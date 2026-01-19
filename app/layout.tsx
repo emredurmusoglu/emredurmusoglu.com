@@ -3,12 +3,13 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Emre Durmuşoğlu",
-  description: "SaaS ve iOS odaklı ürünler geliştiriyorum. Davetiva ve AlarMix.",
+  description: "SaaS ve iOS odaklı dijital ürünler geliştiren bağımsız bir üretici.",
   icons: {
     icon: [
+      { url: "/favicon.ico", type: "image/x-icon" },
       { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/favicon.ico" },
     ],
+    apple: [{ url: "/ed-512.png" }],
   },
 };
 

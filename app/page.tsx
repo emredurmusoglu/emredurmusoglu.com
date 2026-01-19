@@ -76,7 +76,7 @@ export default function Home() {
                     />
                   </div>
                   <span className="text-sm text-white/45 group-hover:text-white/70 transition">
-                    → Visit
+                    → Uygulamaya Git
                   </span>
                 </div>
 
@@ -111,7 +111,7 @@ export default function Home() {
                     />
                   </div>
                   <span className="text-sm text-white/45 group-hover:text-white/70 transition">
-                    → App Store
+                    → Uygulamaya Git
                   </span>
                 </div>
 
