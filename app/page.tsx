@@ -13,6 +13,28 @@ export default function Home() {
 
       {/* Content */}
       <div className="relative mx-auto max-w-6xl px-6 py-12 md:py-24">
+        {/* Top-right contact icon (desktop) */}
+        <div className="absolute right-6 top-20 md:right-10 md:top-24">
+          <a
+            href="mailto:emredurmusoglu1@gmail.com"
+            aria-label="İletişime geç"
+            className="hidden md:inline-flex items-center justify-center rounded-full border border-white/15 bg-white/10 p-2.5 text-white/85 backdrop-blur transition hover:border-white/30 hover:bg-white/15"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              className="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2Z" />
+              <path d="m22 8-10 6L2 8" />
+            </svg>
+          </a>
+        </div>
         {/* LOGO — avatar with glow */}
         <div className="mb-10 flex justify-center md:justify-start">
           <div className="relative">
@@ -128,8 +150,14 @@ export default function Home() {
         </div>
 
         {/* Footer */}
-        <footer className="mt-16 border-t border-white/10 pt-8 text-sm text-white/45">
-          © {new Date().getFullYear()} Emre Durmuşoğlu
+        <footer className="mt-16 flex items-center justify-between gap-4 border-t border-white/10 pt-8 text-sm text-white/45">
+          <span>© {new Date().getFullYear()} Emre Durmuşoğlu</span>
+          <a
+            href="mailto:emredurmusoglu1@gmail.com"
+            className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white/90 backdrop-blur transition hover:border-white/30 hover:bg-white/15 md:hidden"
+          >
+            İletişime Geç
+          </a>
         </footer>
       </div>
     </main>
