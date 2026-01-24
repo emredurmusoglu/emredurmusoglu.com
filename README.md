@@ -6,7 +6,7 @@ Site; üzerinde çalıştığım ürünleri, odaklandığım alanları ve genel 
 
 Canlı adres:  
 👉 https://www.emredurmusoglu.com
-
+Teşekkürler.
 ---
 
 ## 🚀 Proje Hakkında
