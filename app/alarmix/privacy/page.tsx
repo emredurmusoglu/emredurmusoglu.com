@@ -17,7 +17,7 @@ export default function AlarMixPrivacyPage() {
       <div style={{ maxWidth: 820, margin: '0 auto' }}>
         <h1 style={{ fontSize: 28, margin: '0 0 10px' }}>Privacy Policy</h1>
         <div style={{ color: '#9ca3af', fontSize: 14, marginTop: 8 }}>
-          Last updated: January 2026
+          Last updated: June 2026
         </div>
 
         <div
