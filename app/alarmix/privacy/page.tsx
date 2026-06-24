@@ -46,7 +46,7 @@ export default function AlarMixPrivacyPage() {
 
         <h2 style={{ fontSize: 18, margin: '26px 0 10px' }}>2. Advertising</h2>
         <p style={{ color: '#d1d5db' }}>
-          AlarMix uses banner ads and rewarded ads. Ads may be provided by third-party advertising
+          AlarMix uses interstitial ads. Ads may be provided by third-party advertising
           services. These providers may collect anonymous data to display ads and measure advertising
           performance. AlarMix does not share personally identifiable information with advertising
           providers.
@@ -54,8 +54,9 @@ export default function AlarMixPrivacyPage() {
 
         <h2 style={{ fontSize: 18, margin: '26px 0 10px' }}>3. Tracking</h2>
         <p style={{ color: '#d1d5db' }}>
-          AlarMix does not track users across apps or websites owned by other companies. We do not
-          use collected data for tracking or profiling purposes.
+          AlarMix uses Apple's App Tracking Transparency framework to request user permission before
+          any tracking occurs. If the user grants permission, advertising data may be used by
+          third-party providers for tracking purposes.
         </p>
 
         <h2 style={{ fontSize: 18, margin: '26px 0 10px' }}>4. How We Use Data</h2>
