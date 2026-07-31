@@ -14,6 +14,15 @@ const VIEWS: { key: View; label: string }[] = [
   { key: "all", label: "Hepsi" },
 ];
 
+function chip(active: boolean) {
+  return [
+    "shrink-0 rounded-full px-3 py-1.5 text-xs transition",
+    active
+      ? "bg-indigo-600 font-medium text-white"
+      : "border border-neutral-200 bg-white text-neutral-500 hover:border-neutral-300 hover:text-neutral-800",
+  ].join(" ");
+}
+
 export default async function TasksPage({
   searchParams,
 }: {
@@ -56,7 +65,7 @@ export default async function TasksPage({
     <div className="space-y-6">
       <header className="flex items-baseline justify-between">
         <h1 className="text-2xl font-semibold tracking-tight">Yapılacaklar</h1>
-        <span className="text-sm text-white/30">{tasks.length} kayıt</span>
+        <span className="text-sm text-neutral-400">{tasks.length} kayıt</span>
       </header>
 
       <QuickAddTask
@@ -70,27 +79,17 @@ export default async function TasksPage({
           <Link
             key={item.key}
             href={buildHref({ view: item.key })}
-            className={[
-              "rounded-full px-3 py-1.5 text-xs transition",
-              view === item.key
-                ? "bg-white/15 text-white"
-                : "bg-white/[0.05] text-white/45 hover:bg-white/10 hover:text-white/75",
-            ].join(" ")}
+            className={chip(view === item.key)}
           >
             {item.label}
           </Link>
         ))}
 
-        <span className="mx-1 h-4 w-px bg-white/10" />
+        <span className="mx-1 h-4 w-px bg-neutral-200" />
 
         <Link
           href={buildHref({ project: "" })}
-          className={[
-            "rounded-full px-3 py-1.5 text-xs transition",
-            validProjectId === undefined
-              ? "bg-white/15 text-white"
-              : "bg-white/[0.05] text-white/45 hover:bg-white/10 hover:text-white/75",
-          ].join(" ")}
+          className={chip(validProjectId === undefined)}
         >
           Tüm projeler
         </Link>
@@ -98,12 +97,7 @@ export default async function TasksPage({
           <Link
             key={project.id}
             href={buildHref({ project: String(project.id) })}
-            className={[
-              "rounded-full px-3 py-1.5 text-xs transition",
-              validProjectId === project.id
-                ? "bg-white/15 text-white"
-                : "bg-white/[0.05] text-white/45 hover:bg-white/10 hover:text-white/75",
-            ].join(" ")}
+            className={chip(validProjectId === project.id)}
           >
             {project.title}
           </Link>
@@ -111,7 +105,7 @@ export default async function TasksPage({
       </div>
 
       {tasks.length ? (
-        <ul className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-1">
+        <ul className="rounded-2xl border border-neutral-200 bg-white p-1 shadow-sm">
           {tasks.map((task) => (
             <TaskRow
               key={task.id}
@@ -121,7 +115,7 @@ export default async function TasksPage({
           ))}
         </ul>
       ) : (
-        <p className="rounded-2xl border border-white/[0.07] bg-white/[0.02] px-4 py-10 text-center text-sm text-white/30">
+        <p className="rounded-2xl border border-neutral-200 bg-white px-4 py-10 text-center text-sm text-neutral-400 shadow-sm">
           Bu filtrede kayıt yok.
         </p>
       )}
@@ -131,7 +125,7 @@ export default async function TasksPage({
         <form action={clearDoneTasks} className="flex justify-end">
           <button
             type="submit"
-            className="rounded-full border border-white/10 px-3 py-1.5 text-xs text-white/40 transition hover:border-red-400/30 hover:text-red-300/90"
+            className="rounded-full border border-neutral-200 px-3 py-1.5 text-xs text-neutral-400 transition hover:border-red-300 hover:text-red-600"
           >
             Tamamlananları sil ({doneCount})
           </button>

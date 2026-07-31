@@ -16,14 +16,14 @@ const STATUS_OPTIONS = [
 ] as const;
 
 const STATUS_STYLE: Record<string, string> = {
-  idea: "bg-white/[0.06] text-white/50",
-  active: "bg-sky-400/15 text-sky-200/90",
-  paused: "bg-amber-400/10 text-amber-200/80",
-  shipped: "bg-emerald-400/15 text-emerald-200/90",
+  idea: "bg-neutral-100 text-neutral-600",
+  active: "bg-sky-50 text-sky-700",
+  paused: "bg-amber-50 text-amber-700",
+  shipped: "bg-emerald-50 text-emerald-700",
 };
 
 const inputClass =
-  "w-full rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-white/80 outline-none transition placeholder:text-white/25 focus:border-white/25";
+  "w-full rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-800 outline-none transition placeholder:text-neutral-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10";
 
 function ProjectFields({ project }: { project?: Project }) {
   return (
@@ -97,12 +97,12 @@ function ProjectFields({ project }: { project?: Project }) {
         className={`${inputClass} font-mono text-xs`}
       />
 
-      <label className="flex items-center gap-2.5 text-sm text-white/60">
+      <label className="flex items-center gap-2.5 text-sm text-neutral-600">
         <input
           type="checkbox"
           name="isPublic"
           defaultChecked={project?.isPublic ?? false}
-          className="h-4 w-4 rounded border-white/20 bg-white/10 accent-white"
+          className="h-4 w-4 rounded border-neutral-300 accent-indigo-600"
         />
         Ana sayfada göster
       </label>
@@ -117,18 +117,21 @@ export default async function ProjectsPage() {
     <div className="space-y-6">
       <header className="flex items-baseline justify-between">
         <h1 className="text-2xl font-semibold tracking-tight">Projeler</h1>
-        <span className="text-sm text-white/30">{projects.length} proje</span>
+        <span className="text-sm text-neutral-400">{projects.length} proje</span>
       </header>
 
-      <details className="rounded-2xl border border-white/10 bg-white/[0.04]">
-        <summary className="cursor-pointer list-none px-4 py-3 text-sm text-white/60 transition hover:text-white/90">
+      <details className="rounded-2xl border border-neutral-200 bg-white shadow-sm">
+        <summary className="cursor-pointer list-none px-4 py-3 text-sm font-medium text-indigo-600 transition hover:text-indigo-700">
           + Yeni proje
         </summary>
-        <form action={createProject} className="space-y-3 border-t border-white/[0.06] p-4">
+        <form
+          action={createProject}
+          className="space-y-3 border-t border-neutral-100 p-4"
+        >
           <ProjectFields />
           <button
             type="submit"
-            className="rounded-xl bg-white/90 px-5 py-2 text-sm font-medium text-neutral-950 transition hover:bg-white"
+            className="rounded-xl bg-indigo-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-indigo-700"
           >
             Oluştur
           </button>
@@ -141,22 +144,19 @@ export default async function ProjectsPage() {
             <li
               key={project.id}
               id={`p${project.id}`}
-              className="rounded-2xl border border-white/[0.07] bg-white/[0.02]"
+              className="rounded-2xl border border-neutral-200 bg-white shadow-sm"
             >
               <div className="flex flex-wrap items-center gap-3 px-4 py-3.5">
-                <span className="text-sm font-medium text-white/90">
+                <span className="text-sm font-medium text-neutral-900">
                   {project.title}
                 </span>
                 <span
-                  className={`rounded-md px-2 py-0.5 text-[11px] ${STATUS_STYLE[project.status]}`}
+                  className={`rounded-md px-2 py-0.5 text-[11px] font-medium ${STATUS_STYLE[project.status]}`}
                 >
-                  {
-                    STATUS_OPTIONS.find((o) => o.value === project.status)
-                      ?.label
-                  }
+                  {STATUS_OPTIONS.find((o) => o.value === project.status)?.label}
                 </span>
                 {project.isPublic ? (
-                  <span className="rounded-md bg-white/[0.06] px-2 py-0.5 text-[11px] text-white/45">
+                  <span className="rounded-md bg-neutral-100 px-2 py-0.5 text-[11px] text-neutral-500">
                     ana sayfada
                   </span>
                 ) : null}
@@ -164,7 +164,7 @@ export default async function ProjectsPage() {
                 <span className="ml-auto flex items-center gap-3 text-xs">
                   <Link
                     href={`/panel/tasks?project=${project.id}`}
-                    className="text-white/35 transition hover:text-white/70"
+                    className="text-neutral-400 transition hover:text-neutral-700"
                   >
                     İşleri →
                   </Link>
@@ -172,13 +172,13 @@ export default async function ProjectsPage() {
               </div>
 
               {project.description ? (
-                <p className="px-4 pb-3 text-xs leading-relaxed text-white/40">
+                <p className="px-4 pb-3 text-xs leading-relaxed text-neutral-500">
                   {project.description}
                 </p>
               ) : null}
 
-              <details className="border-t border-white/[0.06]">
-                <summary className="cursor-pointer list-none px-4 py-2.5 text-xs text-white/30 transition hover:text-white/60">
+              <details className="border-t border-neutral-100">
+                <summary className="cursor-pointer list-none px-4 py-2.5 text-xs text-neutral-400 transition hover:text-neutral-700">
                   Düzenle
                 </summary>
                 {/* key = kayıt zamanı: kaydettikten sonra form yeniden mount
@@ -186,25 +186,28 @@ export default async function ProjectsPage() {
                 <form
                   key={project.updatedAt.toISOString()}
                   action={updateProject}
-                  className="space-y-3 border-t border-white/[0.06] p-4"
+                  className="space-y-3 border-t border-neutral-100 p-4"
                 >
                   <input type="hidden" name="id" value={project.id} />
                   <ProjectFields project={project} />
                   <div className="flex items-center justify-between">
                     <button
                       type="submit"
-                      className="rounded-xl bg-white/90 px-5 py-2 text-sm font-medium text-neutral-950 transition hover:bg-white"
+                      className="rounded-xl bg-indigo-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-indigo-700"
                     >
                       Kaydet
                     </button>
                   </div>
                 </form>
 
-                <form action={deleteProject} className="border-t border-white/[0.06] px-4 py-3">
+                <form
+                  action={deleteProject}
+                  className="border-t border-neutral-100 px-4 py-3"
+                >
                   <input type="hidden" name="id" value={project.id} />
                   <button
                     type="submit"
-                    className="text-xs text-white/25 transition hover:text-red-300/90"
+                    className="text-xs text-neutral-400 transition hover:text-red-600"
                   >
                     Projeyi sil (işler ve notlar silinmez, bağları kopar)
                   </button>
@@ -214,7 +217,7 @@ export default async function ProjectsPage() {
           ))}
         </ul>
       ) : (
-        <p className="rounded-2xl border border-white/[0.07] bg-white/[0.02] px-4 py-10 text-center text-sm text-white/30">
+        <p className="rounded-2xl border border-neutral-200 bg-white px-4 py-10 text-center text-sm text-neutral-400 shadow-sm">
           Henüz proje yok.
         </p>
       )}

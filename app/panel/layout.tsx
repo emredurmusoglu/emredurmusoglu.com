@@ -9,7 +9,8 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     title: "Panel",
-    statusBarStyle: "black-translucent",
+    // Panel açık temada: durum çubuğu yazıları siyah olsun diye "default".
+    statusBarStyle: "default",
   },
   other: {
     // Next artık standart adı (`mobile-web-app-capable`) üretiyor. iOS 16.4
@@ -19,9 +20,8 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0a0a0a",
-  // Durum çubuğu saydam olduğu için içerik ekranın tepesine kadar uzanıyor;
-  // çentiğin altında kalmasın diye aşağıda safe-area dolgusu veriyoruz.
+  // Site koyu ama panel açık tema — tarayıcı çubuğu da ona uysun.
+  themeColor: "#fafafa",
   viewportFit: "cover",
 };
 

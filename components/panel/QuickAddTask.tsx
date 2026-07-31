@@ -2,6 +2,9 @@ import { createTask } from "@/lib/actions/tasks";
 
 type ProjectOption = { id: number; title: string };
 
+const chipClass =
+  "rounded-lg border border-neutral-200 bg-white px-2.5 py-1.5 text-xs text-neutral-600 outline-none transition hover:border-neutral-300 focus:border-indigo-500";
+
 export function QuickAddTask({
   projects,
   defaultProjectId,
@@ -14,7 +17,7 @@ export function QuickAddTask({
   return (
     <form
       action={createTask}
-      className="rounded-2xl border border-white/10 bg-white/[0.04] p-2"
+      className="rounded-2xl border border-neutral-200 bg-white p-2 shadow-sm"
     >
       <div className="flex items-center gap-2">
         <input
@@ -23,23 +26,23 @@ export function QuickAddTask({
           maxLength={300}
           placeholder="Ne yapılacak?"
           aria-label="Yeni iş"
-          className="min-w-0 flex-1 bg-transparent px-3 py-2 text-sm text-white outline-none placeholder:text-white/30"
+          className="min-w-0 flex-1 bg-transparent px-3 py-2 text-sm text-neutral-900 outline-none placeholder:text-neutral-400"
         />
         <button
           type="submit"
-          className="shrink-0 rounded-xl bg-white/90 px-4 py-2 text-sm font-medium text-neutral-950 transition hover:bg-white"
+          className="shrink-0 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700"
         >
           Ekle
         </button>
       </div>
 
       {detailed ? (
-        <div className="flex flex-wrap gap-2 border-t border-white/[0.06] px-1 pt-2">
+        <div className="flex flex-wrap gap-2 border-t border-neutral-100 px-1 pt-2">
           <select
             name="projectId"
             defaultValue={defaultProjectId ?? ""}
             aria-label="Proje"
-            className="rounded-lg bg-white/[0.06] px-2.5 py-1.5 text-xs text-white/70 outline-none transition hover:bg-white/10"
+            className={chipClass}
           >
             <option value="">Proje yok</option>
             {projects.map((project) => (
@@ -53,19 +56,14 @@ export function QuickAddTask({
             name="priority"
             defaultValue="0"
             aria-label="Öncelik"
-            className="rounded-lg bg-white/[0.06] px-2.5 py-1.5 text-xs text-white/70 outline-none transition hover:bg-white/10"
+            className={chipClass}
           >
             <option value="0">Normal</option>
             <option value="1">Önemli</option>
             <option value="2">Acil</option>
           </select>
 
-          <input
-            type="date"
-            name="dueDate"
-            aria-label="Termin"
-            className="rounded-lg bg-white/[0.06] px-2.5 py-1.5 text-xs text-white/70 outline-none transition hover:bg-white/10"
-          />
+          <input type="date" name="dueDate" aria-label="Termin" className={chipClass} />
         </div>
       ) : (
         defaultProjectId !== undefined && (

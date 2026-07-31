@@ -16,8 +16,9 @@ export default function manifest(): MetadataRoute.Manifest {
     scope: "/",
     display: "standalone",
     orientation: "portrait",
-    background_color: "#0a0a0a",
-    theme_color: "#0a0a0a",
+    // Uygulama = panel, panel de açık tema. Açılış ekranı da ona uysun.
+    background_color: "#fafafa",
+    theme_color: "#fafafa",
     lang: "tr",
     dir: "ltr",
     icons: [

@@ -2,15 +2,15 @@ import { deleteTask, toggleTask } from "@/lib/actions/tasks";
 import { describeDue } from "@/lib/date";
 
 const DUE_TONE: Record<string, string> = {
-  overdue: "text-red-300/90",
-  today: "text-amber-200/90",
-  soon: "text-white/50",
-  later: "text-white/35",
+  overdue: "text-red-600",
+  today: "text-amber-600",
+  soon: "text-neutral-500",
+  later: "text-neutral-400",
 };
 
 const PRIORITY_DOT: Record<number, string> = {
-  1: "bg-amber-400/80",
-  2: "bg-red-400/90",
+  1: "bg-amber-500",
+  2: "bg-red-500",
 };
 
 export type TaskRowData = {
@@ -34,7 +34,7 @@ export function TaskRow({
   const due = describeDue(task.dueDate);
 
   return (
-    <li className="group flex items-start gap-3 rounded-xl px-3 py-2.5 transition hover:bg-white/[0.03]">
+    <li className="group flex items-start gap-3 rounded-xl px-3 py-2.5 transition hover:bg-neutral-50">
       {/* Checkbox yerine form — JS olmadan da çalışır */}
       <form action={toggleTask} className="pt-0.5">
         <input type="hidden" name="id" value={task.id} />
@@ -45,8 +45,8 @@ export function TaskRow({
           className={[
             "flex h-[18px] w-[18px] items-center justify-center rounded-md border transition",
             done
-              ? "border-white/25 bg-white/20"
-              : "border-white/25 hover:border-white/50 hover:bg-white/10",
+              ? "border-indigo-600 bg-indigo-600"
+              : "border-neutral-300 hover:border-indigo-500 hover:bg-indigo-50",
           ].join(" ")}
         >
           {done ? (
@@ -68,7 +68,7 @@ export function TaskRow({
 
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          {PRIORITY_DOT[task.priority] ? (
+          {PRIORITY_DOT[task.priority] && !done ? (
             <span
               className={`h-1.5 w-1.5 shrink-0 rounded-full ${PRIORITY_DOT[task.priority]}`}
               aria-label={task.priority === 2 ? "Acil" : "Önemli"}
@@ -77,7 +77,7 @@ export function TaskRow({
           <span
             className={[
               "truncate text-sm",
-              done ? "text-white/30 line-through" : "text-white/85",
+              done ? "text-neutral-400 line-through" : "text-neutral-800",
             ].join(" ")}
           >
             {task.title}
@@ -87,7 +87,7 @@ export function TaskRow({
         {(showProject && task.projectTitle) || due ? (
           <div className="mt-1 flex items-center gap-2 text-xs">
             {showProject && task.projectTitle ? (
-              <span className="rounded-md bg-white/[0.06] px-1.5 py-0.5 text-white/45">
+              <span className="rounded-md bg-neutral-100 px-1.5 py-0.5 text-neutral-500">
                 {task.projectTitle}
               </span>
             ) : null}
@@ -103,7 +103,7 @@ export function TaskRow({
         <button
           type="submit"
           aria-label="Sil"
-          className="rounded-md p-1 text-white/0 transition group-hover:text-white/30 hover:!text-red-300/90 focus-visible:text-white/50"
+          className="rounded-md p-1 text-transparent transition group-hover:text-neutral-300 hover:!text-red-600 focus-visible:text-neutral-400"
         >
           <svg
             viewBox="0 0 24 24"

@@ -13,25 +13,26 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Asıl yetki kontrolü burada — middleware sadece yönlendirme yapıyor.
+  // Asıl yetki kontrolü burada — proxy sadece yönlendirme yapıyor.
   await requireSession();
   const counts = await getTaskCounts();
 
   return (
-    <div className="safe-top safe-bottom min-h-screen bg-neutral-950 text-white [font-family:system-ui,-apple-system,'Segoe_UI',sans-serif]">
+    <div className="panel-light safe-top safe-bottom min-h-screen bg-neutral-50 text-neutral-900 [font-family:system-ui,-apple-system,'Segoe_UI',sans-serif]">
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-6 md:flex-row md:gap-10 md:px-6 md:py-10">
         <aside className="md:w-52 md:shrink-0">
           <div className="flex items-center justify-between md:block">
             <Link
               href="/panel"
-              className="text-sm font-semibold tracking-tight text-white/90"
+              className="flex items-center gap-2 text-sm font-semibold tracking-tight text-neutral-900"
             >
               Panel
+              <span className="h-1 w-8 rounded-full bg-gradient-to-r from-sky-400 via-indigo-400 to-fuchsia-400" />
             </Link>
             <form action={logout} className="md:hidden">
               <button
                 type="submit"
-                className="text-xs text-white/40 transition hover:text-white/70"
+                className="text-xs text-neutral-400 transition hover:text-neutral-700"
               >
                 Çıkış
               </button>
@@ -52,14 +53,14 @@ export default async function DashboardLayout({
           <div className="mt-8 hidden md:block">
             <Link
               href="/"
-              className="block rounded-xl px-3 py-2 text-sm text-white/40 transition hover:text-white/70"
+              className="block rounded-xl px-3 py-2 text-sm text-neutral-400 transition hover:text-neutral-700"
             >
               ← Siteye dön
             </Link>
             <form action={logout}>
               <button
                 type="submit"
-                className="w-full rounded-xl px-3 py-2 text-left text-sm text-white/40 transition hover:text-white/70"
+                className="w-full rounded-xl px-3 py-2 text-left text-sm text-neutral-400 transition hover:text-neutral-700"
               >
                 Çıkış yap
               </button>

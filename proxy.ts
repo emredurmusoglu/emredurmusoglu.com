@@ -15,10 +15,14 @@ export default function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const hasCookie = request.cookies.has(SESSION_COOKIE);
 
+  // Login sayfasına ASLA dokunma.
+  //
+  // Burada "cookie varsa panele gönder" demek sonsuz döngü yaratıyordu:
+  // süresi dolmuş bir cookie'de proxy panele atıyor, requireSession()
+  // doğrulayıp geçersiz bulunca login'e geri atıyor, proxy tekrar panele...
+  // Proxy geçerli/geçersiz ayrımını yapamadığı için bu kararı veremez.
+  // "Zaten giriş yapmışsan panele git" işini login sayfası kendisi yapıyor.
   if (pathname === "/panel/login") {
-    if (hasCookie) {
-      return NextResponse.redirect(new URL("/panel", request.url));
-    }
     return NextResponse.next();
   }
 

@@ -19,15 +19,22 @@ export function NavLink({
     <Link
       href={href}
       className={[
-        "flex items-center justify-between gap-2 rounded-xl px-3 py-2 text-sm transition",
+        "flex shrink-0 items-center justify-between gap-2 rounded-xl px-3 py-2 text-sm transition",
         active
-          ? "bg-white/10 text-white"
-          : "text-white/55 hover:bg-white/5 hover:text-white/85",
+          ? "bg-indigo-50 font-medium text-indigo-700"
+          : "text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900",
       ].join(" ")}
     >
       <span>{label}</span>
       {badge ? (
-        <span className="rounded-full bg-white/10 px-2 py-0.5 text-xs tabular-nums text-white/70">
+        <span
+          className={[
+            "rounded-full px-2 py-0.5 text-xs tabular-nums",
+            active
+              ? "bg-indigo-100 text-indigo-700"
+              : "bg-neutral-200/70 text-neutral-600",
+          ].join(" ")}
+        >
           {badge}
         </span>
       ) : null}

@@ -18,6 +18,9 @@ const STATUS_LABEL: Record<string, string> = {
   shipped: "Yayında",
 };
 
+const cardClass = "rounded-2xl border border-neutral-200 bg-white shadow-sm";
+const emptyClass = `${cardClass} px-4 py-6 text-center text-sm text-neutral-400`;
+
 export default async function PanelHome() {
   const [due, doing, notes, projects, projectOptions] = await Promise.all([
     listDueTasks(),
@@ -36,46 +39,44 @@ export default async function PanelHome() {
     <div className="space-y-8">
       <header>
         <h1 className="text-2xl font-semibold tracking-tight">Bugün</h1>
-        <p className="mt-1 text-sm text-white/40">{formatDate(new Date())}</p>
+        <p className="mt-1 text-sm text-neutral-500">{formatDate(new Date())}</p>
       </header>
 
       <QuickAddTask projects={projectOptions} detailed />
 
       <section>
         <div className="mb-2 flex items-baseline justify-between px-3">
-          <h2 className="text-sm font-medium text-white/70">
+          <h2 className="text-sm font-medium text-neutral-700">
             Vadesi gelenler
             {due.length ? (
-              <span className="ml-2 text-white/30">{due.length}</span>
+              <span className="ml-2 text-neutral-400">{due.length}</span>
             ) : null}
           </h2>
           <Link
             href="/panel/tasks"
-            className="text-xs text-white/35 transition hover:text-white/70"
+            className="text-xs text-neutral-400 transition hover:text-neutral-700"
           >
             Tümü →
           </Link>
         </div>
 
         {due.length ? (
-          <ul className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-1">
+          <ul className={`${cardClass} p-1`}>
             {due.map((task) => (
               <TaskRow key={task.id} task={task} />
             ))}
           </ul>
         ) : (
-          <p className="rounded-2xl border border-white/[0.07] bg-white/[0.02] px-4 py-6 text-center text-sm text-white/30">
-            Bugüne yetişmesi gereken bir şey yok.
-          </p>
+          <p className={emptyClass}>Bugüne yetişmesi gereken bir şey yok.</p>
         )}
       </section>
 
       {doing.length ? (
         <section>
-          <h2 className="mb-2 px-3 text-sm font-medium text-white/70">
+          <h2 className="mb-2 px-3 text-sm font-medium text-neutral-700">
             Devam edenler
           </h2>
-          <ul className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-1">
+          <ul className={`${cardClass} p-1`}>
             {doing.map((task) => (
               <TaskRow key={task.id} task={task} />
             ))}
@@ -86,34 +87,34 @@ export default async function PanelHome() {
       <div className="grid gap-6 md:grid-cols-2">
         <section>
           <div className="mb-2 flex items-baseline justify-between px-3">
-            <h2 className="text-sm font-medium text-white/70">Son notlar</h2>
+            <h2 className="text-sm font-medium text-neutral-700">Son notlar</h2>
             <Link
               href="/panel/notes"
-              className="text-xs text-white/35 transition hover:text-white/70"
+              className="text-xs text-neutral-400 transition hover:text-neutral-700"
             >
               Tümü →
             </Link>
           </div>
 
           {recentNotes.length ? (
-            <ul className="space-y-1 rounded-2xl border border-white/[0.07] bg-white/[0.02] p-1">
+            <ul className={`${cardClass} space-y-1 p-1`}>
               {recentNotes.map((note) => (
                 <li key={note.id}>
                   <Link
                     href={`/panel/notes/${note.id}`}
-                    className="block rounded-xl px-3 py-2 transition hover:bg-white/[0.04]"
+                    className="block rounded-xl px-3 py-2 transition hover:bg-neutral-50"
                   >
                     <div className="flex items-center gap-2">
-                      <span className="truncate text-sm text-white/85">
+                      <span className="truncate text-sm text-neutral-800">
                         {note.title}
                       </span>
                       {note.isPublic ? (
-                        <span className="shrink-0 rounded-md bg-emerald-400/10 px-1.5 py-0.5 text-[10px] text-emerald-300/80">
+                        <span className="shrink-0 rounded-md bg-emerald-50 px-1.5 py-0.5 text-[10px] font-medium text-emerald-700">
                           yayında
                         </span>
                       ) : null}
                     </div>
-                    <p className="mt-0.5 text-xs text-white/30">
+                    <p className="mt-0.5 text-xs text-neutral-400">
                       {formatDate(note.updatedAt)}
                     </p>
                   </Link>
@@ -121,35 +122,35 @@ export default async function PanelHome() {
               ))}
             </ul>
           ) : (
-            <p className="rounded-2xl border border-white/[0.07] bg-white/[0.02] px-4 py-6 text-center text-sm text-white/30">
-              Henüz not yok.
-            </p>
+            <p className={emptyClass}>Henüz not yok.</p>
           )}
         </section>
 
         <section>
           <div className="mb-2 flex items-baseline justify-between px-3">
-            <h2 className="text-sm font-medium text-white/70">Aktif projeler</h2>
+            <h2 className="text-sm font-medium text-neutral-700">
+              Aktif projeler
+            </h2>
             <Link
               href="/panel/projects"
-              className="text-xs text-white/35 transition hover:text-white/70"
+              className="text-xs text-neutral-400 transition hover:text-neutral-700"
             >
               Tümü →
             </Link>
           </div>
 
           {activeProjects.length ? (
-            <ul className="space-y-1 rounded-2xl border border-white/[0.07] bg-white/[0.02] p-1">
+            <ul className={`${cardClass} space-y-1 p-1`}>
               {activeProjects.map((project) => (
                 <li key={project.id}>
                   <Link
                     href={`/panel/projects#p${project.id}`}
-                    className="flex items-center justify-between gap-2 rounded-xl px-3 py-2 transition hover:bg-white/[0.04]"
+                    className="flex items-center justify-between gap-2 rounded-xl px-3 py-2 transition hover:bg-neutral-50"
                   >
-                    <span className="truncate text-sm text-white/85">
+                    <span className="truncate text-sm text-neutral-800">
                       {project.title}
                     </span>
-                    <span className="shrink-0 text-xs text-white/30">
+                    <span className="shrink-0 text-xs text-neutral-400">
                       {STATUS_LABEL[project.status]}
                     </span>
                   </Link>
@@ -157,9 +158,7 @@ export default async function PanelHome() {
               ))}
             </ul>
           ) : (
-            <p className="rounded-2xl border border-white/[0.07] bg-white/[0.02] px-4 py-6 text-center text-sm text-white/30">
-              Aktif proje yok.
-            </p>
+            <p className={emptyClass}>Aktif proje yok.</p>
           )}
         </section>
       </div>

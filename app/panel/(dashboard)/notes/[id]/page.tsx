@@ -6,6 +6,9 @@ import { getNote, listProjectOptions } from "@/lib/dal";
 import { formatDateTime } from "@/lib/date";
 import { readingTime, renderMarkdown } from "@/lib/markdown";
 
+const fieldClass =
+  "rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-800 outline-none transition placeholder:text-neutral-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10";
+
 export default async function NoteEditorPage({
   params,
 }: {
@@ -26,7 +29,7 @@ export default async function NoteEditorPage({
       <div className="flex items-center justify-between gap-4">
         <Link
           href="/panel/notes"
-          className="text-sm text-white/35 transition hover:text-white/70"
+          className="text-sm text-neutral-400 transition hover:text-neutral-700"
         >
           ← Notlar
         </Link>
@@ -36,7 +39,7 @@ export default async function NoteEditorPage({
             <Link
               href={`/yazilar/${note.slug}`}
               target="_blank"
-              className="text-xs text-emerald-300/80 transition hover:text-emerald-200"
+              className="text-xs font-medium text-emerald-700 transition hover:text-emerald-800"
             >
               Sitede gör ↗
             </Link>
@@ -52,10 +55,10 @@ export default async function NoteEditorPage({
             <button
               type="submit"
               className={[
-                "rounded-full px-3 py-1.5 text-xs transition",
+                "rounded-full px-3 py-1.5 text-xs font-medium transition",
                 note.isPublic
-                  ? "bg-emerald-400/15 text-emerald-200 hover:bg-emerald-400/25"
-                  : "bg-white/[0.06] text-white/50 hover:bg-white/10 hover:text-white/80",
+                  ? "bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+                  : "border border-neutral-200 bg-white text-neutral-600 hover:border-neutral-300 hover:text-neutral-900",
               ].join(" ")}
             >
               {note.isPublic ? "Yayında · geri çek" : "Sitede yayınla"}
@@ -79,7 +82,7 @@ export default async function NoteEditorPage({
           defaultValue={note.title}
           maxLength={300}
           aria-label="Başlık"
-          className="w-full bg-transparent text-2xl font-semibold tracking-tight text-white outline-none placeholder:text-white/25"
+          className="w-full bg-transparent text-2xl font-semibold tracking-tight text-neutral-900 outline-none placeholder:text-neutral-300"
           placeholder="Başlık"
         />
 
@@ -88,7 +91,7 @@ export default async function NoteEditorPage({
             name="projectId"
             defaultValue={note.projectId ?? ""}
             aria-label="Proje"
-            className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-white/70 outline-none transition focus:border-white/25"
+            className={fieldClass}
           >
             <option value="">Proje yok</option>
             {projectOptions.map((project) => (
@@ -103,7 +106,7 @@ export default async function NoteEditorPage({
             defaultValue={note.tags.join(", ")}
             aria-label="Etiketler"
             placeholder="etiketler: swift, saas, fikir"
-            className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-white/70 outline-none transition placeholder:text-white/25 focus:border-white/25"
+            className={fieldClass}
           />
         </div>
 
@@ -113,7 +116,7 @@ export default async function NoteEditorPage({
           maxLength={500}
           aria-label="Özet"
           placeholder="Özet — blog listesinde görünür (boş bırakırsan içerikten türetilir)"
-          className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-white/70 outline-none transition placeholder:text-white/25 focus:border-white/25"
+          className={`${fieldClass} w-full`}
         />
 
         <textarea
@@ -122,18 +125,18 @@ export default async function NoteEditorPage({
           rows={20}
           aria-label="İçerik"
           placeholder="Markdown yazabilirsin…"
-          className="w-full resize-y rounded-xl border border-white/10 bg-white/[0.04] p-4 font-mono text-sm leading-relaxed text-white/85 outline-none transition placeholder:text-white/25 focus:border-white/25"
+          className={`${fieldClass} w-full resize-y p-4 font-mono leading-relaxed`}
         />
 
         <div className="flex items-center justify-between gap-4">
-          <p className="text-xs text-white/25">
+          <p className="text-xs text-neutral-400">
             {formatDateTime(note.updatedAt)} · ~{readingTime(note.content)} dk ·{" "}
             <span className="font-mono">/{note.slug}</span>
             {note.isPublic ? " · slug yayında olduğu için sabit" : ""}
           </p>
           <button
             type="submit"
-            className="rounded-xl bg-white/90 px-5 py-2 text-sm font-medium text-neutral-950 transition hover:bg-white"
+            className="rounded-xl bg-indigo-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-indigo-700"
           >
             Kaydet
           </button>
@@ -141,12 +144,12 @@ export default async function NoteEditorPage({
       </form>
 
       {note.content.trim() ? (
-        <section className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-6">
-          <h2 className="mb-4 text-xs uppercase tracking-wider text-white/25">
+        <section className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
+          <h2 className="mb-4 text-xs uppercase tracking-wider text-neutral-400">
             Önizleme
           </h2>
           <div
-            className="prose-note"
+            className="prose-note prose-note-light"
             dangerouslySetInnerHTML={{ __html: renderMarkdown(note.content) }}
           />
         </section>
@@ -156,7 +159,7 @@ export default async function NoteEditorPage({
         <input type="hidden" name="id" value={note.id} />
         <button
           type="submit"
-          className="rounded-full border border-white/10 px-3 py-1.5 text-xs text-white/35 transition hover:border-red-400/30 hover:text-red-300/90"
+          className="rounded-full border border-neutral-200 px-3 py-1.5 text-xs text-neutral-400 transition hover:border-red-300 hover:text-red-600"
         >
           Notu sil
         </button>
