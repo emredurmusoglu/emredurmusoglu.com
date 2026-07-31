@@ -11,7 +11,7 @@ export default async function LoginPage({
   const safeNext = next?.startsWith("/panel") ? next : undefined;
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-neutral-950 px-6 text-white [font-family:system-ui,-apple-system,'Segoe_UI',sans-serif]">
+    <main className="safe-top safe-bottom relative flex min-h-screen items-center justify-center overflow-hidden bg-neutral-950 px-6 text-white [font-family:system-ui,-apple-system,'Segoe_UI',sans-serif]">
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute -top-32 left-1/2 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-gradient-to-tr from-sky-500/25 via-indigo-500/20 to-fuchsia-500/20 blur-3xl" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black/70" />

@@ -18,7 +18,7 @@ export default async function DashboardLayout({
   const counts = await getTaskCounts();
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-white [font-family:system-ui,-apple-system,'Segoe_UI',sans-serif]">
+    <div className="safe-top safe-bottom min-h-screen bg-neutral-950 text-white [font-family:system-ui,-apple-system,'Segoe_UI',sans-serif]">
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-6 md:flex-row md:gap-10 md:px-6 md:py-10">
         <aside className="md:w-52 md:shrink-0">
           <div className="flex items-center justify-between md:block">
