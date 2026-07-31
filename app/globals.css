@@ -24,3 +24,118 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Markdown içeriği — hem panel önizlemesi hem /yazilar tarafı kullanır.
+   Tailwind typography eklentisi yerine koyu tema için elle yazıldı. */
+.prose-note {
+  color: rgb(255 255 255 / 0.72);
+  font-size: 1rem;
+  line-height: 1.75;
+  overflow-wrap: break-word;
+}
+
+.prose-note > * + * {
+  margin-top: 1.1em;
+}
+
+.prose-note h1,
+.prose-note h2,
+.prose-note h3,
+.prose-note h4 {
+  color: rgb(255 255 255 / 0.95);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.prose-note h1 { font-size: 1.6em; margin-top: 1.8em; }
+.prose-note h2 { font-size: 1.3em; margin-top: 1.8em; }
+.prose-note h3 { font-size: 1.1em; margin-top: 1.6em; }
+
+.prose-note a {
+  color: rgb(186 230 253 / 0.95);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgb(186 230 253 / 0.35);
+}
+
+.prose-note a:hover {
+  text-decoration-color: rgb(186 230 253 / 0.8);
+}
+
+.prose-note strong { color: rgb(255 255 255 / 0.92); font-weight: 600; }
+
+.prose-note ul,
+.prose-note ol {
+  padding-left: 1.35em;
+}
+
+.prose-note ul { list-style: disc; }
+.prose-note ol { list-style: decimal; }
+.prose-note li::marker { color: rgb(255 255 255 / 0.3); }
+.prose-note li + li { margin-top: 0.4em; }
+
+.prose-note blockquote {
+  border-left: 2px solid rgb(255 255 255 / 0.15);
+  padding-left: 1em;
+  color: rgb(255 255 255 / 0.5);
+  font-style: italic;
+}
+
+.prose-note code {
+  background: rgb(255 255 255 / 0.07);
+  border-radius: 0.35rem;
+  padding: 0.15em 0.4em;
+  font-size: 0.875em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: rgb(255 255 255 / 0.85);
+}
+
+.prose-note pre {
+  background: rgb(255 255 255 / 0.04);
+  border: 1px solid rgb(255 255 255 / 0.07);
+  border-radius: 0.85rem;
+  padding: 1rem 1.1rem;
+  overflow-x: auto;
+  font-size: 0.85em;
+  line-height: 1.6;
+}
+
+.prose-note pre code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+.prose-note img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.85rem;
+}
+
+.prose-note hr {
+  border: 0;
+  border-top: 1px solid rgb(255 255 255 / 0.1);
+  margin: 2.2em 0;
+}
+
+.prose-note table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  display: block;
+  overflow-x: auto;
+}
+
+.prose-note th,
+.prose-note td {
+  border: 1px solid rgb(255 255 255 / 0.1);
+  padding: 0.5em 0.75em;
+  text-align: left;
+}
+
+.prose-note th {
+  background: rgb(255 255 255 / 0.04);
+  color: rgb(255 255 255 / 0.85);
+  font-weight: 600;
+}

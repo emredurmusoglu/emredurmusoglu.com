@@ -1,6 +1,18 @@
 import Image from "next/image";
+import Link from "next/link";
 
-export default function Home() {
+import { ProjectCard } from "@/components/ProjectCard";
+import { getPublicNotes, getPublicProjects } from "@/lib/content";
+import { formatDate } from "@/lib/date";
+
+export const revalidate = 3600;
+
+export default async function Home() {
+  const [projects, notes] = await Promise.all([
+    getPublicProjects(),
+    getPublicNotes(),
+  ]);
+
   return (
     <main className="relative min-h-screen overflow-hidden bg-neutral-950 text-white">
       {/* Background — aurora blobs */}
@@ -74,78 +86,47 @@ export default function Home() {
               <span className="text-white/80 font-medium">AlarMix</span> — görevlerle alarmı gerçekten susturmayı
               amaçlayan, alışılmış alarm uygulamalarından farklı bir iOS deneyimi.
             </p>
+
+            {notes.length ? (
+              <div className="mt-10">
+                <h2 className="text-xs uppercase tracking-wider text-white/35">
+                  Son yazılar
+                </h2>
+                <ul className="mt-4 space-y-2.5">
+                  {notes.slice(0, 3).map((note) => (
+                    <li key={note.slug}>
+                      <Link
+                        href={`/yazilar/${note.slug}`}
+                        className="group flex items-baseline justify-between gap-4 text-white/70 transition hover:text-white"
+                      >
+                        <span className="truncate underline decoration-white/15 underline-offset-4 transition group-hover:decoration-white/50">
+                          {note.title}
+                        </span>
+                        <time
+                          dateTime={note.publishedAt?.toISOString()}
+                          className="shrink-0 text-xs text-white/30"
+                        >
+                          {formatDate(note.publishedAt)}
+                        </time>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href="/yazilar"
+                  className="mt-4 inline-block text-sm text-white/40 transition hover:text-white/80"
+                >
+                  Tüm yazılar →
+                </Link>
+              </div>
+            ) : null}
           </section>
 
           {/* RIGHT — PROJECTS */}
           <section className="space-y-4">
-            {/* Davetiva */}
-            <a
-              href="https://davetiva.com"
-              target="_blank"
-              rel="noreferrer"
-              className="group block"
-            >
-              <div className="flex min-h-[168px] md:min-h-[190px] flex-col rounded-3xl border border-white/10 bg-white/5 p-7 backdrop-blur transition hover:bg-white/8 hover:border-white/20 hover:shadow-[0_18px_60px_rgba(0,0,0,0.45)]">
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <h3 className="text-xl font-semibold text-white">Davetiva</h3>
-                    <Image
-                      src="/logo.png"
-                      alt="Davetiva logo"
-                      width={22}
-                      height={22}
-                      className="rounded-sm opacity-90"
-                    />
-                  </div>
-                  <span className="text-sm text-white/45 group-hover:text-white/70 transition">
-                    → Uygulamaya Git
-                  </span>
-                </div>
-
-                <p className="mt-4 text-white/70 leading-relaxed">
-                  Dijital davetiye oluşturma ve RSVP yönetimi platformu. Davetiyeleri tek bağlantıdan paylaşmayı ve yanıtları takip etmeyi sağlar.
-                </p>
-
-                {/* underline en alta sabitlendi */}
-                <div className="mt-auto pt-5">
-                  <div className="h-px w-0 bg-gradient-to-r from-sky-400/70 via-indigo-400/50 to-fuchsia-400/70 transition-all duration-300 group-hover:w-24" />
-                </div>
-              </div>
-            </a>
-
-            {/* AlarMix */}
-            <a
-  href="https://apps.apple.com/tr/app/alarmix-alarm/id6757366872?l=tr"
-  target="_blank"
-  rel="noreferrer"
-  className="group block"
->
-              <div className="flex min-h-[168px] md:min-h-[190px] flex-col rounded-3xl border border-white/10 bg-white/5 p-7 backdrop-blur transition hover:bg-white/8 hover:border-white/20 hover:shadow-[0_18px_60px_rgba(0,0,0,0.45)]">
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <h3 className="text-xl font-semibold text-white">AlarMix</h3>
-                    <Image
-                      src="/AppIcon1024.png"
-                      alt="AlarMix app icon"
-                      width={22}
-                      height={22}
-                      className="rounded-md opacity-90"
-                    />
-                  </div>
-                  <span className="text-sm text-white/45 group-hover:text-white/70 transition">
-                    → Uygulamaya Git
-                  </span>
-                </div>
-
-                <p className="mt-4 text-white/70 leading-relaxed">
-                  Görev tabanlı alarm uygulaması. Görevler tamamlanmadan alarmı kapatmaya izin vermez ve daha aktif bir uyanma deneyimi sunar.
-                </p>
-
-                <div className="mt-auto pt-5">
-                  <div className="h-px w-0 bg-gradient-to-r from-emerald-400/60 via-cyan-400/40 to-sky-400/60 transition-all duration-300 group-hover:w-24" />
-                </div>
-              </div>
-            </a>
+            {projects.map((project) => (
+              <ProjectCard key={project.slug} project={project} />
+            ))}
           </section>
         </div>
 
