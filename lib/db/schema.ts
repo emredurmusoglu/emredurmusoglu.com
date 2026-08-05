@@ -31,7 +31,16 @@ export const projects = pgTable(
     accent: varchar("accent", { length: 120 }),
     /** Public sitede kartta gösterilecek ikon (public/ altındaki yol) */
     iconUrl: varchar("icon_url", { length: 255 }),
+    /** Web adresi — mağazası olmayan ürünler için (ör. Davetiva) */
     url: varchar("url", { length: 500 }),
+    iosUrl: varchar("ios_url", { length: 500 }),
+    androidUrl: varchar("android_url", { length: 500 }),
+    /**
+     * Henüz yayında değil. Kart görünür ama tıklanmaz, "Yakında" rozeti çıkar.
+     * `status` ile karıştırma: o iç takip için, bu kartın dışarıya nasıl
+     * göründüğünü belirliyor.
+     */
+    comingSoon: boolean("coming_soon").notNull().default(false),
     /** Ana sayfada görünsün mü */
     isPublic: boolean("is_public").notNull().default(false),
     sort: integer("sort").notNull().default(0),

@@ -8,6 +8,13 @@
       "when": 1785455842200,
       "tag": "0000_sleepy_zarda",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1785841784527,
+      "tag": "0001_lonely_white_tiger",
+      "breakpoints": true
     }
   ]
 }

@@ -58,9 +58,12 @@ export async function createProject(form: FormData) {
     description: optionalText(form, "description", { max: 2000 }),
     status: readStatus(form),
     url: optionalText(form, "url", { max: 500 }),
+    iosUrl: optionalText(form, "iosUrl", { max: 500 }),
+    androidUrl: optionalText(form, "androidUrl", { max: 500 }),
     iconUrl: optionalText(form, "iconUrl", { max: 255 }),
     accent: optionalText(form, "accent", { max: 120 }),
     isPublic: bool(form, "isPublic"),
+    comingSoon: bool(form, "comingSoon"),
     sort: int(form, "sort") ?? 0,
   });
 
@@ -81,9 +84,12 @@ export async function updateProject(form: FormData) {
       description: optionalText(form, "description", { max: 2000 }),
       status: readStatus(form),
       url: optionalText(form, "url", { max: 500 }),
+      iosUrl: optionalText(form, "iosUrl", { max: 500 }),
+      androidUrl: optionalText(form, "androidUrl", { max: 500 }),
       iconUrl: optionalText(form, "iconUrl", { max: 255 }),
       accent: optionalText(form, "accent", { max: 120 }),
       isPublic: bool(form, "isPublic"),
+      comingSoon: bool(form, "comingSoon"),
       sort: int(form, "sort") ?? 0,
       updatedAt: new Date(),
     })

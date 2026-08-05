@@ -26,6 +26,9 @@ export async function getPublicProjects() {
       accent: projects.accent,
       iconUrl: projects.iconUrl,
       url: projects.url,
+      iosUrl: projects.iosUrl,
+      androidUrl: projects.androidUrl,
+      comingSoon: projects.comingSoon,
     })
     .from(projects)
     .where(eq(projects.isPublic, true))

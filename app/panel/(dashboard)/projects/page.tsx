@@ -66,8 +66,26 @@ function ProjectFields({ project }: { project?: Project }) {
           name="url"
           type="url"
           defaultValue={project?.url ?? ""}
-          placeholder="https://…"
-          aria-label="Bağlantı"
+          placeholder="Web adresi — https://…"
+          aria-label="Web adresi"
+          className={inputClass}
+        />
+
+        <input
+          name="iosUrl"
+          type="url"
+          defaultValue={project?.iosUrl ?? ""}
+          placeholder="App Store linki"
+          aria-label="App Store linki"
+          className={inputClass}
+        />
+
+        <input
+          name="androidUrl"
+          type="url"
+          defaultValue={project?.androidUrl ?? ""}
+          placeholder="Google Play linki"
+          aria-label="Google Play linki"
           className={inputClass}
         />
 
@@ -89,6 +107,11 @@ function ProjectFields({ project }: { project?: Project }) {
         />
       </div>
 
+      <p className="text-xs leading-relaxed text-neutral-400">
+        Her iki mağaza linki de doluysa kart, tıklandığında hangi platform
+        olduğunu sorar. Tek link varsa doğrudan oraya gider.
+      </p>
+
       <input
         name="accent"
         defaultValue={project?.accent ?? ""}
@@ -97,15 +120,27 @@ function ProjectFields({ project }: { project?: Project }) {
         className={`${inputClass} font-mono text-xs`}
       />
 
-      <label className="flex items-center gap-2.5 text-sm text-neutral-600">
-        <input
-          type="checkbox"
-          name="isPublic"
-          defaultChecked={project?.isPublic ?? false}
-          className="h-4 w-4 rounded border-neutral-300 accent-indigo-600"
-        />
-        Ana sayfada göster
-      </label>
+      <div className="flex flex-wrap gap-x-6 gap-y-2">
+        <label className="flex items-center gap-2.5 text-sm text-neutral-600">
+          <input
+            type="checkbox"
+            name="isPublic"
+            defaultChecked={project?.isPublic ?? false}
+            className="h-4 w-4 rounded border-neutral-300 accent-indigo-600"
+          />
+          Ana sayfada göster
+        </label>
+
+        <label className="flex items-center gap-2.5 text-sm text-neutral-600">
+          <input
+            type="checkbox"
+            name="comingSoon"
+            defaultChecked={project?.comingSoon ?? false}
+            className="h-4 w-4 rounded border-neutral-300 accent-indigo-600"
+          />
+          Yakında (kart tıklanmaz)
+        </label>
+      </div>
     </>
   );
 }
@@ -158,6 +193,11 @@ export default async function ProjectsPage() {
                 {project.isPublic ? (
                   <span className="rounded-md bg-neutral-100 px-2 py-0.5 text-[11px] text-neutral-500">
                     ana sayfada
+                  </span>
+                ) : null}
+                {project.comingSoon ? (
+                  <span className="rounded-md bg-amber-50 px-2 py-0.5 text-[11px] font-medium text-amber-700">
+                    yakında
                   </span>
                 ) : null}
 
