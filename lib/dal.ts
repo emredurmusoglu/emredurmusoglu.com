@@ -89,6 +89,7 @@ export async function listDueTasks() {
     .select({
       id: tasks.id,
       title: tasks.title,
+      note: tasks.note,
       status: tasks.status,
       priority: tasks.priority,
       dueDate: tasks.dueDate,

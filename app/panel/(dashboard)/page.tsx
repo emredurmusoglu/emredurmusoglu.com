@@ -63,7 +63,7 @@ export default async function PanelHome() {
         {due.length ? (
           <ul className={`${cardClass} p-1`}>
             {due.map((task) => (
-              <TaskRow key={task.id} task={task} />
+              <TaskRow key={task.id} task={task} projects={projectOptions} />
             ))}
           </ul>
         ) : (
@@ -78,7 +78,7 @@ export default async function PanelHome() {
           </h2>
           <ul className={`${cardClass} p-1`}>
             {doing.map((task) => (
-              <TaskRow key={task.id} task={task} />
+              <TaskRow key={task.id} task={task} projects={projectOptions} />
             ))}
           </ul>
         </section>

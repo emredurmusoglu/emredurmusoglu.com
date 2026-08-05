@@ -110,6 +110,7 @@ export default async function TasksPage({
             <TaskRow
               key={task.id}
               task={task}
+              projects={projectOptions}
               showProject={validProjectId === undefined}
             />
           ))}

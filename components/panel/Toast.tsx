@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 
-const EVENT = "panel:toast";
+/** Kaydetme tamamlandı sinyali. Toast dışında, açık formu kapatmak için de dinleniyor. */
+export const TOAST_EVENT = "panel:toast";
+const EVENT = TOAST_EVENT;
 
 /** Herhangi bir yerden çağrılabilir — ToastHost dinliyor. */
 export function notifyToast(message = "Kaydedildi") {
