@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { SubmitButton } from "@/components/panel/SubmitButton";
 import {
   createProject,
   deleteProject,
@@ -164,12 +165,13 @@ export default async function ProjectsPage() {
           className="space-y-3 border-t border-neutral-100 p-4"
         >
           <ProjectFields />
-          <button
-            type="submit"
-            className="rounded-xl bg-indigo-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-indigo-700"
+          <SubmitButton
+            pendingLabel="Oluşturuluyor…"
+            message="Oluşturuldu"
+            className="rounded-xl bg-indigo-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 disabled:opacity-60"
           >
             Oluştur
-          </button>
+          </SubmitButton>
         </form>
       </details>
 
@@ -221,22 +223,24 @@ export default async function ProjectsPage() {
                 <summary className="cursor-pointer list-none px-4 py-2.5 text-xs text-neutral-400 transition hover:text-neutral-700">
                   Düzenle
                 </summary>
-                {/* key = kayıt zamanı: kaydettikten sonra form yeniden mount
-                    olsun, alanlar eski defaultValue'da takılı kalmasın. */}
                 <form
-                  key={project.updatedAt.toISOString()}
                   action={updateProject}
                   className="space-y-3 border-t border-neutral-100 p-4"
                 >
                   <input type="hidden" name="id" value={project.id} />
-                  <ProjectFields project={project} />
+                  {/* key = kayıt zamanı: alanlar yeniden mount olsun, eski
+                      defaultValue'da takılı kalmasın. Kaydet butonu bu
+                      sarmalın dışında — sıfırlanırsa toast'ı tetikleyemez. */}
+                  <div
+                    key={project.updatedAt.toISOString()}
+                    className="space-y-3"
+                  >
+                    <ProjectFields project={project} />
+                  </div>
                   <div className="flex items-center justify-between">
-                    <button
-                      type="submit"
-                      className="rounded-xl bg-indigo-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-indigo-700"
-                    >
+                    <SubmitButton className="rounded-xl bg-indigo-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 disabled:opacity-60">
                       Kaydet
-                    </button>
+                    </SubmitButton>
                   </div>
                 </form>
 

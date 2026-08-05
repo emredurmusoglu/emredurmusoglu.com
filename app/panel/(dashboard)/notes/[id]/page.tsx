@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { SubmitButton } from "@/components/panel/SubmitButton";
 import { deleteNote, setNotePublished, updateNote } from "@/lib/actions/notes";
 import { getNote, listProjectOptions } from "@/lib/dal";
 import { formatDateTime } from "@/lib/date";
-import { readingTime, renderMarkdown } from "@/lib/markdown";
+import { readingTime } from "@/lib/markdown";
 
 const fieldClass =
   "rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-800 outline-none transition placeholder:text-neutral-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10";
@@ -67,66 +68,65 @@ export default async function NoteEditorPage({
         </div>
       </div>
 
-      {/* key = kayıt zamanı: action bittikten sonra form yeniden mount olsun.
-          Aksi halde React, kontrolsüz select/input'ları mount anındaki
-          defaultValue'ya sıfırlıyor ve alanlar kaydedilen değeri göstermiyor. */}
-      <form
-        key={note.updatedAt.toISOString()}
-        action={updateNote}
-        className="space-y-4"
-      >
+      <form action={updateNote} className="space-y-4">
         <input type="hidden" name="id" value={note.id} />
 
-        <input
-          name="title"
-          defaultValue={note.title}
-          maxLength={300}
-          aria-label="Başlık"
-          className="w-full bg-transparent text-2xl font-semibold tracking-tight text-neutral-900 outline-none placeholder:text-neutral-300"
-          placeholder="Başlık"
-        />
+        {/* key = kayıt zamanı: action bitince alanlar yeniden mount olsun,
+            yoksa React onları mount anındaki defaultValue'ya sıfırlıyor ve
+            kaydedilen değer görünmüyor. Kaydet butonu bilerek bu sarmalın
+            DIŞINDA: kendisi de sıfırlanırsa toast'ı tetikleyemez. */}
+        <div key={note.updatedAt.toISOString()} className="space-y-4">
+          <input
+            name="title"
+            defaultValue={note.title}
+            maxLength={300}
+            aria-label="Başlık"
+            className="w-full bg-transparent text-2xl font-semibold tracking-tight text-neutral-900 outline-none placeholder:text-neutral-300"
+            placeholder="Başlık"
+          />
 
-        <div className="grid gap-3 sm:grid-cols-2">
-          <select
-            name="projectId"
-            defaultValue={note.projectId ?? ""}
-            aria-label="Proje"
-            className={fieldClass}
-          >
-            <option value="">Proje yok</option>
-            {projectOptions.map((project) => (
-              <option key={project.id} value={project.id}>
-                {project.title}
-              </option>
-            ))}
-          </select>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <select
+              name="projectId"
+              defaultValue={note.projectId ?? ""}
+              aria-label="Proje"
+              className={fieldClass}
+            >
+              <option value="">Proje yok</option>
+              {projectOptions.map((project) => (
+                <option key={project.id} value={project.id}>
+                  {project.title}
+                </option>
+              ))}
+            </select>
+
+            <input
+              name="tags"
+              defaultValue={note.tags.join(", ")}
+              aria-label="Etiketler"
+              placeholder="etiketler: swift, saas, fikir"
+              className={fieldClass}
+            />
+          </div>
 
           <input
-            name="tags"
-            defaultValue={note.tags.join(", ")}
-            aria-label="Etiketler"
-            placeholder="etiketler: swift, saas, fikir"
-            className={fieldClass}
+            name="excerpt"
+            defaultValue={note.excerpt ?? ""}
+            maxLength={500}
+            aria-label="Özet"
+            placeholder="Özet — blog listesinde görünür (boş bırakırsan içerikten türetilir)"
+            className={`${fieldClass} w-full`}
+          />
+
+          <textarea
+            name="content"
+            defaultValue={note.content}
+            rows={20}
+            aria-label="İçerik"
+            placeholder="Markdown yazabilirsin…"
+            className={`${fieldClass} w-full resize-y p-4 font-mono leading-relaxed`}
           />
         </div>
-
-        <input
-          name="excerpt"
-          defaultValue={note.excerpt ?? ""}
-          maxLength={500}
-          aria-label="Özet"
-          placeholder="Özet — blog listesinde görünür (boş bırakırsan içerikten türetilir)"
-          className={`${fieldClass} w-full`}
-        />
-
-        <textarea
-          name="content"
-          defaultValue={note.content}
-          rows={20}
-          aria-label="İçerik"
-          placeholder="Markdown yazabilirsin…"
-          className={`${fieldClass} w-full resize-y p-4 font-mono leading-relaxed`}
-        />
 
         <div className="flex items-center justify-between gap-4">
           <p className="text-xs text-neutral-400">
@@ -134,26 +134,11 @@ export default async function NoteEditorPage({
             <span className="font-mono">/{note.slug}</span>
             {note.isPublic ? " · slug yayında olduğu için sabit" : ""}
           </p>
-          <button
-            type="submit"
-            className="rounded-xl bg-indigo-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-indigo-700"
-          >
+          <SubmitButton className="rounded-xl bg-indigo-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 disabled:opacity-60">
             Kaydet
-          </button>
+          </SubmitButton>
         </div>
       </form>
-
-      {note.content.trim() ? (
-        <section className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-          <h2 className="mb-4 text-xs uppercase tracking-wider text-neutral-400">
-            Önizleme
-          </h2>
-          <div
-            className="prose-note prose-note-light"
-            dangerouslySetInnerHTML={{ __html: renderMarkdown(note.content) }}
-          />
-        </section>
-      ) : null}
 
       <form action={deleteNote} className="flex justify-end pt-4">
         <input type="hidden" name="id" value={note.id} />

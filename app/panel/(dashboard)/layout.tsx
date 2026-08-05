@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { NavLink } from "@/components/panel/NavLink";
+import { ToastHost } from "@/components/panel/Toast";
 import { logout } from "@/lib/actions/auth";
 import { requireSession } from "@/lib/auth/session";
 import { getTaskCounts } from "@/lib/dal";
@@ -70,6 +71,9 @@ export default async function DashboardLayout({
 
         <main className="min-w-0 flex-1 pb-16">{children}</main>
       </div>
+
+      {/* Layout hiç unmount olmadığı için toast burada duruyor */}
+      <ToastHost />
     </div>
   );
 }

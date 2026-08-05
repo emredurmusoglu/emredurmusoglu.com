@@ -1,3 +1,4 @@
+import { TaskTitle } from "@/components/panel/TaskTitle";
 import { deleteTask, toggleTask } from "@/lib/actions/tasks";
 import { describeDue } from "@/lib/date";
 
@@ -67,21 +68,14 @@ export function TaskRow({
       </form>
 
       <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-2">
+        <div className="flex items-start gap-2">
           {PRIORITY_DOT[task.priority] && !done ? (
             <span
-              className={`h-1.5 w-1.5 shrink-0 rounded-full ${PRIORITY_DOT[task.priority]}`}
+              className={`mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full ${PRIORITY_DOT[task.priority]}`}
               aria-label={task.priority === 2 ? "Acil" : "Önemli"}
             />
           ) : null}
-          <span
-            className={[
-              "truncate text-sm",
-              done ? "text-neutral-400 line-through" : "text-neutral-800",
-            ].join(" ")}
-          >
-            {task.title}
-          </span>
+          <TaskTitle title={task.title} done={done} />
         </div>
 
         {(showProject && task.projectTitle) || due ? (

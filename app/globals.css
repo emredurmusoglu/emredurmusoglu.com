@@ -42,6 +42,24 @@ body {
   color-scheme: light;
 }
 
+/* Kaydetme sonrası ekranın ortasında beliren "Kaydedildi" bildirimi */
+@keyframes panel-toast {
+  0% { opacity: 0; transform: translateY(8px) scale(0.94); }
+  14% { opacity: 1; transform: none; }
+  78% { opacity: 1; transform: none; }
+  100% { opacity: 0; transform: translateY(-6px) scale(0.98); }
+}
+
+.panel-toast {
+  animation: panel-toast 1.8s ease forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel-toast {
+    animation: none;
+  }
+}
+
 /* body arka planı karanlık modda #0a0a0a oluyor. Panel açık tema olduğu için
    iOS'ta aşırı kaydırma (rubber-band) sırasında kenarlarda siyah bant
    görünürdü — panel açıkken gövdeyi de açık renge çekiyoruz. */

@@ -1,3 +1,4 @@
+import { SubmitButton } from "@/components/panel/SubmitButton";
 import { createTask } from "@/lib/actions/tasks";
 
 type ProjectOption = { id: number; title: string };
@@ -28,12 +29,13 @@ export function QuickAddTask({
           aria-label="Yeni iş"
           className="min-w-0 flex-1 bg-transparent px-3 py-2 text-sm text-neutral-900 outline-none placeholder:text-neutral-400"
         />
-        <button
-          type="submit"
-          className="shrink-0 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700"
+        <SubmitButton
+          pendingLabel="Ekleniyor…"
+          message="Eklendi"
+          className="shrink-0 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 disabled:opacity-60"
         >
           Ekle
-        </button>
+        </SubmitButton>
       </div>
 
       {detailed ? (
