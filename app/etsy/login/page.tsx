@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { redirect } from "next/navigation";
 
 import { EtsyLoginForm } from "@/components/etsy/EtsyLoginForm";
@@ -22,8 +23,15 @@ export default async function EtsyLoginPage({
 
       <div className="relative w-full max-w-sm">
         <div className="mb-8 flex flex-col items-center text-center">
-          <div className="grid h-14 w-14 place-items-center rounded-2xl bg-white text-lg font-semibold tracking-tight text-orange-600 ring-1 ring-neutral-200">
-            Etsy
+          <div className="relative h-16 w-16 overflow-hidden rounded-2xl ring-1 ring-neutral-200">
+            <Image
+              src="/icons/etsy-icon-192.png"
+              alt="Cheerish Days Crafts"
+              fill
+              priority
+              sizes="64px"
+              className="object-cover"
+            />
           </div>
           <p className="mt-5 text-sm text-neutral-500">
             Kullanıcı adın ve parolanla gir.

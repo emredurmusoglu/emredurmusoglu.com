@@ -12,6 +12,12 @@ import type { Metadata, Viewport } from "next";
 export const metadata: Metadata = {
   title: "Cheerish Days Crafts",
   manifest: "/etsy.webmanifest",
+  // Sekme ve ana ekran ikonu: sitenin "ED" logosu değil, dükkânın kendi logosu.
+  // Kaynak görsel şeffaf değil — iOS şeffaflığı siyaha çevirdiği için bu iyi.
+  icons: {
+    icon: [{ url: "/icons/etsy-favicon-32.png", sizes: "32x32", type: "image/png" }],
+    apple: [{ url: "/icons/etsy-apple-touch-icon.png", sizes: "180x180" }],
+  },
   // Defter arama motorlarına asla düşmesin
   robots: { index: false, follow: false, nocache: true },
   appleWebApp: {
