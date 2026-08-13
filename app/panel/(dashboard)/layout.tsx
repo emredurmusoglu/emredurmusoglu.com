@@ -23,13 +23,21 @@ export default async function DashboardLayout({
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-6 md:flex-row md:gap-10 md:px-6 md:py-10">
         <aside className="md:w-52 md:shrink-0">
           <div className="flex items-center justify-between md:block">
-            <Link
-              href="/panel"
-              className="flex items-center gap-2 text-sm font-semibold tracking-tight text-neutral-900"
-            >
-              Panel
-              <span className="h-1 w-8 rounded-full bg-gradient-to-r from-sky-400 via-indigo-400 to-fuchsia-400" />
-            </Link>
+            <div className="flex items-center gap-2">
+              <Link
+                href="/panel"
+                className="flex items-center gap-2 text-sm font-semibold tracking-tight text-neutral-900"
+              >
+                Panel
+                <span className="h-1 w-8 rounded-full bg-gradient-to-r from-sky-400 via-indigo-400 to-fuchsia-400" />
+              </Link>
+              <Link
+                href="/etsy"
+                className="rounded-full bg-white px-2.5 py-1 text-xs font-medium text-orange-600 ring-1 ring-neutral-200 transition hover:ring-orange-300"
+              >
+                Etsy
+              </Link>
+            </div>
             <form action={logout} className="md:hidden">
               <button
                 type="submit"

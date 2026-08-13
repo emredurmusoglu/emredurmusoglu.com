@@ -59,6 +59,80 @@ export function toDateInput(date: Date | null): string {
   return date ? dayKey(date) : "";
 }
 
+/* ------------------------------------------------------------------ ay bazlı */
+
+/** "YYYY-MM" — Etsy defterinde seçili ayın anahtarı */
+export type MonthKey = string;
+
+export const MONTHS_TR = [
+  "Ocak",
+  "Şubat",
+  "Mart",
+  "Nisan",
+  "Mayıs",
+  "Haziran",
+  "Temmuz",
+  "Ağustos",
+  "Eylül",
+  "Ekim",
+  "Kasım",
+  "Aralık",
+];
+
+export const MONTHS_TR_SHORT = [
+  "Oca",
+  "Şub",
+  "Mar",
+  "Nis",
+  "May",
+  "Haz",
+  "Tem",
+  "Ağu",
+  "Eyl",
+  "Eki",
+  "Kas",
+  "Ara",
+];
+
+export function currentMonth(tz: string = TZ): MonthKey {
+  return dayKey(new Date(), tz).slice(0, 7);
+}
+
+/** Geçersiz girdide bu ayı döner — URL'den gelen değer doğrudan kullanılmasın */
+export function safeMonth(input: string | undefined): MonthKey {
+  if (!input || !/^\d{4}-(0[1-9]|1[0-2])$/.test(input)) return currentMonth();
+  const year = Number(input.slice(0, 4));
+  return year >= 2000 && year <= 2100 ? input : currentMonth();
+}
+
+export function splitMonth(month: MonthKey): { year: number; month: number } {
+  return { year: Number(month.slice(0, 4)), month: Number(month.slice(5, 7)) };
+}
+
+export function monthKey(year: number, month: number): MonthKey {
+  return `${year}-${String(month).padStart(2, "0")}`;
+}
+
+export function monthLabel(month: MonthKey): string {
+  const { year, month: m } = splitMonth(month);
+  return `${MONTHS_TR[m - 1]} ${year}`;
+}
+
+/** Ayın ilk ve son günü, "YYYY-MM-DD" olarak (SQL aralık filtresi için) */
+export function monthRange(month: MonthKey): { start: string; end: string } {
+  const { year, month: m } = splitMonth(month);
+  const last = new Date(Date.UTC(year, m, 0)).getUTCDate();
+  return {
+    start: `${month}-01`,
+    end: `${month}-${String(last).padStart(2, "0")}`,
+  };
+}
+
+export function formatDayShort(day: string): string {
+  const [year, month, date] = day.split("-").map(Number);
+  return `${date} ${MONTHS_TR_SHORT[month - 1]} ${String(year).slice(2)}`;
+}
+
 export type DueLabel = { text: string; tone: "overdue" | "today" | "soon" | "later" };
 
 export function describeDue(due: Date | null): DueLabel | null {

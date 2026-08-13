@@ -1,12 +1,15 @@
 import {
   boolean,
+  date,
   index,
   integer,
+  numeric,
   pgEnum,
   pgTable,
   serial,
   text,
   timestamp,
+  unique,
   varchar,
 } from "drizzle-orm/pg-core";
 
@@ -107,9 +110,57 @@ export const notes = pgTable(
   ],
 );
 
+/* ---------------------------------------------------------------- etsy defteri */
+
+export const etsyEntryKind = pgEnum("etsy_entry_kind", ["income", "expense"]);
+
+export const etsyCategories = pgTable(
+  "etsy_categories",
+  {
+    id: serial("id").primaryKey(),
+    kind: etsyEntryKind("kind").notNull().default("expense"),
+    name: varchar("name", { length: 80 }).notNull(),
+    sort: integer("sort").notNull().default(0),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => [unique("etsy_categories_kind_name_key").on(t.kind, t.name)],
+);
+
+export const etsyEntries = pgTable(
+  "etsy_entries",
+  {
+    id: serial("id").primaryKey(),
+    kind: etsyEntryKind("kind").notNull(),
+    categoryId: integer("category_id").references(() => etsyCategories.id, {
+      onDelete: "set null",
+    }),
+    /** Tutar ₺ cinsinden. numeric — kuruş yuvarlama hatası olmasın diye. */
+    amount: numeric("amount", { precision: 12, scale: 2 }).notNull(),
+    note: varchar("note", { length: 300 }),
+    /**
+     * Kaydın ait olduğu gün. Saat/zaman dilimi taşımayan düz bir `date`:
+     * ay filtresi böylece sunucunun saatinden bağımsız çalışıyor.
+     */
+    occurredOn: date("occurred_on", { mode: "string" }).notNull(),
+    /** Girişi yapan kullanıcı adı (lib/auth/users.ts) */
+    createdBy: varchar("created_by", { length: 40 }).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => [
+    index("etsy_entries_occurred_idx").on(t.occurredOn),
+    index("etsy_entries_kind_idx").on(t.kind, t.occurredOn),
+  ],
+);
+
 export type Project = typeof projects.$inferSelect;
 export type NewProject = typeof projects.$inferInsert;
 export type Task = typeof tasks.$inferSelect;
 export type NewTask = typeof tasks.$inferInsert;
 export type Note = typeof notes.$inferSelect;
 export type NewNote = typeof notes.$inferInsert;
+export type EtsyCategory = typeof etsyCategories.$inferSelect;
+export type EtsyEntry = typeof etsyEntries.$inferSelect;

@@ -12,7 +12,11 @@ export default async function LoginPage({
   // "Zaten giriş yapmışsan panele git" kararı burada veriliyor, proxy'de değil:
   // burada cookie gerçekten doğrulanıyor. Süresi dolmuş bir cookie form'u
   // gösterir, sonsuz yönlendirmeye girmez.
-  if (await getSession()) redirect("/panel");
+  //
+  // Rol kontrolü şart: sadece /etsy yetkisi olan bir oturumla gelindiğinde
+  // panele geri atsak, panel de buraya atar ve döngüye girerdi.
+  const session = await getSession();
+  if (session?.role === "owner") redirect("/panel");
 
   const { next } = await searchParams;
   const safeNext = next?.startsWith("/panel") ? next : undefined;

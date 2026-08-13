@@ -15,6 +15,9 @@ export default function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const hasCookie = request.cookies.has(SESSION_COOKIE);
 
+  const loginPath = pathname.startsWith("/etsy") ? "/etsy/login" : "/panel/login";
+  const homePath = pathname.startsWith("/etsy") ? "/etsy" : "/panel";
+
   // Login sayfasına ASLA dokunma.
   //
   // Burada "cookie varsa panele gönder" demek sonsuz döngü yaratıyordu:
@@ -22,13 +25,13 @@ export default function proxy(request: NextRequest) {
   // doğrulayıp geçersiz bulunca login'e geri atıyor, proxy tekrar panele...
   // Proxy geçerli/geçersiz ayrımını yapamadığı için bu kararı veremez.
   // "Zaten giriş yapmışsan panele git" işini login sayfası kendisi yapıyor.
-  if (pathname === "/panel/login") {
+  if (pathname === loginPath) {
     return NextResponse.next();
   }
 
   if (!hasCookie) {
-    const url = new URL("/panel/login", request.url);
-    if (pathname !== "/panel") url.searchParams.set("next", pathname);
+    const url = new URL(loginPath, request.url);
+    if (pathname !== homePath) url.searchParams.set("next", pathname);
     return NextResponse.redirect(url);
   }
 
@@ -36,5 +39,5 @@ export default function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/panel/:path*"],
+  matcher: ["/panel/:path*", "/etsy/:path*"],
 };

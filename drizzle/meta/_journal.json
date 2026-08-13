@@ -15,6 +15,27 @@
       "when": 1785841784527,
       "tag": "0001_lonely_white_tiger",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1786618073740,
+      "tag": "0002_wealthy_ender_wiggin",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1786636296574,
+      "tag": "0003_etsy_kategori_duzeni",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1786636348327,
+      "tag": "0004_etsy_kategori_sirasi",
+      "breakpoints": true
     }
   ]
 }
