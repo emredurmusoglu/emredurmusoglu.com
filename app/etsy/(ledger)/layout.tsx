@@ -20,7 +20,11 @@ export default async function LedgerLayout({
   return (
     <div className="panel-light safe-top safe-bottom min-h-screen bg-neutral-50 text-neutral-900 [font-family:system-ui,-apple-system,'Segoe_UI',sans-serif]">
       <header className="sticky top-0 z-20 border-b border-neutral-200 bg-neutral-50/85 backdrop-blur">
-        <div className="mx-auto flex max-w-5xl items-center gap-3 px-4 py-3 md:px-6">
+        {/*
+          Telefonda sekmeler alt satıra iniyor (order-last + w-full), md'den
+          itibaren aynı satıra dönüyor. Panel dönüşü sadece sahibinde.
+        */}
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-2 gap-y-2 px-4 py-2.5 md:px-6">
           <Link
             href="/etsy"
             className="flex shrink-0 items-center gap-2 text-sm font-semibold tracking-tight"
@@ -29,25 +33,25 @@ export default async function LedgerLayout({
             <span className="h-1 w-8 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-rose-400" />
           </Link>
 
-          <nav className="ml-2 flex min-w-0 flex-1 gap-1 overflow-x-auto">
+          {session.role === "owner" ? (
+            <Link
+              href="/panel"
+              className="shrink-0 rounded-full bg-white px-2.5 py-1 text-xs font-medium text-indigo-600 ring-1 ring-neutral-200 transition hover:ring-indigo-300"
+            >
+              ← Panel
+            </Link>
+          ) : null}
+
+          <nav className="order-last flex w-full min-w-0 gap-1 overflow-x-auto md:order-none md:ml-2 md:w-auto">
             <EtsyNavLink href="/etsy" label="Cheerish Days Crafts" />
             {session.role === "owner" ? (
               <EtsyNavLink href="/etsy/kategoriler" label="Kategoriler" />
             ) : null}
           </nav>
 
-          <span className="hidden shrink-0 rounded-full bg-white px-2.5 py-1 text-xs text-neutral-500 ring-1 ring-neutral-200 sm:inline">
+          <span className="ml-auto shrink-0 rounded-full bg-white px-2.5 py-1 text-xs text-neutral-500 ring-1 ring-neutral-200">
             {userLabel(session.username)}
           </span>
-
-          {session.role === "owner" ? (
-            <Link
-              href="/panel"
-              className="hidden shrink-0 text-xs text-neutral-400 transition hover:text-neutral-700 sm:inline"
-            >
-              Panel →
-            </Link>
-          ) : null}
 
           <form action={etsyLogout} className="shrink-0">
             <button
