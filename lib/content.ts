@@ -28,6 +28,7 @@ export async function getPublicProjects() {
       url: projects.url,
       iosUrl: projects.iosUrl,
       androidUrl: projects.androidUrl,
+      androidSoon: projects.androidSoon,
       comingSoon: projects.comingSoon,
     })
     .from(projects)

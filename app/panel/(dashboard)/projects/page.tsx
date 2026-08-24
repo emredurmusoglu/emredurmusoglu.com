@@ -110,7 +110,9 @@ function ProjectFields({ project }: { project?: Project }) {
 
       <p className="text-xs leading-relaxed text-neutral-400">
         Her iki mağaza linki de doluysa kart, tıklandığında hangi platform
-        olduğunu sorar. Tek link varsa doğrudan oraya gider.
+        olduğunu sorar. Tek link varsa doğrudan oraya gider. Google Play linki
+        boşken &quot;Android yakında&quot; işaretlenirse düğme görünür ama uyarı
+        verir.
       </p>
 
       <input
@@ -140,6 +142,16 @@ function ProjectFields({ project }: { project?: Project }) {
             className="h-4 w-4 rounded border-neutral-300 accent-indigo-600"
           />
           Yakında (kart tıklanmaz)
+        </label>
+
+        <label className="flex items-center gap-2.5 text-sm text-neutral-600">
+          <input
+            type="checkbox"
+            name="androidSoon"
+            defaultChecked={project?.androidSoon ?? false}
+            className="h-4 w-4 rounded border-neutral-300 accent-indigo-600"
+          />
+          Android yakında
         </label>
       </div>
     </>

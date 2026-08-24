@@ -1,0 +1,1 @@
+ALTER TABLE "projects" ADD COLUMN "android_soon" boolean DEFAULT false NOT NULL;

@@ -14,6 +14,7 @@ export type PublicProject = {
   url: string | null;
   iosUrl: string | null;
   androidUrl: string | null;
+  androidSoon: boolean;
   comingSoon: boolean;
 };
 
@@ -41,13 +42,16 @@ function PlatformChip({ label }: { label: string }) {
   );
 }
 
+const STORE_BUTTON =
+  "inline-flex flex-1 items-center justify-center gap-2 rounded-xl border px-3 py-2 text-sm font-medium transition";
+
 function StoreButton({ href, icon, label }: { href: string; icon: React.ReactNode; label: string }) {
   return (
     <a
       href={href}
       target="_blank"
       rel="noreferrer"
-      className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/10 px-3 py-2 text-sm font-medium text-white/90 transition hover:border-white/30 hover:bg-white/20"
+      className={`${STORE_BUTTON} border-white/15 bg-white/10 text-white/90 hover:border-white/30 hover:bg-white/20`}
     >
       {icon}
       {label}
@@ -55,19 +59,45 @@ function StoreButton({ href, icon, label }: { href: string; icon: React.ReactNod
   );
 }
 
+/** Android sürümü henüz yokken: mağazaya değil, uyarıya götüren düğme. */
+function SoonButton({
+  icon,
+  label,
+  onClick,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`${STORE_BUTTON} border-white/10 bg-white/[0.04] text-white/45 hover:border-amber-300/30 hover:bg-amber-300/10 hover:text-amber-100/90`}
+    >
+      {icon}
+      {label}
+    </button>
+  );
+}
+
 export function ProjectCard({ project }: { project: PublicProject }) {
   const [picking, setPicking] = useState(false);
+  const [androidNotice, setAndroidNotice] = useState(false);
 
   // next/image sadece yerel dosyalarda kullanılıyor; uzak bir URL girilirse
   // next.config'de domain tanımı gerekmesin diye kart ikonsuz gösterilir.
   const icon = project.iconUrl?.startsWith("/") ? project.iconUrl : null;
 
-  const hasBothStores = Boolean(project.iosUrl && project.androidUrl);
+  // Android tarafı ya gerçekten yayında ya da "yakında" — ikisinde de kart
+  // tıklanınca önce platform seçimi açılıyor.
+  const androidSoon = Boolean(project.androidSoon && !project.androidUrl);
+  const hasBothStores = Boolean(project.iosUrl && (project.androidUrl || androidSoon));
   const singleHref = project.iosUrl ?? project.androidUrl ?? project.url ?? null;
 
   const platforms = [
     project.iosUrl ? "iOS" : null,
-    project.androidUrl ? "Android" : null,
+    project.androidUrl ? "Android" : androidSoon ? "Android — yakında" : null,
     project.url && !project.iosUrl && !project.androidUrl ? "Web" : null,
   ].filter(Boolean) as string[];
 
@@ -107,13 +137,33 @@ export function ProjectCard({ project }: { project: PublicProject }) {
 
         {/* Her iki mağazada da varsa önce hangisi diye soruyoruz */}
         {hasBothStores && picking ? (
-          <div className="flex gap-2">
-            <StoreButton href={project.iosUrl!} icon={<AppleIcon />} label="App Store" />
-            <StoreButton
-              href={project.androidUrl!}
-              icon={<PlayIcon />}
-              label="Google Play"
-            />
+          <div>
+            <div className="flex gap-2">
+              <StoreButton href={project.iosUrl!} icon={<AppleIcon />} label="App Store" />
+              {project.androidUrl ? (
+                <StoreButton
+                  href={project.androidUrl}
+                  icon={<PlayIcon />}
+                  label="Google Play"
+                />
+              ) : (
+                <SoonButton
+                  icon={<PlayIcon />}
+                  label="Google Play"
+                  onClick={() => setAndroidNotice(true)}
+                />
+              )}
+            </div>
+
+            {androidNotice ? (
+              <p
+                role="status"
+                className="mt-3 rounded-xl border border-amber-300/25 bg-amber-300/10 px-3 py-2 text-xs leading-relaxed text-amber-100/85"
+              >
+                Android sürümü henüz yayında değil, yakında Google
+                Play&apos;de. Şimdilik iOS&apos;tan indirebilirsin.
+              </p>
+            ) : null}
           </div>
         ) : (
           <div className="flex items-center justify-between gap-3">

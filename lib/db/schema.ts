@@ -39,6 +39,11 @@ export const projects = pgTable(
     iosUrl: varchar("ios_url", { length: 500 }),
     androidUrl: varchar("android_url", { length: 500 }),
     /**
+     * Android sürümü henüz yok ama yolda. Kartta "Google Play" düğmesi
+     * görünür, basınca mağazaya gitmek yerine "yakında" uyarısı çıkar.
+     */
+    androidSoon: boolean("android_soon").notNull().default(false),
+    /**
      * Henüz yayında değil. Kart görünür ama tıklanmaz, "Yakında" rozeti çıkar.
      * `status` ile karıştırma: o iç takip için, bu kartın dışarıya nasıl
      * göründüğünü belirliyor.
