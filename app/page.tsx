@@ -78,7 +78,7 @@ export default async function Home() {
 
           <div className="space-y-4 text-base leading-relaxed text-white/60 md:text-lg">
             <p>
-              Vibe coding yaklaşımını bir merak konusu olarak değil, üretim biçimim olarak benimsiyorum. Eskiden bir ekibin aylarca üzerinde çalıştığı projeleri bugün tek başıma, haftalar içinde geliştirip kullanılabilir hâle getirebiliyorum.
+              Vibe coding yaklaşımını bir merak konusu olarak değil, bir üretim biçimi olarak benimsiyorum. Eskiden bir ekibin aylarca üzerinde çalıştığı projeleri bugün tek başıma, haftalar içinde geliştirip kullanılabilir hâle getirebiliyorum.
             </p>
             <p>
               Fikri bulmaktan tasarıma, koddan mağaza yayınına ve kullanıcı
