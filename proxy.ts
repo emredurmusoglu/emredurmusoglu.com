@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 
-import { SESSION_COOKIE } from "@/lib/auth/session.shared";
+import { PATH_HEADER, SESSION_COOKIE } from "@/lib/auth/session.shared";
 
 /**
  * Next 16'da eski "middleware" dosyasının yerini "proxy" aldı.
@@ -15,7 +15,9 @@ export default function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const hasCookie = request.cookies.has(SESSION_COOKIE);
 
-  const loginPath = pathname.startsWith("/etsy") ? "/etsy/login" : "/panel/login";
+  const loginPath = pathname.startsWith("/etsy")
+    ? "/etsy/login"
+    : "/panel/login";
   const homePath = pathname.startsWith("/etsy") ? "/etsy" : "/panel";
 
   // Login sayfasına ASLA dokunma.
@@ -26,7 +28,7 @@ export default function proxy(request: NextRequest) {
   // Proxy geçerli/geçersiz ayrımını yapamadığı için bu kararı veremez.
   // "Zaten giriş yapmışsan panele git" işini login sayfası kendisi yapıyor.
   if (pathname === loginPath) {
-    return NextResponse.next();
+    return next(request, pathname);
   }
 
   if (!hasCookie) {
@@ -35,7 +37,17 @@ export default function proxy(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  return NextResponse.next();
+  return next(request, pathname);
+}
+
+/**
+ * İstenen yolu bir başlıkla arkaya taşıyoruz: layout'lar `headers()` ile
+ * okuyabiliyor (Etsy erişim kaydı hangi sayfanın açıldığını böyle biliyor).
+ */
+function next(request: NextRequest, pathname: string) {
+  const headers = new Headers(request.headers);
+  headers.set(PATH_HEADER, pathname);
+  return NextResponse.next({ request: { headers } });
 }
 
 export const config = {

@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { verifyPassword } from "@/lib/auth/password";
 import { createSession, destroySession } from "@/lib/auth/session";
 import { findUser } from "@/lib/auth/users";
+import { logEtsyAccess } from "@/lib/etsy/access-log";
 
 export type LoginState = { error?: string };
 
@@ -94,6 +95,9 @@ export async function etsyLogin(
     formData.get("password"),
   );
   if (result.error) return result;
+
+  const who = typeof username === "string" ? username.trim().toLowerCase() : "";
+  await logEtsyAccess(who, "login");
 
   const next = formData.get("next");
   const target =

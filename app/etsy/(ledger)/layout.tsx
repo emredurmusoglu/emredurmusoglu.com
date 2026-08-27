@@ -1,10 +1,13 @@
+import { headers } from "next/headers";
 import Link from "next/link";
 
 import { EtsyNavLink } from "@/components/etsy/EtsyNavLink";
 import { ToastHost } from "@/components/panel/Toast";
 import { etsyLogout } from "@/lib/actions/auth";
+import { PATH_HEADER } from "@/lib/auth/session.shared";
 import { requireEtsySession } from "@/lib/auth/session";
 import { userLabel } from "@/lib/auth/users";
+import { logEtsyAccess } from "@/lib/etsy/access-log";
 
 // Defter her zaman taze veri gösterir, cache'lenmez.
 export const dynamic = "force-dynamic";
@@ -16,6 +19,14 @@ export default async function LedgerLayout({
 }) {
   // Asıl yetki kontrolü burada — proxy sadece yönlendirme yapıyor.
   const session = await requireEtsySession();
+
+  // Kim ne zaman bakmış: defter her açıldığında kaydediliyor (20 dakikada
+  // bir satırdan fazlası yazılmıyor). Loglar sekmesinin kendisi sayılmıyor,
+  // yoksa listeye bakmak listeyi büyütüyor.
+  const path = (await headers()).get(PATH_HEADER);
+  if (!path?.startsWith("/etsy/loglar")) {
+    await logEtsyAccess(session.username, "visit", path);
+  }
 
   return (
     <div className="panel-light safe-top safe-bottom min-h-screen bg-neutral-50 text-neutral-900 [font-family:system-ui,-apple-system,'Segoe_UI',sans-serif]">
@@ -45,7 +56,10 @@ export default async function LedgerLayout({
           <nav className="order-last flex w-full min-w-0 gap-1 overflow-x-auto md:order-none md:ml-2 md:w-auto">
             <EtsyNavLink href="/etsy" label="Cheerish Days Crafts" />
             {session.role === "owner" ? (
-              <EtsyNavLink href="/etsy/kategoriler" label="Kategoriler" />
+              <>
+                <EtsyNavLink href="/etsy/kategoriler" label="Kategoriler" />
+                <EtsyNavLink href="/etsy/loglar" label="Loglar" />
+              </>
             ) : null}
           </nav>
 

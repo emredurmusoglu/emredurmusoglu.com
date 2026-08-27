@@ -119,6 +119,8 @@ export const notes = pgTable(
 
 export const etsyEntryKind = pgEnum("etsy_entry_kind", ["income", "expense"]);
 
+export const etsyAccessEvent = pgEnum("etsy_access_event", ["login", "visit"]);
+
 export const etsyCategories = pgTable(
   "etsy_categories",
   {
@@ -161,6 +163,35 @@ export const etsyEntries = pgTable(
   ],
 );
 
+/**
+ * Deftere kimin ne zaman baktığının kaydı.
+ *
+ * Cookie 30 gün yaşadığı için sadece "giriş" olayı neredeyse hiç düşmüyor;
+ * asıl bilgi `visit` satırları — defter her açıldığında (15 dakikada bir
+ * en fazla bir satır) yazılıyor.
+ */
+export const etsyAccessLog = pgTable(
+  "etsy_access_log",
+  {
+    id: serial("id").primaryKey(),
+    /** lib/auth/users.ts'teki kullanıcı adı */
+    username: varchar("username", { length: 40 }).notNull(),
+    event: etsyAccessEvent("event").notNull().default("visit"),
+    /** İlk açtığı sayfa */
+    path: varchar("path", { length: 200 }),
+    /** User-agent'tan çıkarılan kaba cihaz adı (ör. "iPhone") */
+    device: varchar("device", { length: 80 }),
+    ip: varchar("ip", { length: 60 }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => [
+    index("etsy_access_log_created_idx").on(t.createdAt),
+    index("etsy_access_log_user_idx").on(t.username, t.createdAt),
+  ],
+);
+
 export type Project = typeof projects.$inferSelect;
 export type NewProject = typeof projects.$inferInsert;
 export type Task = typeof tasks.$inferSelect;
@@ -169,3 +200,4 @@ export type Note = typeof notes.$inferSelect;
 export type NewNote = typeof notes.$inferInsert;
 export type EtsyCategory = typeof etsyCategories.$inferSelect;
 export type EtsyEntry = typeof etsyEntries.$inferSelect;
+export type EtsyAccessLog = typeof etsyAccessLog.$inferSelect;
