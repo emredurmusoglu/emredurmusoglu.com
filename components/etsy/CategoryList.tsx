@@ -1,4 +1,5 @@
 import { SubmitButton } from "@/components/panel/SubmitButton";
+import { SwipeRow } from "@/components/SwipeRow";
 import {
   createCategory,
   deleteCategory,
@@ -53,41 +54,58 @@ export function CategoryList({
         {categories.length ? (
           <ul className="mt-1 border-t border-neutral-100 pt-1">
             {categories.map((category) => (
-              <li
-                key={category.id}
-                className="group flex items-center gap-2 rounded-xl px-1 transition hover:bg-neutral-50"
-              >
-                <form action={renameCategory} className="min-w-0 flex-1">
-                  <input type="hidden" name="id" value={category.id} />
-                  <input
-                    name="name"
-                    defaultValue={category.name}
-                    maxLength={80}
-                    aria-label="Kategori adı"
-                    className="w-full rounded-lg border border-transparent bg-transparent px-2 py-2 text-sm text-neutral-800 outline-none transition focus:border-neutral-300 focus:bg-white"
-                  />
-                </form>
+              <li key={category.id} className="group">
+                {/* Silme telefonda sola kaydırmanın arkasında */}
+                <SwipeRow
+                  className="rounded-xl"
+                  contentClassName="flex items-center gap-2 rounded-xl bg-white px-1 transition hover:bg-neutral-50"
+                  rightAction={
+                    <form action={deleteCategory}>
+                      <input type="hidden" name="id" value={category.id} />
+                      <button
+                        type="submit"
+                        className="rounded-lg bg-red-600 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-red-700"
+                      >
+                        Sil
+                      </button>
+                    </form>
+                  }
+                >
+                  <form action={renameCategory} className="min-w-0 flex-1">
+                    <input type="hidden" name="id" value={category.id} />
+                    <input
+                      name="name"
+                      defaultValue={category.name}
+                      maxLength={80}
+                      aria-label="Kategori adı"
+                      className="w-full rounded-lg border border-transparent bg-transparent px-2 py-2 text-sm text-neutral-800 outline-none transition focus:border-neutral-300 focus:bg-white"
+                    />
+                  </form>
 
-                <form action={deleteCategory} className="shrink-0">
-                  <input type="hidden" name="id" value={category.id} />
-                  <button
-                    type="submit"
-                    aria-label={`${category.name} kategorisini sil`}
-                    className="rounded-md p-1.5 text-neutral-300 transition hover:text-red-600 md:text-transparent md:group-hover:text-neutral-300"
+                  <form
+                    action={deleteCategory}
+                    className="hidden shrink-0 md:block"
                   >
-                    <svg
-                      viewBox="0 0 24 24"
-                      className="h-4 w-4"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.8"
-                      strokeLinecap="round"
-                      aria-hidden="true"
+                    <input type="hidden" name="id" value={category.id} />
+                    <button
+                      type="submit"
+                      aria-label={`${category.name} kategorisini sil`}
+                      className="rounded-md p-1.5 text-transparent transition group-hover:text-neutral-300 hover:!text-red-600"
                     >
-                      <path d="M18 6 6 18M6 6l12 12" />
-                    </svg>
-                  </button>
-                </form>
+                      <svg
+                        viewBox="0 0 24 24"
+                        className="h-4 w-4"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M18 6 6 18M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </form>
+                </SwipeRow>
               </li>
             ))}
           </ul>

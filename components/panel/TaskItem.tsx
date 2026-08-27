@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+
+import { SwipeRow } from "@/components/SwipeRow";
 
 import { TOAST_EVENT } from "./Toast";
 
@@ -16,13 +18,6 @@ const PRIORITY_DOT: Record<number, string> = {
   2: "bg-red-500",
 };
 
-/** Kaydırıldığında eylemlerin göründüğü genişlik */
-const REVEAL = 96;
-/** Bu eşiği geçen kaydırma açık kalıyor, altı geri kapanıyor */
-const THRESHOLD = 44;
-
-type Side = "left" | "right" | null;
-
 export function TaskItem({
   title,
   done,
@@ -33,6 +28,7 @@ export function TaskItem({
   showProject,
   toggleForm,
   deleteForm,
+  deleteSwipeForm,
   editForm,
 }: {
   title: string;
@@ -43,17 +39,14 @@ export function TaskItem({
   dueTone: string | null;
   showProject: boolean;
   toggleForm: React.ReactNode;
+  /** Masaüstünde imleçle beliren küçük çarpı */
   deleteForm: React.ReactNode;
+  /** Telefonda sola kaydırınca çıkan "Sil" düğmesi */
+  deleteSwipeForm: React.ReactNode;
   editForm: React.ReactNode;
 }) {
   const [expanded, setExpanded] = useState(false);
   const [editing, setEditing] = useState(false);
-  const [offset, setOffset] = useState(0);
-  const [side, setSide] = useState<Side>(null);
-  const [dragging, setDragging] = useState(false);
-
-  const start = useRef<{ x: number; y: number } | null>(null);
-  const locked = useRef<"horizontal" | "vertical" | null>(null);
 
   // Kaydetme bittiğinde formu kapat. Toast olayı bunun tek güvenilir
   // sinyali: form sunucudan geldiği için submit'ini buradan izleyemiyoruz.
@@ -63,56 +56,6 @@ export function TaskItem({
     window.addEventListener(TOAST_EVENT, onSaved);
     return () => window.removeEventListener(TOAST_EVENT, onSaved);
   }, [editing]);
-
-  function onTouchStart(event: React.TouchEvent) {
-    if (editing) return;
-    const touch = event.touches[0];
-    start.current = { x: touch.clientX, y: touch.clientY };
-    locked.current = null;
-    setDragging(true);
-  }
-
-  function onTouchMove(event: React.TouchEvent) {
-    if (!start.current) return;
-    const touch = event.touches[0];
-    const dx = touch.clientX - start.current.x;
-    const dy = touch.clientY - start.current.y;
-
-    // İlk hareketin yönüne kilitleniyoruz: dikeyse sayfa kaydırmasına
-    // karışmıyoruz. (touch-action: pan-y ile birlikte çalışıyor.)
-    if (!locked.current) {
-      if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return;
-      locked.current = Math.abs(dx) > Math.abs(dy) ? "horizontal" : "vertical";
-    }
-    if (locked.current === "vertical") return;
-
-    const clamped = Math.max(-REVEAL, Math.min(REVEAL, dx));
-    setOffset(clamped);
-    setSide(clamped > 0 ? "left" : clamped < 0 ? "right" : null);
-  }
-
-  function onTouchEnd() {
-    setDragging(false);
-    start.current = null;
-
-    if (Math.abs(offset) >= THRESHOLD) {
-      const open = offset > 0 ? REVEAL : -REVEAL;
-      setOffset(open);
-      setSide(open > 0 ? "left" : "right");
-    } else {
-      close();
-    }
-  }
-
-  function close() {
-    setOffset(0);
-    setSide(null);
-  }
-
-  function openEditor() {
-    close();
-    setEditing(true);
-  }
 
   if (editing) {
     return (
@@ -132,37 +75,23 @@ export function TaskItem({
   }
 
   return (
-    <li className="group relative overflow-hidden rounded-xl">
-      {/* Kaydırınca açığa çıkan eylemler — içeriğin altında duruyor */}
-      <div
-        className={[
-          "absolute inset-y-0 flex items-center gap-1 px-2",
-          side === "left" ? "left-0" : "right-0",
-          side ? "opacity-100" : "opacity-0",
-        ].join(" ")}
-        aria-hidden={!side}
-      >
-        <button
-          type="button"
-          onClick={openEditor}
-          tabIndex={side ? 0 : -1}
-          className="rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-indigo-700"
-        >
-          Düzenle
-        </button>
-      </div>
-
-      <div
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}
-        onTouchCancel={onTouchEnd}
-        style={{
-          transform: `translateX(${offset}px)`,
-          touchAction: "pan-y",
-          transition: dragging ? "none" : "transform 200ms ease",
-        }}
-        className="relative flex items-start gap-3 rounded-xl bg-neutral-50 px-3 py-2.5 transition-colors hover:bg-neutral-100 md:bg-white md:hover:bg-neutral-50"
+    <li className="group">
+      <SwipeRow
+        className="rounded-xl"
+        contentClassName="flex items-start gap-3 rounded-xl bg-neutral-50 px-3 py-2.5 transition-colors hover:bg-neutral-100 md:bg-white md:hover:bg-neutral-50"
+        leftAction={(close) => (
+          <button
+            type="button"
+            onClick={() => {
+              close();
+              setEditing(true);
+            }}
+            className="rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-indigo-700"
+          >
+            Düzenle
+          </button>
+        )}
+        rightAction={deleteSwipeForm}
       >
         <div className="pt-0.5">{toggleForm}</div>
 
@@ -204,12 +133,12 @@ export function TaskItem({
         </div>
 
         {/* Masaüstünde dokunma yok — eylemler imleçle beliriyor */}
-        <div className="flex items-center gap-0.5 pt-0.5">
+        <div className="hidden items-center gap-0.5 pt-0.5 md:flex">
           <button
             type="button"
-            onClick={openEditor}
+            onClick={() => setEditing(true)}
             aria-label="Düzenle"
-            className="hidden rounded-md p-1 text-transparent transition group-hover:text-neutral-400 hover:!text-indigo-600 md:block"
+            className="rounded-md p-1 text-transparent transition group-hover:text-neutral-400 hover:!text-indigo-600"
           >
             <svg
               viewBox="0 0 24 24"
@@ -227,7 +156,7 @@ export function TaskItem({
           </button>
           {deleteForm}
         </div>
-      </div>
+      </SwipeRow>
     </li>
   );
 }

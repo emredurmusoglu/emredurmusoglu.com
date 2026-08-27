@@ -73,13 +73,24 @@ export function TaskRow({
           </button>
         </form>
       }
+      deleteSwipeForm={
+        <form action={deleteTask}>
+          <input type="hidden" name="id" value={task.id} />
+          <button
+            type="submit"
+            className="rounded-lg bg-red-600 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-red-700"
+          >
+            Sil
+          </button>
+        </form>
+      }
       deleteForm={
         <form action={deleteTask}>
           <input type="hidden" name="id" value={task.id} />
           <button
             type="submit"
             aria-label="Sil"
-            className="rounded-md p-1 text-neutral-300 transition hover:text-red-600 md:text-transparent md:group-hover:text-neutral-300"
+            className="rounded-md p-1 text-transparent transition group-hover:text-neutral-300 hover:!text-red-600"
           >
             <svg
               viewBox="0 0 24 24"

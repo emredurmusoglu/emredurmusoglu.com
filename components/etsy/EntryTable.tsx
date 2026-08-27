@@ -1,4 +1,5 @@
 import { NoteText } from "@/components/etsy/NoteText";
+import { SwipeRow } from "@/components/SwipeRow";
 import { deleteEntry } from "@/lib/actions/etsy";
 import { userLabel } from "@/lib/auth/users";
 import { formatDayShort } from "@/lib/date";
@@ -27,7 +28,8 @@ export function EntryTable({
   tone: "income" | "expense";
 }) {
   const total = entries.reduce((sum, entry) => sum + entry.amount, 0);
-  const amountColor = tone === "income" ? "text-emerald-700" : "text-neutral-900";
+  const amountColor =
+    tone === "income" ? "text-emerald-700" : "text-neutral-900";
 
   return (
     <section>
@@ -44,7 +46,7 @@ export function EntryTable({
       </div>
 
       {entries.length ? (
-        <div className="rounded-2xl border border-neutral-200 bg-white shadow-sm">
+        <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
           {/* Başlık satırı sadece tablo düzeninde anlamlı */}
           <div
             className={`hidden ${gridCols} items-center gap-x-3 border-b border-neutral-100 px-4 py-2 text-xs text-neutral-400 md:grid`}
@@ -61,60 +63,77 @@ export function EntryTable({
             {entries.map((entry) => (
               <li
                 key={entry.id}
-                className={`group border-b border-neutral-50 last:border-0 ${rowClass}`}
+                className="group border-b border-neutral-50 last:border-0"
               >
-                {/* Telefonda tek meta satırı, md'de iki ayrı sütun */}
-                <div className="order-3 flex min-w-0 items-center gap-2 text-xs text-neutral-400 md:order-none md:contents">
-                  <span className="shrink-0 whitespace-nowrap tabular-nums md:text-sm md:text-neutral-500">
-                    {formatDayShort(entry.occurredOn)}
-                  </span>
-                  <span className="min-w-0 truncate">
-                    {entry.categoryName ? (
-                      <span className="rounded-md bg-neutral-100 px-1.5 py-0.5 text-xs text-neutral-600">
-                        {entry.categoryName}
-                      </span>
-                    ) : (
-                      <span className="text-neutral-300">—</span>
-                    )}
-                  </span>
-                  <span className="shrink-0 truncate md:hidden">
-                    {userLabel(entry.createdBy)}
-                  </span>
-                </div>
-
-                <div className="order-1 min-w-0 text-sm md:order-none">
-                  <NoteText note={entry.note} />
-                  <span className="hidden text-xs text-neutral-400 md:block">
-                    {userLabel(entry.createdBy)}
-                  </span>
-                </div>
-
-                <span
-                  className={`order-2 self-start whitespace-nowrap text-right text-sm font-medium tabular-nums md:order-none md:self-center ${amountColor}`}
+                {/* Silme telefonda sola kaydırmanın arkasında: listede duran
+                    bir çarpıya el değip kayıt uçmasın. */}
+                <SwipeRow
+                  contentClassName={`bg-white ${rowClass}`}
+                  rightAction={
+                    <form action={deleteEntry}>
+                      <input type="hidden" name="id" value={entry.id} />
+                      <button
+                        type="submit"
+                        className="rounded-lg bg-red-600 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-red-700"
+                      >
+                        Sil
+                      </button>
+                    </form>
+                  }
                 >
-                  {formatMoney(entry.amount)}
-                </span>
+                  {/* Telefonda tek meta satırı, md'de iki ayrı sütun */}
+                  <div className="order-3 flex min-w-0 items-center gap-2 text-xs text-neutral-400 md:order-none md:contents">
+                    <span className="shrink-0 whitespace-nowrap tabular-nums md:text-sm md:text-neutral-500">
+                      {formatDayShort(entry.occurredOn)}
+                    </span>
+                    <span className="min-w-0 truncate">
+                      {entry.categoryName ? (
+                        <span className="rounded-md bg-neutral-100 px-1.5 py-0.5 text-xs text-neutral-600">
+                          {entry.categoryName}
+                        </span>
+                      ) : (
+                        <span className="text-neutral-300">—</span>
+                      )}
+                    </span>
+                    <span className="shrink-0 truncate md:hidden">
+                      {userLabel(entry.createdBy)}
+                    </span>
+                  </div>
 
-                <form action={deleteEntry} className="order-4 md:order-none">
-                  <input type="hidden" name="id" value={entry.id} />
-                  <button
-                    type="submit"
-                    aria-label="Sil"
-                    className="rounded-md p-1 text-neutral-300 transition hover:text-red-600 md:text-transparent md:group-hover:text-neutral-300"
+                  <div className="order-1 min-w-0 text-sm md:order-none">
+                    <NoteText note={entry.note} />
+                    <span className="hidden text-xs text-neutral-400 md:block">
+                      {userLabel(entry.createdBy)}
+                    </span>
+                  </div>
+
+                  <span
+                    className={`order-2 self-start whitespace-nowrap text-right text-sm font-medium tabular-nums md:order-none md:self-center ${amountColor}`}
                   >
-                    <svg
-                      viewBox="0 0 24 24"
-                      className="h-4 w-4"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.8"
-                      strokeLinecap="round"
-                      aria-hidden="true"
+                    {formatMoney(entry.amount)}
+                  </span>
+
+                  <form action={deleteEntry} className="hidden md:block">
+                    <input type="hidden" name="id" value={entry.id} />
+                    <button
+                      type="submit"
+                      aria-label="Sil"
+                      className="rounded-md p-1 text-transparent transition group-hover:text-neutral-300 hover:!text-red-600"
                     >
-                      <path d="M18 6 6 18M6 6l12 12" />
-                    </svg>
-                  </button>
-                </form>
+                      <svg
+                        viewBox="0 0 24 24"
+                        className="h-4 w-4"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M18 6 6 18M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </form>
+                </SwipeRow>
               </li>
             ))}
           </ul>
