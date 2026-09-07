@@ -9,7 +9,12 @@ import {
   safeMonth,
   splitMonth,
 } from "@/lib/date";
-import { listCategories, listMonthEntries, listYearTotals } from "@/lib/etsy/dal";
+import {
+  listCategories,
+  listMonthEntries,
+  listYearExpenseByCategory,
+  listYearTotals,
+} from "@/lib/etsy/dal";
 import { formatMoney } from "@/lib/money";
 
 function toneClass(tone: "income" | "expense" | "net", value: number) {
@@ -73,11 +78,13 @@ export default async function EtsyLedgerPage({
   const month = safeMonth(m);
   const { year } = splitMonth(month);
 
-  const [entries, categories, yearTotals] = await Promise.all([
-    listMonthEntries(month),
-    listCategories(),
-    listYearTotals(year),
-  ]);
+  const [entries, categories, yearTotals, yearExpenseByCategory] =
+    await Promise.all([
+      listMonthEntries(month),
+      listCategories(),
+      listYearTotals(year),
+      listYearExpenseByCategory(year),
+    ]);
 
   const income = entries.filter((entry) => entry.kind === "income");
   const expense = entries.filter((entry) => entry.kind === "expense");
@@ -150,7 +157,22 @@ export default async function EtsyLedgerPage({
       <EntryTable title="Gelirler" entries={income} tone="income" />
       <EntryTable title="Giderler" entries={expense} tone="expense" />
 
-      <ExpenseChart entries={expense} />
+      <ExpenseChart
+        slices={expense.map((entry) => ({
+          name: entry.categoryName,
+          amount: entry.amount,
+        }))}
+        caption={monthLabel(month)}
+      />
+
+      {/* En altta yılın tamamı: aydan aya gezerken bile toplamda nereye
+          gittiği aynı yerde duruyor. */}
+      <ExpenseChart
+        slices={yearExpenseByCategory}
+        title="Yıllık gider dağılımı"
+        caption={`${year} toplamı`}
+        variant="year"
+      />
     </div>
   );
 }

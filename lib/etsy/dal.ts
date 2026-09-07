@@ -105,6 +105,33 @@ export async function listYearTotals(year: number): Promise<MonthTotals[]> {
   return [...byMonth.values()];
 }
 
+export type CategoryTotal = { name: string | null; amount: number };
+
+/** Yıllık gider dağılımı için: seçili yılda kategori başına gider toplamı */
+export async function listYearExpenseByCategory(
+  year: number,
+): Promise<CategoryTotal[]> {
+  await requireEtsySession();
+
+  const rows = await db
+    .select({
+      name: etsyCategories.name,
+      total: sql<string>`sum(${etsyEntries.amount})`,
+    })
+    .from(etsyEntries)
+    .leftJoin(etsyCategories, eq(etsyEntries.categoryId, etsyCategories.id))
+    .where(
+      and(
+        eq(etsyEntries.kind, "expense"),
+        gte(etsyEntries.occurredOn, `${year}-01-01`),
+        lte(etsyEntries.occurredOn, `${year}-12-31`),
+      ),
+    )
+    .groupBy(etsyCategories.name);
+
+  return rows.map((row) => ({ name: row.name, amount: Number(row.total) }));
+}
+
 /** Defterde kayıt bulunan yıllar — yıl seçicide gösterilir */
 export async function listYears(): Promise<number[]> {
   await requireEtsySession();
