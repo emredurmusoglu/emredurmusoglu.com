@@ -10,9 +10,9 @@ import { formatMoney } from "@/lib/money";
  * Tek bir ayın gelir ya da gider dökümü.
  *
  * Tek bir işaretleme iki düzen veriyor: telefonda satır iki sıraya bölünüyor
- * (üstte açıklama + tutar, altta tarih/kategori/kişi), md'den itibaren
- * `md:contents` sayesinde aynı hücreler gerçek bir tablo ızgarasına oturuyor.
- * Böylece dar ekranda yatay kaydırma gerekmiyor.
+ * (üstte kategori + tutar, altta tarih/açıklama/kişi), md'den itibaren
+ * `md:contents` ve `md:order-*` sayesinde aynı hücreler gerçek bir tablo
+ * ızgarasına oturuyor. Böylece dar ekranda yatay kaydırma gerekmiyor.
  */
 const gridCols =
   "grid-cols-[1fr_auto] md:grid-cols-[6rem_10rem_1fr_7.5rem_2rem]";
@@ -81,39 +81,44 @@ export function EntryTable({
                     </form>
                   }
                 >
-                  {/* Telefonda tek meta satırı, md'de iki ayrı sütun */}
-                  <div className="order-3 flex min-w-0 items-center gap-2 text-xs text-neutral-400 md:order-none md:contents">
-                    <span className="shrink-0 whitespace-nowrap tabular-nums md:text-sm md:text-neutral-500">
+                  {/* Telefonda üstte kategori duruyor: satırın neyle ilgili
+                      olduğu tek bakışta belli olsun. Açıklama alt satıra
+                      iniyor, uzunsa dokununca açılıyor. */}
+                  <span className="order-1 min-w-0 truncate md:order-2">
+                    {entry.categoryName ? (
+                      <span className="rounded-md bg-neutral-100 px-1.5 py-0.5 text-xs text-neutral-600">
+                        {entry.categoryName}
+                      </span>
+                    ) : (
+                      <span className="text-neutral-300">—</span>
+                    )}
+                  </span>
+
+                  <span
+                    className={`order-2 whitespace-nowrap text-right text-sm font-medium tabular-nums md:order-4 ${amountColor}`}
+                  >
+                    {formatMoney(entry.amount)}
+                  </span>
+
+                  {/* Telefonda tek alt satır, md'de ayrı sütunlar */}
+                  <div className="order-3 col-span-2 flex min-w-0 items-baseline gap-2 text-xs text-neutral-400 md:col-span-1 md:contents">
+                    <span className="shrink-0 whitespace-nowrap tabular-nums md:order-1 md:text-sm md:text-neutral-500">
                       {formatDayShort(entry.occurredOn)}
                     </span>
-                    <span className="min-w-0 truncate">
-                      {entry.categoryName ? (
-                        <span className="rounded-md bg-neutral-100 px-1.5 py-0.5 text-xs text-neutral-600">
-                          {entry.categoryName}
-                        </span>
-                      ) : (
-                        <span className="text-neutral-300">—</span>
-                      )}
-                    </span>
+
+                    <div className="min-w-0 flex-1 md:order-3 md:flex-none md:text-sm">
+                      <NoteText note={entry.note} />
+                      <span className="hidden text-xs text-neutral-400 md:block">
+                        {userLabel(entry.createdBy)}
+                      </span>
+                    </div>
+
                     <span className="shrink-0 truncate md:hidden">
                       {userLabel(entry.createdBy)}
                     </span>
                   </div>
 
-                  <div className="order-1 min-w-0 text-sm md:order-none">
-                    <NoteText note={entry.note} />
-                    <span className="hidden text-xs text-neutral-400 md:block">
-                      {userLabel(entry.createdBy)}
-                    </span>
-                  </div>
-
-                  <span
-                    className={`order-2 self-start whitespace-nowrap text-right text-sm font-medium tabular-nums md:order-none md:self-center ${amountColor}`}
-                  >
-                    {formatMoney(entry.amount)}
-                  </span>
-
-                  <form action={deleteEntry} className="hidden md:block">
+                  <form action={deleteEntry} className="hidden md:order-5 md:block">
                     <input type="hidden" name="id" value={entry.id} />
                     <button
                       type="submit"
