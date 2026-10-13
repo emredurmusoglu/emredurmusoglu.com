@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 
 import { getPublicNotes } from "@/lib/content";
 import { SITE_URL } from "@/lib/site";
+import { works } from "@/lib/work";
 
 export const revalidate = 3600;
 
@@ -23,6 +24,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     ...STATIC_PATHS.map((path) => ({
       url: `${SITE_URL}${path}`,
+      lastModified: new Date(),
+    })),
+    ...works.map((work) => ({
+      url: `${SITE_URL}/isler/${work.slug}`,
       lastModified: new Date(),
     })),
     ...notes.map((note) => ({

@@ -6,7 +6,7 @@ import { SITE_URL } from "@/lib/site";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: "Emre Durmuşoğlu",
-  description: "SaaS ve iOS odaklı dijital ürünler geliştiren bağımsız bir üretici.",
+  description: "Web uygulamaları, yönetim panelleri, iOS ve Android uygulamaları geliştiren bağımsız yazılım geliştirici.",
   icons: {
     icon: [
       { url: "/favicon.ico", type: "image/x-icon" },

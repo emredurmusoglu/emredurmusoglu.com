@@ -2,10 +2,21 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { ProjectCard } from "@/components/ProjectCard";
+import { WorkCard } from "@/components/work/WorkCard";
 import { getPublicNotes, getPublicProjects } from "@/lib/content";
 import { formatDate } from "@/lib/date";
+import { works } from "@/lib/work";
 
 export const revalidate = 3600;
+
+const CAPABILITIES = [
+  "Web uygulamaları",
+  "Yönetim panelleri",
+  "iOS uygulamaları",
+  "Android uygulamaları",
+  "Backend & veritabanı",
+  "Yayın & bakım",
+];
 
 export default async function Home() {
   const [projects, notes] = await Promise.all([
@@ -72,20 +83,34 @@ export default async function Home() {
           <div className="mb-7 h-px w-16 bg-gradient-to-r from-sky-400/60 via-indigo-400/40 to-fuchsia-400/60" />
 
           <p className="mb-6 text-xl leading-relaxed text-white/85 md:text-2xl">
-            Merhaba, ben Emre. Fikirden yayına giden yolu kısaltmaya çalışan
-            bağımsız bir üreticiyim.
+            Merhaba, ben Emre. Bağımsız bir yazılım geliştiricisiyim.
+            Karmaşık işleri, ilk bakışta anlaşılan sade yazılımlara
+            dönüştürüyorum.
           </p>
 
           <div className="space-y-4 text-base leading-relaxed text-white/60 md:text-lg">
             <p>
-              Vibe coding yaklaşımını bir merak konusu olarak değil, bir üretim biçimi olarak benimsiyorum. Eskiden bir ekibin aylarca üzerinde çalıştığı projeleri bugün tek başıma, haftalar içinde geliştirip kullanılabilir hâle getirebiliyorum.
+              Web uygulamaları, yönetim panelleri, iOS ve Android uygulamaları
+              geliştiriyorum. Fikrin netleşmesinden tasarıma, koddan mağaza
+              yayınına ve sonrasındaki bakıma kadar her adımı tek elden
+              yürütüyorum.
             </p>
             <p>
-              Fikri bulmaktan tasarıma, koddan mağaza yayınına ve kullanıcı
-              desteğine kadar her adımı kendim yürütüyorum. Aşağıdakiler bu
-              çabanın şu ana kadarki somut çıktıları.
+              Aşağıda kendi ürünlerimi ve geliştirdiğim diğer işleri
+              inceleyebilirsiniz.
             </p>
           </div>
+
+          <ul className="mt-8 flex flex-wrap gap-2">
+            {CAPABILITIES.map((c) => (
+              <li
+                key={c}
+                className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-white/55 backdrop-blur"
+              >
+                {c}
+              </li>
+            ))}
+          </ul>
         </section>
 
         {/* Ürünler */}
@@ -93,7 +118,7 @@ export default async function Home() {
           <section className="mt-16 md:mt-24">
             <div className="mb-6 flex items-baseline gap-3">
               <h2 className="text-xs uppercase tracking-[0.15em] text-white/40">
-                Ürünler
+                Kendi ürünlerim
               </h2>
               <span className="h-px flex-1 bg-white/10" />
               <span className="text-xs tabular-nums text-white/25">
@@ -104,6 +129,27 @@ export default async function Home() {
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
               {projects.map((project) => (
                 <ProjectCard key={project.slug} project={project} />
+              ))}
+            </div>
+          </section>
+        ) : null}
+
+        {/* Diğer işler */}
+        {works.length ? (
+          <section id="isler" className="mt-16 scroll-mt-8 md:mt-24">
+            <div className="mb-6 flex items-baseline gap-3">
+              <h2 className="text-xs uppercase tracking-[0.15em] text-white/40">
+                Diğer işler
+              </h2>
+              <span className="h-px flex-1 bg-white/10" />
+              <span className="text-xs tabular-nums text-white/25">
+                {works.length}
+              </span>
+            </div>
+
+            <div className="space-y-5">
+              {works.map((work) => (
+                <WorkCard key={work.slug} work={work} />
               ))}
             </div>
           </section>
