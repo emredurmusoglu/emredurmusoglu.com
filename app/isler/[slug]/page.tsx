@@ -73,7 +73,10 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
         {/* Başlık */}
         <header className="mt-10 md:mt-14">
           <div className="flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#1E3D8F] ring-1 ring-white/10">
+            <span
+              className="flex h-11 w-11 items-center justify-center rounded-xl ring-1 ring-white/10"
+              style={{ backgroundColor: work.brand }}
+            >
               <Image src={work.logo} alt="" width={24} height={26} className="h-6 w-auto" />
             </span>
             <span className="text-xs uppercase tracking-[0.15em] text-white/40">
@@ -177,10 +180,7 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
           <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">
             İşiniz için benzer bir sistem mi düşünüyorsunuz?
           </h2>
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/60">
-            Rezervasyon, talep toplama, planlama ya da ekibinizin her gün kullanacağı bir panel.
-            Birlikte netleştirip yayına alalım.
-          </p>
+          <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/60">{work.pitch}</p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               href="/iletisim"

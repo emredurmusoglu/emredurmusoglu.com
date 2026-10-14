@@ -15,7 +15,10 @@ export function WorkCard({ work }: { work: Work }) {
       <div className="relative grid gap-8 p-6 md:grid-cols-[1fr_1.25fr] md:gap-10 md:p-8">
         <div className="flex flex-col">
           <div className="flex items-center gap-3">
-            <span className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#1E3D8F] ring-1 ring-white/10">
+            <span
+              className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ring-1 ring-white/10"
+              style={{ backgroundColor: work.brand }}
+            >
               <Image src={work.logo} alt="" width={22} height={24} className="h-6 w-auto" />
             </span>
             <div>
