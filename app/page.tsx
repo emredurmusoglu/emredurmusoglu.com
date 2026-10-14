@@ -116,7 +116,7 @@ export default async function Home() {
 
         {/* Ürünler */}
         {projects.length ? (
-          <section id="urunler" className="mt-16 scroll-mt-8 md:mt-24">
+          <section id="projeler" className="mt-16 scroll-mt-8 md:mt-24">
             <div className="mb-6 flex items-baseline gap-3">
               <h2 className="text-xs uppercase tracking-[0.15em] text-white/40">
                 Kendi projelerim
@@ -132,7 +132,7 @@ export default async function Home() {
                 <ProjectCard
                   key={project.slug}
                   project={project}
-                  detailHref={getProduct(project.slug) ? `/urunler/${project.slug}` : undefined}
+                  detailHref={getProduct(project.slug) ? `/projeler/${project.slug}` : undefined}
                 />
               ))}
             </div>

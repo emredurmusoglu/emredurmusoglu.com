@@ -33,7 +33,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
     })),
     ...products.map((product) => ({
-      url: `${SITE_URL}/urunler/${product.slug}`,
+      url: `${SITE_URL}/projeler/${product.slug}`,
       lastModified: new Date(),
     })),
     ...notes.map((note) => ({

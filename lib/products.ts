@@ -1,5 +1,5 @@
 /**
- * Kendi ürünlerimin detay sayfaları (/urunler/<slug>).
+ * Kendi ürünlerimin detay sayfaları (/projeler/<slug>).
  *
  * Kartın kendisi (başlık, açıklama, ikon, mağaza bağlantıları) panelden,
  * veritabanından geliyor; burada yalnızca vitrin içeriği var: ekran
