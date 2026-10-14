@@ -182,12 +182,12 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
             Birlikte netleştirip yayına alalım.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <a
-              href={`mailto:emredurmusoglu1@gmail.com?subject=${encodeURIComponent("Proje görüşmesi")}`}
+            <Link
+              href="/iletisim"
               className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-medium text-neutral-950 transition hover:bg-white/85"
             >
               İletişime geç
-            </a>
+            </Link>
             <a
               href={work.liveUrl}
               target="_blank"

@@ -51,8 +51,8 @@ export default async function Home() {
             </div>
           </div>
 
-          <a
-            href="mailto:emredurmusoglu1@gmail.com"
+          <Link
+            href="/iletisim"
             className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white/85 backdrop-blur transition hover:border-white/30 hover:bg-white/15"
           >
             <svg
@@ -69,7 +69,7 @@ export default async function Home() {
               <path d="m22 8-10 6L2 8" />
             </svg>
             <span className="hidden sm:inline">İletişime geç</span>
-          </a>
+          </Link>
         </header>
 
         {/* Hero */}

@@ -9,6 +9,7 @@ export const revalidate = 3600;
 const STATIC_PATHS = [
   "/",
   "/yazilar",
+  "/iletisim",
   "/vaktinde/privacy",
   "/vaktinde/support",
   "/vaktinde/terms",
