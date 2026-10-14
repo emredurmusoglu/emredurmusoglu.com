@@ -30,14 +30,7 @@ export default function IletisimPage() {
         </h1>
         <div className="mt-5 h-px w-16 bg-gradient-to-r from-sky-400/60 via-indigo-400/40 to-fuchsia-400/60" />
 
-        <p className="mt-8 text-base leading-relaxed text-white/60 md:text-lg">
-          Aklınızdaki projeyi, sorunuzu ya da fikrinizi kısaca yazın. Mesajınız
-          doğrudan bana ulaşır, en kısa sürede size dönüş yaparım.
-        </p>
-
-        <div className="mt-10">
-          <ContactForm />
-        </div>
+        <ContactForm />
       </div>
     </main>
   );
