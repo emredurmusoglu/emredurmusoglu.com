@@ -1,7 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
+
+import { AppleIcon, PlayIcon } from "@/components/StoreIcons";
 
 const DEFAULT_ACCENT = "from-sky-400/70 via-indigo-400/50 to-fuchsia-400/70";
 
@@ -17,22 +20,6 @@ export type PublicProject = {
   androidSoon: boolean;
   comingSoon: boolean;
 };
-
-function AppleIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor" aria-hidden="true">
-      <path d="M16.4 12.8c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9s-1.8-.9-3-.8c-1.5 0-3 .9-3.8 2.3-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 3 2.3 1.2 0 1.6-.7 3.1-.7s1.9.7 3.1.7 2.1-1.1 2.9-2.3c.9-1.3 1.3-2.6 1.3-2.6s-2.4-1-2.4-3.8ZM14.2 5.9c.6-.8 1.1-1.9 1-3-1 0-2.2.6-2.9 1.5-.6.7-1.2 1.9-1 3 1.1.1 2.2-.6 2.9-1.5Z" />
-    </svg>
-  );
-}
-
-function PlayIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor" aria-hidden="true">
-      <path d="M3.6 2.3c-.3.3-.5.8-.5 1.4v16.6c0 .6.2 1.1.5 1.4l.1.1 9.3-9.3v-.2L3.6 2.3ZM16.1 15.6l-3.1-3.1v-.2l3.1-3.1.1.1 3.7 2.1c1 .6 1 1.6 0 2.2l-3.8 2ZM15.9 15.8 12.9 12.7 3.6 22c.3.4.9.4 1.5.1l10.8-6.3M15.9 8.2 5.1 2C4.5 1.6 3.9 1.7 3.6 2l9.3 9.3 3-3.1Z" />
-    </svg>
-  );
-}
 
 function PlatformChip({ label }: { label: string }) {
   return (
@@ -81,7 +68,14 @@ function SoonButton({
   );
 }
 
-export function ProjectCard({ project }: { project: PublicProject }) {
+export function ProjectCard({
+  project,
+  detailHref,
+}: {
+  project: PublicProject;
+  /** Ürünün detay sayfası varsa kart oraya gider, mağaza bağlantısı yanında kalır. */
+  detailHref?: string;
+}) {
   const [picking, setPicking] = useState(false);
   const [androidNotice, setAndroidNotice] = useState(false);
 
@@ -100,6 +94,20 @@ export function ProjectCard({ project }: { project: PublicProject }) {
     project.androidUrl ? "Android" : androidSoon ? "Android — yakında" : null,
     project.url && !project.iosUrl && !project.androidUrl ? "Web" : null,
   ].filter(Boolean) as string[];
+
+  // Detay sayfası olan kartlarda mağazaya giden ikincil bağlantı. Kartın
+  // tamamını kaplayan detay bağlantısının üstünde durması için z-10.
+  const storeLink =
+    "relative z-10 text-sm text-white/40 transition hover:text-white/85";
+  const storeAction = hasBothStores ? (
+    <button type="button" onClick={() => setPicking(true)} className={storeLink}>
+      Uygulamaya Git ↗
+    </button>
+  ) : singleHref ? (
+    <a href={singleHref} target="_blank" rel="noreferrer" className={storeLink}>
+      {project.iosUrl || project.androidUrl ? "Uygulamaya Git ↗" : "Siteye Git ↗"}
+    </a>
+  ) : null;
 
   const inner = (
     <>
@@ -137,7 +145,7 @@ export function ProjectCard({ project }: { project: PublicProject }) {
 
         {/* Her iki mağazada da varsa önce hangisi diye soruyoruz */}
         {hasBothStores && picking ? (
-          <div>
+          <div className="relative z-10">
             <div className="flex gap-2">
               <StoreButton href={project.iosUrl!} icon={<AppleIcon />} label="App Store" />
               {project.androidUrl ? (
@@ -174,6 +182,13 @@ export function ProjectCard({ project }: { project: PublicProject }) {
             />
             {project.comingSoon ? (
               <span className="text-sm text-white/30">Hazırlanıyor</span>
+            ) : detailHref ? (
+              <div className="flex items-center gap-4">
+                {storeAction}
+                <span className="text-sm font-medium text-white/70 transition group-hover:text-white">
+                  İncele →
+                </span>
+              </div>
             ) : (
               <span className="text-sm text-white/50 transition group-hover:text-white/85">
                 Uygulamaya Git →
@@ -192,6 +207,19 @@ export function ProjectCard({ project }: { project: PublicProject }) {
 
   if (project.comingSoon || !singleHref) {
     return <div className={shell}>{inner}</div>;
+  }
+
+  if (detailHref) {
+    return (
+      <div className={`${shell} ${interactive} relative`}>
+        {inner}
+        <Link
+          href={detailHref}
+          aria-label={`${project.title} — incele`}
+          className="absolute inset-0 rounded-3xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/40"
+        />
+      </div>
+    );
   }
 
   if (hasBothStores) {

@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 
 import { getPublicNotes } from "@/lib/content";
+import { products } from "@/lib/products";
 import { SITE_URL } from "@/lib/site";
 import { works } from "@/lib/work";
 
@@ -29,6 +30,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
     ...works.map((work) => ({
       url: `${SITE_URL}/isler/${work.slug}`,
+      lastModified: new Date(),
+    })),
+    ...products.map((product) => ({
+      url: `${SITE_URL}/urunler/${product.slug}`,
       lastModified: new Date(),
     })),
     ...notes.map((note) => ({

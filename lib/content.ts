@@ -36,6 +36,24 @@ export async function getPublicProjects() {
     .orderBy(asc(projects.sort), asc(projects.title));
 }
 
+export async function getPublicProject(slug: string) {
+  const [row] = await db
+    .select({
+      slug: projects.slug,
+      title: projects.title,
+      iconUrl: projects.iconUrl,
+      url: projects.url,
+      iosUrl: projects.iosUrl,
+      androidUrl: projects.androidUrl,
+      androidSoon: projects.androidSoon,
+      comingSoon: projects.comingSoon,
+    })
+    .from(projects)
+    .where(and(eq(projects.slug, slug), eq(projects.isPublic, true)));
+
+  return row ?? null;
+}
+
 export async function getPublicNotes() {
   return db
     .select({

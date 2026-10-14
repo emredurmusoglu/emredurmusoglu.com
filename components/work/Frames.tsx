@@ -61,3 +61,35 @@ export function PhoneFrame({ image, className = "" }: { image: WorkImage; classN
     </figure>
   );
 }
+
+/**
+ * Uygulama ekran görüntüsü için iPhone çerçevesi. Köşe yarıçapı yüzdeyle
+ * verildiği için her boyutta aynı oranda kalıyor.
+ */
+export function DeviceFrame({
+  image,
+  sizes = "(max-width: 768px) 60vw, 300px",
+  priority = false,
+  className = "",
+}: {
+  image: WorkImage;
+  sizes?: string;
+  priority?: boolean;
+  className?: string;
+}) {
+  return (
+    <figure
+      className={`overflow-hidden rounded-[14%/6.5%] border-[6px] border-neutral-800 bg-neutral-900 shadow-[0_30px_80px_rgba(0,0,0,0.6)] ring-1 ring-white/15 ${className}`}
+    >
+      <Image
+        src={image.src}
+        alt={image.alt}
+        width={image.width}
+        height={image.height}
+        sizes={sizes}
+        priority={priority}
+        className="block h-auto w-full"
+      />
+    </figure>
+  );
+}

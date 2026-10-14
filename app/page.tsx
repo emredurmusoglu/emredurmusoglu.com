@@ -5,6 +5,7 @@ import { ProjectCard } from "@/components/ProjectCard";
 import { WorkCard } from "@/components/work/WorkCard";
 import { getPublicNotes, getPublicProjects } from "@/lib/content";
 import { formatDate } from "@/lib/date";
+import { getProduct } from "@/lib/products";
 import { works } from "@/lib/work";
 
 export const revalidate = 3600;
@@ -115,7 +116,7 @@ export default async function Home() {
 
         {/* Ürünler */}
         {projects.length ? (
-          <section className="mt-16 md:mt-24">
+          <section id="urunler" className="mt-16 scroll-mt-8 md:mt-24">
             <div className="mb-6 flex items-baseline gap-3">
               <h2 className="text-xs uppercase tracking-[0.15em] text-white/40">
                 Kendi ürünlerim
@@ -128,7 +129,11 @@ export default async function Home() {
 
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
               {projects.map((project) => (
-                <ProjectCard key={project.slug} project={project} />
+                <ProjectCard
+                  key={project.slug}
+                  project={project}
+                  detailHref={getProduct(project.slug) ? `/urunler/${project.slug}` : undefined}
+                />
               ))}
             </div>
           </section>
