@@ -97,7 +97,7 @@ export default async function Home() {
               yürütüyorum.
             </p>
             <p>
-              Aşağıda kendi ürünlerimi ve geliştirdiğim diğer işleri
+              Aşağıda kendi projelerimi ve geliştirdiğim diğer işleri
               inceleyebilirsiniz.
             </p>
           </div>
@@ -119,7 +119,7 @@ export default async function Home() {
           <section id="urunler" className="mt-16 scroll-mt-8 md:mt-24">
             <div className="mb-6 flex items-baseline gap-3">
               <h2 className="text-xs uppercase tracking-[0.15em] text-white/40">
-                Kendi ürünlerim
+                Kendi projelerim
               </h2>
               <span className="h-px flex-1 bg-white/10" />
               <span className="text-xs tabular-nums text-white/25">

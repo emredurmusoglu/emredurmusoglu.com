@@ -141,7 +141,7 @@ export const products: ProductShowcase[] = [
     kind: "app",
     tagline: "Görevleri tamamlamadan susmayan, sizi gerçekten uyandıran alarm.",
     summary:
-      "Erteleye erteleye geç kalanlar için. AlarMix çaldığında kapatmak için önce bir görevi bitirmeniz gerekiyor: birkaç işlem çözmek, kart eşleştirmek ya da bir cümle yazmak. Görev bittiğinde artık uyanmış oluyorsunuz.",
+      "Erteleye erteleye geç kalanlara özel. AlarMix çaldığında kapatmak için önce bir görevi bitirmeniz gerekiyor: birkaç işlem çözmek, kart eşleştirmek ya da bir cümle yazmak. Görev bittiğinde artık uyanmış oluyorsunuz.",
     category: "Alarm uygulaması",
     platform: "iPhone",
     year: "2026",

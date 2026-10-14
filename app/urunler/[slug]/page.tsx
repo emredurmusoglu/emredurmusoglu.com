@@ -130,7 +130,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 <Image src={icon} alt="" fill sizes="48px" className="object-cover" />
               </span>
             ) : null}
-            <span className="text-xs uppercase tracking-[0.15em] text-white/40">Kendi ürünüm</span>
+            <span className="text-xs uppercase tracking-[0.15em] text-white/40">Kendi projem</span>
           </div>
 
           <h1 className="mt-6 text-4xl font-bold tracking-tight md:text-6xl">{project.title}</h1>
