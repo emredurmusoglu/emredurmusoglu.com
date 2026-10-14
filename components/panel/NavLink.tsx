@@ -7,10 +7,13 @@ export function NavLink({
   href,
   label,
   badge,
+  alert = false,
 }: {
   href: string;
   label: string;
   badge?: number;
+  /** Rozet dikkat çeksin (ör. okunmamış mesaj) */
+  alert?: boolean;
 }) {
   const pathname = usePathname();
   const active = href === "/panel" ? pathname === href : pathname.startsWith(href);
@@ -30,9 +33,11 @@ export function NavLink({
         <span
           className={[
             "rounded-full px-2 py-0.5 text-xs tabular-nums",
-            active
-              ? "bg-indigo-100 text-indigo-700"
-              : "bg-neutral-200/70 text-neutral-600",
+            alert
+              ? "bg-rose-500 font-medium text-white"
+              : active
+                ? "bg-indigo-100 text-indigo-700"
+                : "bg-neutral-200/70 text-neutral-600",
           ].join(" ")}
         >
           {badge}

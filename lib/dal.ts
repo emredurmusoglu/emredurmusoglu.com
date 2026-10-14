@@ -5,7 +5,7 @@ import { and, asc, desc, eq, isNull, lte, ne, or, sql } from "drizzle-orm";
 import { requireSession } from "@/lib/auth/session";
 import { endOfToday } from "@/lib/date";
 import { db } from "@/lib/db";
-import { notes, projects, tasks } from "@/lib/db/schema";
+import { contactMessages, notes, projects, tasks } from "@/lib/db/schema";
 
 /**
  * Panel tarafındaki TÜM okuma/yazma buradan geçer ve her fonksiyon önce
@@ -112,6 +112,22 @@ export async function getTaskCounts() {
   const counts = { todo: 0, doing: 0, done: 0 };
   for (const row of rows) counts[row.status] = row.count;
   return counts;
+}
+
+/* ------------------------------------------------------------------- mesajlar */
+
+export async function listMessages() {
+  await requireSession();
+  return db.select().from(contactMessages).orderBy(desc(contactMessages.createdAt));
+}
+
+export async function getUnreadMessageCount() {
+  await requireSession();
+  const [row] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(contactMessages)
+    .where(isNull(contactMessages.readAt));
+  return row?.count ?? 0;
 }
 
 /* --------------------------------------------------------------------- notlar */

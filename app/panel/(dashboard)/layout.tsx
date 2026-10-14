@@ -4,7 +4,7 @@ import { NavLink } from "@/components/panel/NavLink";
 import { ToastHost } from "@/components/panel/Toast";
 import { logout } from "@/lib/actions/auth";
 import { requireSession } from "@/lib/auth/session";
-import { getTaskCounts } from "@/lib/dal";
+import { getTaskCounts, getUnreadMessageCount } from "@/lib/dal";
 
 // Panel her zaman taze veri gösterir, cache'lenmez.
 export const dynamic = "force-dynamic";
@@ -16,7 +16,10 @@ export default async function DashboardLayout({
 }) {
   // Asıl yetki kontrolü burada — proxy sadece yönlendirme yapıyor.
   await requireSession();
-  const counts = await getTaskCounts();
+  const [counts, unreadMessages] = await Promise.all([
+    getTaskCounts(),
+    getUnreadMessageCount(),
+  ]);
 
   return (
     <div className="panel-light safe-top safe-bottom min-h-screen bg-neutral-50 text-neutral-900 [font-family:system-ui,-apple-system,'Segoe_UI',sans-serif]">
@@ -57,6 +60,12 @@ export default async function DashboardLayout({
             />
             <NavLink href="/panel/notes" label="Notlar" />
             <NavLink href="/panel/projects" label="Projeler" />
+            <NavLink
+              href="/panel/messages"
+              label="Mesajlar"
+              badge={unreadMessages}
+              alert
+            />
           </nav>
 
           <div className="mt-8 hidden md:block">

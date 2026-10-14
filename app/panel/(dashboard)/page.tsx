@@ -3,17 +3,18 @@ import Link from "next/link";
 import { QuickAddTask } from "@/components/panel/QuickAddTask";
 import { TaskRow } from "@/components/panel/TaskRow";
 import { formatDate } from "@/lib/date";
-import { listNotes, listProjectOptions, listTasks } from "@/lib/dal";
+import { getUnreadMessageCount, listNotes, listProjectOptions, listTasks } from "@/lib/dal";
 
 const cardClass = "rounded-2xl border border-neutral-200 bg-white shadow-sm";
 const emptyClass = `${cardClass} px-4 py-6 text-center text-sm text-neutral-400`;
 
 export default async function PanelHome() {
-  const [todo, doing, notes, projectOptions] = await Promise.all([
+  const [todo, doing, notes, projectOptions, unreadMessages] = await Promise.all([
     listTasks({ status: "todo" }),
     listTasks({ status: "doing" }),
     listNotes(),
     listProjectOptions(),
+    getUnreadMessageCount(),
   ]);
 
   const recentNotes = notes.slice(0, 5);
@@ -24,6 +25,19 @@ export default async function PanelHome() {
         <h1 className="text-2xl font-semibold tracking-tight">Bugün</h1>
         <p className="mt-1 text-sm text-neutral-500">{formatDate(new Date())}</p>
       </header>
+
+      {unreadMessages ? (
+        <Link
+          href="/panel/messages"
+          className="flex items-center justify-between gap-3 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 transition hover:border-rose-300"
+        >
+          <span className="flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-rose-500" />
+            Siteden {unreadMessages} yeni mesaj var
+          </span>
+          <span className="font-medium">Oku →</span>
+        </Link>
+      ) : null}
 
       <QuickAddTask projects={projectOptions} detailed />
 

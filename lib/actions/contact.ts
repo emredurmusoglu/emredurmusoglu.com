@@ -1,6 +1,11 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
+import { eq } from "drizzle-orm";
+
 import { PREFERENCES } from "@/lib/contact";
+import { db } from "@/lib/db";
+import { contactMessages } from "@/lib/db/schema";
 import { text } from "@/lib/form";
 
 const TO = "emredurmusoglu1@gmail.com";
@@ -32,7 +37,7 @@ function escapeHtml(value: string): string {
 }
 
 /**
- * İletişim formu → Resend üzerinden Gmail'e mail.
+ * İletişim formu → veritabanı (panelde "Mesajlar") + Resend üzerinden Gmail'e mail.
  * SDK yerine düz fetch: tek bir istek için bağımlılık eklemeye gerek yok.
  */
 export async function sendContact(
@@ -70,14 +75,53 @@ export async function sendContact(
     };
   }
 
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
-    console.error("RESEND_API_KEY tanımlı değil");
+  // Önce veritabanına: mail spama düşse ya da hiç gitmese de panelde görünsün.
+  let savedId: number | null = null;
+  try {
+    const [row] = await db
+      .insert(contactMessages)
+      .values({
+        name: values.name,
+        email: values.email,
+        phone: values.phone || null,
+        preference: values.preference,
+        message: values.message,
+      })
+      .returning({ id: contactMessages.id });
+    savedId = row.id;
+  } catch (err) {
+    console.error("İletişim mesajı kaydedilemedi", err);
+  }
+
+  const emailSent = await sendEmail(values);
+
+  if (savedId && emailSent) {
+    await db
+      .update(contactMessages)
+      .set({ emailSent: true })
+      .where(eq(contactMessages.id, savedId))
+      .catch((err) => console.error("email_sent güncellenemedi", err));
+  }
+
+  // İkisinden biri tuttuysa mesaj elimizde.
+  if (!savedId && !emailSent) {
     return {
       status: "error",
       message: `Mesaj şu an gönderilemedi. Doğrudan ${TO} adresine yazabilirsiniz.`,
       values,
     };
+  }
+
+  // Paneldeki "Mesajlar" rozeti tazelensin.
+  revalidatePath("/panel", "layout");
+  return { status: "sent" };
+}
+
+async function sendEmail(values: ContactValues): Promise<boolean> {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.error("RESEND_API_KEY tanımlı değil");
+    return false;
   }
 
   const html = `
@@ -88,30 +132,30 @@ export async function sendContact(
     <p style="white-space:pre-wrap">${escapeHtml(values.message)}</p>
   `;
 
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from: FROM,
-      to: [TO],
-      reply_to: values.email,
-      subject: `Siteden mesaj: ${values.name}`,
-      text: `Ad: ${values.name}\nE-posta: ${values.email}\nTelefon: ${values.phone || "—"}\nİletişim tercihi: ${values.preference}\n\n${values.message}`,
-      html,
-    }),
-  });
+  try {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: FROM,
+        to: [TO],
+        reply_to: values.email,
+        subject: `Siteden mesaj: ${values.name}`,
+        text: `Ad: ${values.name}\nE-posta: ${values.email}\nTelefon: ${values.phone || "—"}\nİletişim tercihi: ${values.preference}\n\n${values.message}`,
+        html,
+      }),
+    });
 
-  if (!res.ok) {
-    console.error("Resend hatası", res.status, await res.text());
-    return {
-      status: "error",
-      message: `Mesaj şu an gönderilemedi. Doğrudan ${TO} adresine yazabilirsiniz.`,
-      values,
-    };
+    if (!res.ok) {
+      console.error("Resend hatası", res.status, await res.text());
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error("Resend isteği başarısız", err);
+    return false;
   }
-
-  return { status: "sent" };
 }

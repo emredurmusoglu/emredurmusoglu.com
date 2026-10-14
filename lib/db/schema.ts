@@ -192,6 +192,32 @@ export const etsyAccessLog = pgTable(
   ],
 );
 
+/**
+ * Sitedeki iletişim formundan gelen mesajlar.
+ *
+ * Mail bildirimi spama ya da Promosyonlar'a düşebiliyor; mesaj önce buraya
+ * yazılıyor, panelde okunmamışlar rozetle görünüyor.
+ */
+export const contactMessages = pgTable(
+  "contact_messages",
+  {
+    id: serial("id").primaryKey(),
+    name: varchar("name", { length: 120 }).notNull(),
+    email: varchar("email", { length: 200 }).notNull(),
+    phone: varchar("phone", { length: 30 }),
+    /** "E-posta" | "Telefon" | "WhatsApp" */
+    preference: varchar("preference", { length: 20 }).notNull().default("E-posta"),
+    message: text("message").notNull(),
+    /** Resend'e başarıyla iletildi mi */
+    emailSent: boolean("email_sent").notNull().default(false),
+    readAt: timestamp("read_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => [index("contact_messages_created_idx").on(t.createdAt)],
+);
+
 export type Project = typeof projects.$inferSelect;
 export type NewProject = typeof projects.$inferInsert;
 export type Task = typeof tasks.$inferSelect;
@@ -201,3 +227,4 @@ export type NewNote = typeof notes.$inferInsert;
 export type EtsyCategory = typeof etsyCategories.$inferSelect;
 export type EtsyEntry = typeof etsyEntries.$inferSelect;
 export type EtsyAccessLog = typeof etsyAccessLog.$inferSelect;
+export type ContactMessage = typeof contactMessages.$inferSelect;
