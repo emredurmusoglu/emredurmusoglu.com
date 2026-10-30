@@ -23,6 +23,10 @@ export const viewport: Viewport = {
   // Site koyu ama panel açık tema — tarayıcı çubuğu da ona uysun.
   themeColor: "#fafafa",
   viewportFit: "cover",
+  // iOS, 16px'ten küçük yazılı bir alana odaklanınca sayfayı büyütüyor ve
+  // klavye kapanınca geri küçültmüyor. maximum-scale bu otomatik büyütmeyi
+  // kesiyor; iOS parmakla yakınlaştırmaya yine izin veriyor.
+  maximumScale: 1,
 };
 
 export default function PanelRootLayout({

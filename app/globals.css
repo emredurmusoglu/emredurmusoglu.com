@@ -42,6 +42,15 @@ body {
   color-scheme: light;
 }
 
+/* İkinci kemer: telefonda küçük yazılı alanlar 16px'e çıkıyor. iOS'un
+   odaklanınca büyütme eşiği 16px; viewport ayarı bir gün yetmezse bile
+   klavye açılınca ekran zıplamasın. Masaüstünde (fare) tasarım aynen kalır. */
+@media (pointer: coarse) {
+  .panel-light :is(input, textarea, select):is(.text-xs, .text-sm) {
+    font-size: 16px;
+  }
+}
+
 /* Kaydetme sonrası ekranın ortasında beliren "Kaydedildi" bildirimi */
 @keyframes panel-toast {
   0% { opacity: 0; transform: translateY(8px) scale(0.94); }

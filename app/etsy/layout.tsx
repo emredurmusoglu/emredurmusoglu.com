@@ -36,6 +36,8 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   themeColor: "#fafafa",
   viewportFit: "cover",
+  // Paneldeki gibi: klavye açılınca iOS'un otomatik yakınlaştırmasını kes.
+  maximumScale: 1,
 };
 
 export default function EtsyRootLayout({
