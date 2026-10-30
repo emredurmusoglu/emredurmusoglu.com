@@ -225,3 +225,114 @@ body:has(.panel-light) {
   color: var(--prose-heading);
   font-weight: 600;
 }
+
+/* ── Oku (hızlı okuma) ─────────────────────────────────────────────────────
+   Tek, koyu bir tema: kırmızı odak harfi en iyi koyu zeminde öne çıkıyor ve
+   gece okurken göz yormuyor. Renkler `bg-oku-bg`, `text-oku-red` gibi
+   Tailwind sınıfları olarak kullanılıyor. */
+@theme {
+  --color-oku-bg: #0c0c0e;
+  --color-oku-surface: #151518;
+  --color-oku-raised: #1e1e22;
+  --color-oku-line: #2b2b31;
+  --color-oku-text: #f2f2f3;
+  --color-oku-muted: #9a9aa2;
+  --color-oku-faint: #5d5d66;
+  --color-oku-red: #ff453a;
+}
+
+.oku-app {
+  color-scheme: dark;
+}
+
+/* Panel'deki gibi: aşırı kaydırmada kenarlarda açık renk bant görünmesin. */
+html:has(.oku-app),
+body:has(.oku-app) {
+  background: #0c0c0e;
+  overscroll-behavior: none;
+}
+
+@keyframes oku-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes oku-sheet-in {
+  from { transform: translateY(24px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+.oku-fade-in {
+  animation: oku-fade-in 0.2s ease-out both;
+}
+
+.oku-sheet-in {
+  animation: oku-sheet-in 0.28s cubic-bezier(0.2, 0.9, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .oku-fade-in,
+  .oku-sheet-in {
+    animation: none;
+  }
+}
+
+/* Bağlam metninin üst ve alt kenarı yumuşakça kaybolsun. */
+.oku-context-mask {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
+  scrollbar-width: none;
+}
+
+.oku-context-mask::-webkit-scrollbar {
+  display: none;
+}
+
+/* Klavye kısayolları ipucu yalnızca fareli cihazlarda. */
+.oku-hint-fine {
+  display: none;
+}
+
+@media (pointer: fine) {
+  .oku-hint-fine {
+    display: block;
+  }
+}
+
+/* Hız kaydırıcısı */
+.oku-range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 28px;
+  background: transparent;
+}
+
+.oku-range::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--color-oku-line);
+}
+
+.oku-range::-moz-range-track {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--color-oku-line);
+}
+
+.oku-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 24px;
+  height: 24px;
+  margin-top: -10px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.4);
+}
+
+.oku-range::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+}

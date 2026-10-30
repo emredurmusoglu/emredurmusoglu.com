@@ -9,7 +9,7 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       // Sayfaların kendi <meta robots> etiketi de noindex/nofollow veriyor;
       // burası taramanın en baştan olmaması için.
-      disallow: ["/panel", "/panel/", "/etsy", "/etsy/"],
+      disallow: ["/panel", "/panel/", "/etsy", "/etsy/", "/oku"],
     },
     sitemap: `${SITE_URL}/sitemap.xml`,
   };

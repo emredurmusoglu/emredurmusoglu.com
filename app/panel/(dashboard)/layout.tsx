@@ -40,6 +40,12 @@ export default async function DashboardLayout({
               >
                 Etsy
               </Link>
+              <Link
+                href="/oku"
+                className="rounded-full bg-white px-2.5 py-1 text-xs font-medium text-neutral-700 ring-1 ring-neutral-200 transition hover:ring-neutral-400"
+              >
+                O<span className="text-red-500">k</span>u
+              </Link>
             </div>
             <form action={logout} className="md:hidden">
               <button
