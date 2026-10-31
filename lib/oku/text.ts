@@ -10,15 +10,22 @@
 export type FocusMode = "optimal" | "center";
 
 export type Token = {
+  /** Sahnede gösterilen hali: parantezsiz, büyük sayılar gruplanmış */
   text: string;
+  /** Metindeki asıl hali — bağlam görünümü bunu gösteriyor */
+  source: string;
   /** Kırmızı boyanan harfin `text` içindeki konumu */
   pivot: number;
   /** Bu kelime kaç kelimelik süre ekranda kalacak */
   weight: number;
+  /** Hız ne olursa olsun en az bu kadar milisaniye (sayılar için) */
+  minMs: number;
   /** Cümlenin ilk kelimesi mi — geri/ileri cümle atlamaları buna bakıyor */
   sentenceStart: boolean;
   /** Paragrafın ilk kelimesi mi — bağlam görünümü paragrafları buna göre bölüyor */
   paraStart: boolean;
+  /** Parantez içinde mi — sahne kenarlarında parantez gösteriliyor */
+  aside: boolean;
   /** Bölünmüş uzun kelimenin parçası: bağlamda arkasına boşluk konmuyor */
   joinNext?: boolean;
 };
@@ -91,7 +98,7 @@ const VOWEL = /[aeıioöuüâîûAEIİOÖUÜÂÎÛ]/;
  * yakın böyle bir nokta aranıyor; bulunamazsa düz kesiliyor.
  */
 function splitLongWord(word: string): string[] {
-  if (letterCount(word) <= SPLIT_ABOVE) return [word];
+  if (letterCount(word) <= SPLIT_ABOVE || /\d/.test(word)) return [word];
   const parts = Math.ceil(word.length / CHUNK);
   const target = Math.ceil(word.length / parts);
   let cut = target;
@@ -110,13 +117,55 @@ function splitLongWord(word: string): string[] {
       break;
     }
   }
-  return [`${word.slice(0, cut)}-`, ...splitLongWord(word.slice(cut))];
+  return [word.slice(0, cut), ...splitLongWord(word.slice(cut))];
 }
 
-function letterCount(word: string): number {
+function letterCount(word: string, pattern = LETTER): number {
   let count = 0;
-  for (const char of word) if (LETTER.test(char)) count++;
+  for (const char of word) if (pattern.test(char)) count++;
   return count;
+}
+
+const ONLY_LETTER = /\p{L}/u;
+const OPENERS = /^(["'“‘«]*)([([]+)/u;
+const CLOSERS = /[)\]]+(?=["'”’»]*[.,;:!?…—–]*["'”’»]*$)/u;
+const CURRENCY_SIGN = /[₺$€£]/u;
+const CURRENCY_WORD = /^(tl|try|lira|usd|dolar|eur|euro|avro|sterlin|gbp)\b/iu;
+
+/**
+ * Göz büyük bir sayıyı rakam rakam okur. Binlik ayırıcıyla gruplanınca
+ * "1534799" yerine "1.534.799" bir bakışta kavranıyor. Yıllar (4 hane),
+ * 0 ile başlayan telefon/numaralar ve 11+ haneli kimlik/IBAN parçaları
+ * olduğu gibi kalıyor; para birimi varsa 4 hane de gruplanıyor.
+ */
+function groupDigits(word: string, money: boolean): string {
+  return word.replace(/(^|[^\d.,])(\d+)(?![.,]?\d)/gu, (match, before, run) => {
+    if (run[0] === "0" || run.length > 10) return match;
+    if (run.length < (money ? 4 : 5)) return match;
+    return before + run.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  });
+}
+
+/**
+ * Rakamlı kelimenin ek süresi (kelime cinsinden). Kısa sayılar ("3 kişi")
+ * neredeyse normal; hane arttıkça, birden çok sayı ("2009-2010") ya da
+ * tarih ("12.05.2009") varsa artıyor.
+ */
+function numberCost(word: string): { extra: number; minMs: number } {
+  const digits = letterCount(word, /\d/);
+  if (!digits) return { extra: 0, minMs: 0 };
+  if (digits <= 2) return { extra: 0.3, minMs: 0 };
+  const numbers = word.match(/\d+(?:[.,]\d+)*/g)?.length ?? 1;
+  const isDate = /\d{1,2}[./]\d{1,2}[./]\d{2,4}/.test(word);
+  const extra =
+    0.4 +
+    0.35 * (Math.min(digits, 12) - 2) +
+    0.35 * (numbers - 1) +
+    (isDate ? 0.4 : 0);
+  return {
+    extra: Math.min(extra, 3.2),
+    minMs: 200 + 50 * Math.min(digits, 12) + 60 * (numbers - 1),
+  };
 }
 
 export function tokenize(
@@ -124,45 +173,97 @@ export function tokenize(
   { focus, punctuationPause }: { focus: FocusMode; punctuationPause: boolean },
 ): Parsed {
   const tokens: Token[] = [];
+  // `base` ritim (uzunluk + noktalama), ortalaması 1'e çekiliyor;
+  // `extra` içerik zorluğu (sayılar), hızı koruyup üstüne ekleniyor.
+  const base: number[] = [];
+  const extra: number[] = [];
   const paragraphs = splitParagraphs(text);
 
   paragraphs.forEach((paragraph, p) => {
     const words = paragraph.split(/\s+/).filter(Boolean);
+    let depth = 0;
     words.forEach((whole, w) => {
-      splitLongWord(whole).forEach((word, part, pieces) => {
-        const length = letterCount(word);
+      // Parantez işaretleri kelimeden alınıp sahnenin kenarına taşınıyor;
+      // "(örneğin" kelimesi ekranda kaymıyor, aradaki söz de belli oluyor.
+      let display = whole;
+      const opened = OPENERS.exec(display);
+      const opens = opened ? opened[2].length : 0;
+      if (opens) {
+        display = opened![1] + display.slice(opened![0].length);
+        depth += opens;
+      }
+      const aside = depth > 0;
+      const closed = depth > 0 ? CLOSERS.exec(display) : null;
+      if (closed) {
+        display =
+          display.slice(0, closed.index) +
+          display.slice(closed.index + closed[0].length);
+        depth = Math.max(0, depth - closed[0].length);
+      }
+      if (!display || !LETTER.test(display)) display = whole;
+
+      const money =
+        CURRENCY_SIGN.test(whole) || CURRENCY_WORD.test(words[w + 1] ?? "");
+      display = groupDigits(display, money).replace(/(\d)-(?=\d)/g, "$1–");
+      const cost = numberCost(whole);
+
+      const sourceParts = splitLongWord(whole);
+      const displayParts =
+        sourceParts.length > 1
+          ? splitLongWord(display).map((part, i, all) =>
+              i < all.length - 1 ? `${part}-` : part,
+            )
+          : [display];
+      const pieces =
+        displayParts.length === sourceParts.length ? sourceParts : [whole];
+
+      pieces.forEach((source, part) => {
+        const shown = pieces.length > 1 ? displayParts[part] : display;
+        const length = letterCount(shown, cost.extra ? ONLY_LETTER : LETTER);
         // Uzun kelimeler daha uzun kalır; Türkçe ekli kelimeler için önemli.
         let weight = length > 7 ? Math.min(1 + (length - 7) * 0.08, 1.9) : 1;
-        if (/\d/.test(word)) weight += 0.3;
 
-        const isLastInParagraph =
-          w === words.length - 1 && part === pieces.length - 1;
-        if (punctuationPause) {
+        const isLast = part === pieces.length - 1;
+        const isLastInParagraph = w === words.length - 1 && isLast;
+        if (punctuationPause && isLast) {
           if (isLastInParagraph && p < paragraphs.length - 1) weight += 1.6;
-          else if (SENTENCE_END.test(word)) weight += 1.1;
-          else if (CLAUSE_END.test(word)) weight += 0.5;
+          else if (SENTENCE_END.test(whole)) weight += 1.1;
+          else if (CLAUSE_END.test(whole) || closed) weight += 0.5;
+          else if (OPENERS.test(words[w + 1] ?? "")) weight += 0.35;
         }
 
+        let bonus = part === 0 ? cost.extra : 0;
+        // Büyük bir sayıdan sonra göz bir an toparlanıyor.
         const previous = tokens[tokens.length - 1];
+        if (previous && previous.minMs >= 360 && part === 0) bonus += 0.2;
+
         tokens.push({
-          text: word,
-          pivot: pivotIndex(word, focus),
-          weight,
+          text: shown,
+          source,
+          pivot: pivotIndex(shown, focus),
+          weight: 0,
+          minMs: part === 0 ? cost.minMs : 0,
           paraStart: w === 0 && part === 0,
           sentenceStart:
             part === 0 &&
-            (w === 0 || !previous || SENTENCE_END.test(previous.text)),
-          joinNext: part < pieces.length - 1 || undefined,
+            (w === 0 || !previous || SENTENCE_END.test(previous.source)),
+          aside,
+          joinNext: !isLast || undefined,
         });
+        base.push(weight);
+        extra.push(bonus);
       });
     });
   });
 
   // Molalar kelimeler arasında süreyi yeniden dağıtıyor ama toplamı uzatmıyor:
   // ortalama ağırlık 1 olsun ki "300 kelime/dk" gerçekten dakikada 300 kelime.
+  // Sayıların ek süresi bunun dışında: onlar gerçekten daha uzun sürüyor.
   const mean =
-    tokens.reduce((sum, token) => sum + token.weight, 0) / (tokens.length || 1);
-  for (const token of tokens) token.weight /= mean;
+    base.reduce((sum, weight) => sum + weight, 0) / (base.length || 1);
+  tokens.forEach((token, i) => {
+    token.weight = base[i] / mean + extra[i];
+  });
 
   const suffix = new Float64Array(tokens.length + 1);
   for (let i = tokens.length - 1; i >= 0; i--) {

@@ -97,6 +97,7 @@ export function Reader({
   const percentRef = useRef<HTMLSpanElement>(null);
   const remainingRef = useRef<HTMLSpanElement>(null);
   const contextRef = useRef<HTMLDivElement>(null);
+  const asideRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -122,13 +123,21 @@ export function Reader({
       const half = pivot.offsetWidth / 2;
       const center = pivot.offsetLeft + half;
       const target = width * focal;
+      // Parantez görünüyorsa kelime onlara değmesin.
+      const gap = token.aside
+        ? ((asideRef.current?.firstElementChild as HTMLElement | null)
+            ?.offsetWidth ?? 0) + 8
+        : 4;
       const scale = Math.min(
         1,
-        (target - half - 4) / (left.offsetWidth || 1),
-        (width - target - half - 4) / (right.offsetWidth || 1),
+        (target - half - gap) / (left.offsetWidth || 1),
+        (width - target - half - gap) / (right.offsetWidth || 1),
       );
       row.style.transformOrigin = `${center}px 50%`;
       row.style.transform = `translateX(${target - center}px)${scale < 1 ? ` scale(${scale})` : ""}`;
+      if (asideRef.current) {
+        asideRef.current.style.opacity = token.aside ? "1" : "0";
+      }
 
       if (fillRef.current) {
         fillRef.current.style.transform = `scaleX(${(i + 1) / total})`;
@@ -169,8 +178,9 @@ export function Reader({
       // Arka plandan dönünce kaçırılan kelimeleri art arda patlatma.
       if (nextAt < now - 250) nextAt = now;
       const ramp = warmup < RAMP_WORDS ? 1 + (RAMP_WORDS - warmup) * 0.15 : 1;
+      const token = tokens[indexRef.current];
       nextAt +=
-        tokens[indexRef.current].weight * (60000 / wpmRef.current) * ramp;
+        Math.max(token.weight * (60000 / wpmRef.current), token.minMs) * ramp;
       timer = window.setTimeout(advance, nextAt - performance.now());
     };
 
@@ -420,6 +430,16 @@ export function Reader({
             style={{ left: `${focal * 100}%` }}
           />
 
+          {/* Parantez içindeki söz okunurken kenarlarda parantez duruyor */}
+          <div
+            ref={asideRef}
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 inset-y-[0.2em] flex items-center justify-between font-light text-oku-faint opacity-0 transition-opacity duration-150"
+          >
+            <span>(</span>
+            <span>)</span>
+          </div>
+
           <div
             ref={rowRef}
             className="relative grid w-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-baseline leading-none font-medium tracking-[-0.01em] whitespace-pre text-oku-text"
@@ -495,10 +515,7 @@ export function Reader({
                               : "cursor-pointer text-oku-muted"
                         }
                       >
-                        {/* Bölünmüş kelime bağlamda tek parça görünsün */}
-                        {tokens[i].joinNext
-                          ? tokens[i].text.slice(0, -1)
-                          : tokens[i].text}
+                        {tokens[i].source}
                       </span>
                       {tokens[i].joinNext ? "" : " "}
                     </span>
