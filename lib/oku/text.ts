@@ -9,6 +9,8 @@
 
 export type FocusMode = "optimal" | "center";
 
+export type Aside = "paren" | "quote";
+
 export type Token = {
   /** Sahnede gösterilen hali: parantezsiz, büyük sayılar gruplanmış */
   text: string;
@@ -24,8 +26,8 @@ export type Token = {
   sentenceStart: boolean;
   /** Paragrafın ilk kelimesi mi — bağlam görünümü paragrafları buna göre bölüyor */
   paraStart: boolean;
-  /** Parantez içinde mi — sahne kenarlarında parantez gösteriliyor */
-  aside: boolean;
+  /** Parantez ya da tırnak içinde mi — sahne kenarlarında işareti gösteriliyor */
+  aside?: Aside;
   /** Bölünmüş uzun kelimenin parçası: bağlamda arkasına boşluk konmuyor */
   joinNext?: boolean;
 };
@@ -127,8 +129,72 @@ function letterCount(word: string, pattern = LETTER): number {
 }
 
 const ONLY_LETTER = /\p{L}/u;
-const OPENERS = /^(["'“‘«]*)([([]+)/u;
-const CLOSERS = /[)\]]+(?=["'”’»]*[.,;:!?…—–]*["'”’»]*$)/u;
+const OPEN: Record<string, Aside> = {
+  "(": "paren",
+  "[": "paren",
+  '"': "quote",
+  "“": "quote",
+  "«": "quote",
+};
+const CLOSE: Record<string, Aside> = {
+  ")": "paren",
+  "]": "paren",
+  '"': "quote",
+  "”": "quote",
+  "»": "quote",
+};
+/** Kapanış işaretinden sonra yalnızca noktalama ya da ek gelebilir: "(AB)'ye" */
+const AFTER_CLOSE = /^[)\]"”».,;:!?…—–'’\p{L}]*$/u;
+
+/**
+ * Parantez ve tırnak işaretleri kelimeden alınıp sahnenin kenarına
+ * taşınıyor: "(örneğin" ya da “Evet” kelimesi ekranda kaymıyor, aradaki
+ * söz de belli oluyor. `stack` paragraf boyunca açık işaretleri tutuyor;
+ * eşi açılmamış bir kapanış ("1)" gibi) olduğu gibi kalıyor.
+ */
+/** Kelimede bu türden bir kapanış var mı — "evet" ya da (AB)'ye gibi. */
+function closes(word: string, kind: Aside): boolean {
+  for (let i = 1; i < word.length; i++) {
+    if (CLOSE[word[i]] === kind && AFTER_CLOSE.test(word.slice(i + 1))) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function stripMarks(
+  word: string,
+  stack: Aside[],
+  canOpen: (kind: Aside) => boolean,
+) {
+  let start = 0;
+  while (
+    start < word.length - 1 &&
+    OPEN[word[start]] &&
+    canOpen(OPEN[word[start]])
+  ) {
+    stack.push(OPEN[word[start]]);
+    start++;
+  }
+  const aside = stack[stack.length - 1];
+  let display = "";
+  let closed = false;
+  for (let i = start; i < word.length; i++) {
+    const kind = CLOSE[word[i]];
+    if (
+      kind &&
+      i > start &&
+      stack.includes(kind) &&
+      AFTER_CLOSE.test(word.slice(i + 1))
+    ) {
+      stack.length = stack.lastIndexOf(kind);
+      closed = true;
+      continue;
+    }
+    display += word[i];
+  }
+  return { display: LETTER.test(display) ? display : word, aside, closed };
+}
 const CURRENCY_SIGN = /[₺$€£]/u;
 const CURRENCY_WORD = /^(tl|try|lira|usd|dolar|eur|euro|avro|sterlin|gbp)\b/iu;
 
@@ -181,26 +247,19 @@ export function tokenize(
 
   paragraphs.forEach((paragraph, p) => {
     const words = paragraph.split(/\s+/).filter(Boolean);
-    let depth = 0;
+    const stack: Aside[] = [];
     words.forEach((whole, w) => {
-      // Parantez işaretleri kelimeden alınıp sahnenin kenarına taşınıyor;
-      // "(örneğin" kelimesi ekranda kaymıyor, aradaki söz de belli oluyor.
-      let display = whole;
-      const opened = OPENERS.exec(display);
-      const opens = opened ? opened[2].length : 0;
-      if (opens) {
-        display = opened![1] + display.slice(opened![0].length);
-        depth += opens;
-      }
-      const aside = depth > 0;
-      const closed = depth > 0 ? CLOSERS.exec(display) : null;
-      if (closed) {
-        display =
-          display.slice(0, closed.index) +
-          display.slice(closed.index + closed[0].length);
-        depth = Math.max(0, depth - closed[0].length);
-      }
-      if (!display || !LETTER.test(display)) display = whole;
+      // Eşi olmayan bir açılış (kapanmamış tırnak gibi) yok sayılıyor;
+      // yoksa paragrafın geri kalanı tırnak içi sanılırdı.
+      const marks = stripMarks(whole, stack, (kind) =>
+        words
+          .slice(w)
+          .some((word, k) =>
+            k ? closes(word, kind) : closes(word.slice(1), kind),
+          ),
+      );
+      const { aside, closed } = marks;
+      let display = marks.display;
 
       const money =
         CURRENCY_SIGN.test(whole) || CURRENCY_WORD.test(words[w + 1] ?? "");
@@ -229,7 +288,7 @@ export function tokenize(
           if (isLastInParagraph && p < paragraphs.length - 1) weight += 1.6;
           else if (SENTENCE_END.test(whole)) weight += 1.1;
           else if (CLAUSE_END.test(whole) || closed) weight += 0.5;
-          else if (OPENERS.test(words[w + 1] ?? "")) weight += 0.35;
+          else if (OPEN[words[w + 1]?.[0] ?? ""]) weight += 0.35;
         }
 
         let bonus = part === 0 ? cost.extra : 0;

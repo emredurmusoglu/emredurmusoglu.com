@@ -117,6 +117,17 @@ export function Reader({
       pivot.textContent = token.text[token.pivot] ?? "";
       right.textContent = token.text.slice(token.pivot + 1);
 
+      const marks = asideRef.current;
+      if (marks) {
+        marks.style.opacity = token.aside ? "1" : "0";
+        // Kaybolurken eski işaret kalsın, solarken değişmesin.
+        if (token.aside && marks.firstElementChild && marks.lastElementChild) {
+          const quote = token.aside === "quote";
+          marks.firstElementChild.textContent = quote ? "“" : "(";
+          marks.lastElementChild.textContent = quote ? "”" : ")";
+        }
+      }
+
       // Kırmızı harfin ortası piksel piksel odak çizgisine oturtuluyor;
       // kelime yine de taşacaksa odak noktasının etrafında küçültülüyor.
       const width = row.clientWidth;
@@ -135,9 +146,6 @@ export function Reader({
       );
       row.style.transformOrigin = `${center}px 50%`;
       row.style.transform = `translateX(${target - center}px)${scale < 1 ? ` scale(${scale})` : ""}`;
-      if (asideRef.current) {
-        asideRef.current.style.opacity = token.aside ? "1" : "0";
-      }
 
       if (fillRef.current) {
         fillRef.current.style.transform = `scaleX(${(i + 1) / total})`;
@@ -430,7 +438,7 @@ export function Reader({
             style={{ left: `${focal * 100}%` }}
           />
 
-          {/* Parantez içindeki söz okunurken kenarlarda parantez duruyor */}
+          {/* Parantez ya da tırnak içi okunurken kenarlarda işareti duruyor */}
           <div
             ref={asideRef}
             aria-hidden="true"
