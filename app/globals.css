@@ -530,10 +530,23 @@ body:has(.oku-app) {
     opacity: 0.2;
   }
 
-  /* Kaydırırken sayfa kodu kısa bir an belirginleşiyor */
+  /* Kaydırırken sayfa kodu belirginleşiyor; durunca birden değil, yavaşça
+     sönüyor. Dokununca yanan fener de aynı yumuşaklıkta kapanıyor. */
+  .src-layer[data-variant="page"] .src-ambient {
+    transition: opacity 1.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+
+  .src-layer[data-variant="page"] .src-spot {
+    transition: opacity 1s ease-out;
+  }
+
   .src-layer[data-variant="page"][data-glow] .src-ambient {
     opacity: 0.16;
-    transition-duration: 0.2s;
+    transition-duration: 0.25s;
+  }
+
+  .src-layer[data-variant="page"][data-hover] .src-spot {
+    transition-duration: 0.25s;
   }
 }
 
