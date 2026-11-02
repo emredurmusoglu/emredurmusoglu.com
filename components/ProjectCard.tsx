@@ -99,9 +99,12 @@ export function ProjectCard({
   ].filter(Boolean) as string[];
 
   // Detay sayfası olan kartlarda mağazaya giden ikincil bağlantı. Kartın
-  // tamamını kaplayan detay bağlantısının üstünde durması için z-10.
+  // tamamını kaplayan detay bağlantısının üstünde durması gerekiyor; ama
+  // hover'da adacık backdrop-filter ile kendi katmanını açtığı için z-10'u
+  // bağlantıya değil adacığın kendisine veriyoruz (aşağıda). Dolgu, parmakla
+  // basılabilecek bir alan bırakıyor.
   const storeLink =
-    "relative z-10 text-sm text-white/40 transition hover:text-white/85";
+    "pointer-events-auto -my-2 py-2 text-sm text-white/40 transition hover:text-white/85";
   const storeAction = hasBothStores ? (
     <button type="button" onClick={() => setPicking(true)} className={storeLink}>
       Uygulamaya Git
@@ -188,7 +191,10 @@ export function ProjectCard({
             {project.comingSoon ? (
               <span className="src-island text-sm text-white/30">Hazırlanıyor</span>
             ) : detailHref ? (
-              <div className="src-island flex items-center gap-4">
+              // Adacık detay bağlantısının üstünde ama tıklamaları geçiriyor;
+              // yalnızca mağaza bağlantısı tıklamayı kendisi alıyor, "İncele →"
+              // alttaki detay bağlantısına düşüyor.
+              <div className="src-island pointer-events-none relative z-10 flex items-center gap-4">
                 {storeAction}
                 <span className="text-sm font-medium text-white/70 transition group-hover:text-white">
                   İncele →

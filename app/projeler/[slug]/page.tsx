@@ -124,7 +124,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
       <div className="relative mx-auto max-w-5xl px-6 py-12 md:py-20">
         <Link
-          href="/#projeler"
+          href="/"
           className="inline-flex items-center gap-2 text-sm text-white/45 transition hover:text-white/85"
         >
           ← Ana sayfa
