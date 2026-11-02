@@ -67,9 +67,9 @@ export const works: Work[] = [
   {
     slug: "sibea",
     title: "Sibea",
-    tagline: "İş makinesi kiralama firması için canlı müsaitlikli web sitesi ve yönetim paneli.",
+    tagline: "Bir iş makinesi kiralama firması için makinelerin müsaitliğini canlı gösteren web sitesi ve yönetim paneli.",
     summary:
-      "SİBEA İnşaat'ın kiralama sürecini tek bir sisteme taşıdım. Müşterileri hangi makinenin ne zaman boş olduğunu siteden görüp iki dakikada talep bırakıyor; ekip ise teklif, planlama, teslim ve iadeyi tek panelden yönetiyor.",
+      "SİBEA İnşaat'ın kiralama sürecini tek bir sisteme taşıdım. Müşteriler hangi makinenin ne zaman boş olduğunu siteden görüp iki dakikada talep bırakıyor; ekip ise teklif, planlama, teslim ve iadeyi tek panelden yönetiyor.",
     company: "SİBEA İnşaat",
     year: "2026",
     responsibility: "Tasarım, geliştirme, yayın ve bakım",
@@ -90,7 +90,7 @@ export const works: Work[] = [
     features: [
       {
         title: "Hangi makine ne zaman boş, herkes görüyor",
-        body: "Filodaki her makinenin durumu ve önümüzdeki haftaları sitede canlı. Ekip ayrıca bir şey güncellemiyor; panelde yapılan her kiralama siteye anında yansıyor.",
+        body: "Filodaki her makinenin durumu ve önümüzdeki haftalardaki doluluğu sitede canlı olarak görünüyor. Ekip ayrıca bir şey güncellemiyor; panelde yapılan her kiralama siteye anında yansıyor.",
         image: desktop("sibea", "site-filo", "Filo sayfası: canlı müsaitlik", "sibea.com.tr/filo"),
       },
       {
@@ -147,7 +147,7 @@ export const works: Work[] = [
   {
     slug: "menga",
     title: "MengA",
-    tagline: "İnşaat firması için referans vitrini olan kurumsal site ve müşteri takip paneli.",
+    tagline: "Bir inşaat firması için referanslarını sergileyen kurumsal site ve müşteri takip paneli.",
     summary:
       "MengA İnşaat'ın 2012'den bu yana yaptığı işleri, makine parkını ve yurt dışındaki danışmanlık deneyimini iki dilde bir siteye taşıdım. Siteden gelen her talep, ekibin müşteri takibini, yazışmalarını, makinelerini ve tanıtım kataloğunu yönettiği panele düşüyor.",
     company: "MengA İnşaat",
@@ -174,13 +174,13 @@ export const works: Work[] = [
         image: desktop("menga", "site-projeler", "Projeler sayfası", "menga.com.tr/projeler"),
       },
       {
-        title: "Site, yazılımcıya gerek kalmadan güncel",
+        title: "Yazılımcıya gerek kalmadan hep güncel",
         body: "Yeni bir proje, fotoğraf ya da makine panelden ekleniyor ve birkaç saniye içinde sitede. Her içeriğin Türkçesi ve İngilizcesi aynı formda yan yana.",
         image: desktop("menga", "panel-icerik", "Panelde site içeriği", "menga.com.tr/panel/icerik"),
       },
       {
         title: "Teklif talebi doğrudan takibe",
-        body: "Siteden gelen her talep panelde yeni bir müşteri kaydı olarak açılıyor ve ekibe anında e-postayla bildiriliyor. Hiçbir talep bir gelen kutusunda unutulmuyor.",
+        body: "Siteden gelen her talep panelde yeni bir müşteri kaydı olarak açılıyor ve ekibe anında e-postayla bildiriliyor. Hiçbir talep e-posta kutusunda unutulup gitmiyor.",
         image: desktop("menga", "site-teklif", "Teklif isteme formu", "menga.com.tr/teklif-iste"),
       },
       {
@@ -228,7 +228,7 @@ export const works: Work[] = [
       },
       {
         title: "Eski adresler kaybolmadı",
-        body: "Eski sitedeki her sayfa yenisine yönleniyor; Google'da kazanılmış yer ve paylaşılmış bağlantılar boşa gitmedi.",
+        body: "Eski sitedeki her sayfa yenisine yönleniyor; Google'daki sıralama da paylaşılmış bağlantılar da boşa gitmedi.",
       },
     ],
     pitch:

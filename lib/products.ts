@@ -72,7 +72,7 @@ export const products: ProductShowcase[] = [
     kind: "web",
     tagline: "Düğün, kına ve nişan için tek bağlantıyla paylaşılan dijital davetiye.",
     summary:
-      "Kağıt davetiyenin yerine, WhatsApp'tan tek bağlantıyla gönderilen şık bir davetiye sayfası. Çift bilgileri girip tasarımını seçiyor, misafirler davetiyeyi açıp katılımını bildiriyor; kim geliyor, kaç kişi geliyor, hepsi canlı olarak panelde.",
+      "Kağıt davetiyenin yerine, WhatsApp'tan tek bağlantıyla gönderilen şık bir davetiye sayfası. Çift, bilgilerini girip tasarımını seçiyor, misafirler davetiyeyi açıp katılımını bildiriyor; kim geliyor, kaç kişi geliyor, hepsi canlı olarak panelde.",
     category: "Dijital davetiye platformu",
     platform: "Web · telefon öncelikli",
     year: "2025",
@@ -112,7 +112,7 @@ export const products: ProductShowcase[] = [
     highlights: [
       {
         title: "Katılım formu ve canlı panel",
-        body: "Misafir gelip gelmeyeceğini, kaç kişi olduğunu ve notunu bırakıyor; liste panelinizde anında güncelleniyor.",
+        body: "Misafir gelip gelmeyeceğini ve kaç kişi olacağını bildiriyor, dilerse bir not bırakıyor. Liste panelinizde anında güncelleniyor.",
       },
       {
         title: "Fotoğraf ve video galerisi",
@@ -120,7 +120,7 @@ export const products: ProductShowcase[] = [
       },
       {
         title: "Hediye ve IBAN bölümü",
-        body: "İsterseniz hediye önerileri ve banka bilgileri; istemezseniz tek tıkla gizli.",
+        body: "İsterseniz hediye önerilerinizi ve banka bilgilerinizi ekleyin, istemezseniz tek tıkla gizleyin.",
       },
       {
         title: "Müzik ya da sesli mesaj",
@@ -128,7 +128,7 @@ export const products: ProductShowcase[] = [
       },
       {
         title: "Harita ve takvim",
-        body: "Mekana yol tarifi ve etkinliği takvime ekleme, misafirin telefonunda tek dokunuş.",
+        body: "Misafir mekana yol tarifi almayı da etkinliği takvimine eklemeyi de tek dokunuşla hallediyor.",
       },
       {
         title: "Türkçe ve İngilizce",
@@ -156,11 +156,11 @@ export const products: ProductShowcase[] = [
       { value: "5", label: "farklı uyanma görevi" },
       { value: "24", label: "alarm sesi" },
       { value: "11", label: "dilde kullanılabiliyor" },
-      { value: "0", label: "görev bitmeden kapatma yolu" },
+      { value: "0", label: "görevi bitirmeden susturmanın yolu" },
     ],
     features: [
       {
-        title: "Alarmlarınız, tek bakışta",
+        title: "Bütün alarmlarınız tek bakışta",
         body: "Hafta içi, hafta sonu ya da tek seferlik. Her alarmın hangi günlerde çalacağı ve hangi görevleri istediği listede görünüyor.",
         image: alarmix("alarms", "Alarm listesi"),
       },
@@ -212,7 +212,7 @@ export const products: ProductShowcase[] = [
     kind: "app",
     tagline: "Rüzgara karşı çizgide kalmaya çalıştığınız, tek dokunuşla oynanan arcade oyunu.",
     summary:
-      "Kural basit: çizginin üzerinde kal. Ama rüzgar sizi itiyor, engeller yolu kesiyor ve her saniye biraz daha zorlaşıyor. Kısa molalar için tasarlandı, ama elden bırakması zor.",
+      "Kural basit: çizginin üzerinde kal. Ama rüzgar sizi itiyor, engeller yolu kesiyor ve her saniye biraz daha zorlaşıyor. Kısa molalarda oynamak için birebir ama bir başlayınca bırakması zor.",
     category: "Arcade oyun",
     platform: "iPhone ve Android",
     year: "2026",
@@ -237,7 +237,7 @@ export const products: ProductShowcase[] = [
       },
       {
         title: "Baloncuklar işinize yarar",
-        body: "Kalkan rüzgarı kesiyor, +2 çizgi dışında fazladan süre veriyor, kalp ise ekstra can. Doğru anda toplamak skoru katlıyor.",
+        body: "Kalkan rüzgarı kesiyor, +2 çizgi dışında fazladan süre kazandırıyor, kalp de bir can daha veriyor. Doğru anda toplarsanız skor katlanıyor.",
         image: online("bubbles", "Güçlendirme baloncukları"),
       },
       {
@@ -268,9 +268,9 @@ export const products: ProductShowcase[] = [
   {
     slug: "vaktinde",
     kind: "app",
-    tagline: "Diyanet'in resmî vakitleri, susturana kadar çalan ezan alarmı ve kıble, tek uygulamada.",
+    tagline: "Diyanet'in resmî vakitleri, susturana kadar çalan ezan alarmı ve kıble pusulası bir arada.",
     summary:
-      "Namaz vakitlerini takip etmenin sade ve zarif yolu. Ana ekranda dönen canlı dünya, bir sonraki vakte kalan süre ve günün gökyüzü; arkasında ise Diyanet'in resmî vakitleri. Kur'an-ı Kerim, imsakiye, kıble pusulası ve Apple Watch desteğiyle.",
+      "Namaz vakitlerini sade ve zarif bir şekilde takip edin. Ana ekranda dönen canlı bir dünya, sıradaki vakte kalan süre ve günün gökyüzü; arkasında da Diyanet'in resmî vakitleri. Üstelik Kur'an-ı Kerim, imsakiye, kıble pusulası ve Apple Watch desteği de var.",
     category: "Namaz vakti ve ibadet",
     platform: "iPhone, Apple Watch, CarPlay",
     year: "2026",
@@ -289,7 +289,7 @@ export const products: ProductShowcase[] = [
     ],
     features: [
       {
-        title: "Bir sonraki vakit, tek bakışta",
+        title: "Sıradaki vakit tek bakışta",
         body: "Kalan süre, günün altı vakti ve hicri tarih. Arka plandaki gökyüzü günün saatine göre değişiyor; sabah güneşi, gece ay ve yıldızlar.",
         image: vaktinde("home", "Ana ekran, gece"),
       },
@@ -305,7 +305,7 @@ export const products: ProductShowcase[] = [
       },
       {
         title: "Ayın tüm vakitleri",
-        body: "İmsakiye ile ayın her gününün vakitleri bir arada; bugün vurgulu.",
+        body: "İmsakiyede ayın bütün günlerinin vakitleri bir arada; bugünün satırı vurgulu.",
         image: vaktinde("imsakiye", "İmsakiye"),
       },
     ],
@@ -316,11 +316,11 @@ export const products: ProductShowcase[] = [
       },
       {
         title: "Kıble pusulası",
-        body: "Kâbe'nin yönü pusulada ve haritada, bulunduğunuz yerden.",
+        body: "Bulunduğunuz yerden Kâbe'nin yönü hem pusulada hem haritada.",
       },
       {
         title: "Widget ve kilit ekranı",
-        body: "Telefonu açmadan bir sonraki vakte ne kadar kaldığını görün.",
+        body: "Telefonun kilidini açmadan sıradaki vakte ne kadar kaldığını görün.",
       },
       {
         title: "Apple Watch ve CarPlay",

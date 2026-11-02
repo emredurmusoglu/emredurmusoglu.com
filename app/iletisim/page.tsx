@@ -5,7 +5,7 @@ import { ContactForm } from "@/components/ContactForm";
 
 export const metadata: Metadata = {
   title: "İletişim — Emre Durmuşoğlu",
-  description: "Proje, iş birliği ya da soru için mesaj gönderin.",
+  description: "Bir projeniz, iş birliği teklifiniz ya da sorunuz varsa yazın.",
   alternates: { canonical: "/iletisim" },
 };
 

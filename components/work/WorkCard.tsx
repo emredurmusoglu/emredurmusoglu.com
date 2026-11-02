@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { ExternalArrow } from "@/components/ExternalArrow";
 import { SourceLayer } from "@/components/source/SourceLayer";
 import workCardSource from "@/lib/source/workCard.json";
 import type { Work } from "@/lib/work";
@@ -61,7 +62,7 @@ export function WorkCard({ work }: { work: Work }) {
                 className="inline-flex items-center gap-1.5 rounded-full border border-white/15 px-4 py-2 text-sm font-medium text-white/75 transition hover:border-white/30 hover:text-white"
               >
                 {work.liveLabel}
-                <span aria-hidden="true">↗</span>
+                <ExternalArrow className="ml-0" />
               </a>
             </div>
           </div>

@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { ExternalArrow } from "@/components/ExternalArrow";
 import { SourceLayer } from "@/components/source/SourceLayer";
 import { AppleIcon, PlayIcon } from "@/components/StoreIcons";
 import { BrowserFrame, DeviceFrame } from "@/components/work/Frames";
@@ -82,7 +83,8 @@ function StoreLinks({ project, primary = false }: { project: Project; primary?: 
       ) : null}
       {!project.iosUrl && !project.androidUrl && project.url ? (
         <a href={project.url} target="_blank" rel="noreferrer" className={primary ? solid : ghost}>
-          {host} ↗
+          {host}
+          <ExternalArrow className="ml-0" />
         </a>
       ) : null}
     </div>

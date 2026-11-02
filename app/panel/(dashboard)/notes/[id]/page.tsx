@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { ExternalArrow } from "@/components/ExternalArrow";
 import { SubmitButton } from "@/components/panel/SubmitButton";
 import { deleteNote, setNotePublished, updateNote } from "@/lib/actions/notes";
 import { getNote, listProjectOptions } from "@/lib/dal";
@@ -42,7 +43,8 @@ export default async function NoteEditorPage({
               target="_blank"
               className="text-xs font-medium text-emerald-700 transition hover:text-emerald-800"
             >
-              Sitede gör ↗
+              Sitede gör
+              <ExternalArrow />
             </Link>
           ) : null}
 

@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { ExternalArrow } from "@/components/ExternalArrow";
 import { SourceLayer } from "@/components/source/SourceLayer";
 import { BrowserFrame, PhoneFrame } from "@/components/work/Frames";
 import ctaSource from "@/lib/source/workCta.json";
@@ -115,7 +116,8 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
                   rel="noreferrer"
                   className="text-white/80 underline decoration-white/25 underline-offset-4 transition hover:text-white hover:decoration-white/60"
                 >
-                  {work.liveLabel} ↗
+                  {work.liveLabel}
+                  <ExternalArrow />
                 </a>
                 <span className="ml-2 text-white/35">· {work.year}</span>
               </dd>
@@ -201,7 +203,8 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
               rel="noreferrer"
               className="inline-flex items-center gap-1.5 rounded-full border border-white/15 px-5 py-2.5 text-sm font-medium text-white/75 transition hover:border-white/30 hover:text-white"
             >
-              {work.liveLabel} ↗
+              {work.liveLabel}
+              <ExternalArrow className="ml-0" />
             </a>
           </div>
         </section>

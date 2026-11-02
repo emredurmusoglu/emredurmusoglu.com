@@ -20,7 +20,7 @@ export function ContactForm() {
       <div className="mt-10 rounded-2xl border border-emerald-400/20 bg-emerald-400/5 p-6 text-white/80">
         <p className="font-medium text-white">Mesajınız ulaştı, teşekkürler.</p>
         <p className="mt-2 text-sm text-white/55">
-          En kısa sürede size dönüş yapacağım.
+          En kısa sürede size döneceğim.
         </p>
       </div>
     );
@@ -32,7 +32,7 @@ export function ContactForm() {
     <>
       <p className="mt-8 text-base leading-relaxed text-white/60 md:text-lg">
         Aklınızdaki projeyi, sorunuzu ya da fikrinizi kısaca yazın. Mesajınız
-        doğrudan bana ulaşır, en kısa sürede size dönüş yaparım.
+        doğrudan bana ulaşır, en kısa sürede size dönerim.
       </p>
 
       <form action={action} className="mt-10 space-y-4">
@@ -79,7 +79,7 @@ export function ContactForm() {
           </label>
           <fieldset>
             <legend className="mb-1.5 block text-sm text-white/55">
-              Size nasıl dönüş yapayım?
+              Size nasıl ulaşayım?
             </legend>
             <div className="flex flex-wrap gap-2">
               {PREFERENCES.map((p) => (

@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
+import { ExternalArrow } from "@/components/ExternalArrow";
 import { SourceLayer } from "@/components/source/SourceLayer";
 import { AppleIcon, PlayIcon } from "@/components/StoreIcons";
 import cardSource from "@/lib/source/projectCard.json";
@@ -103,11 +104,13 @@ export function ProjectCard({
     "relative z-10 text-sm text-white/40 transition hover:text-white/85";
   const storeAction = hasBothStores ? (
     <button type="button" onClick={() => setPicking(true)} className={storeLink}>
-      Uygulamaya Git ↗
+      Uygulamaya Git
+      <ExternalArrow />
     </button>
   ) : singleHref ? (
     <a href={singleHref} target="_blank" rel="noreferrer" className={storeLink}>
-      {project.iosUrl || project.androidUrl ? "Uygulamaya Git ↗" : "Siteye Git ↗"}
+      {project.iosUrl || project.androidUrl ? "Uygulamaya Git" : "Siteye Git"}
+      <ExternalArrow />
     </a>
   ) : null;
 
