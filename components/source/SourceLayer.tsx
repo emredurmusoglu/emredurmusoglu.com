@@ -64,8 +64,13 @@ export function SourceLayer({
       layer.style.setProperty("--src-x", `${e.clientX - r.left}px`);
       layer.style.setProperty("--src-y", `${e.clientY - r.top}px`);
     };
+    // Fener pointerenter'a güvenmeden her harekette de yanıyor: sayfa
+    // geçişinde imleç zaten içerideyken bazı tarayıcılar (Safari) enter
+    // olayını hiç göndermiyor, fener de hiç açılmıyordu.
     const track = (e: PointerEvent) => {
-      if (e.pointerType === "mouse") aim(e);
+      if (e.pointerType !== "mouse") return;
+      aim(e);
+      layer.dataset.hover = "";
     };
     const enter = (e: PointerEvent) => {
       if (e.pointerType !== "mouse") return;
