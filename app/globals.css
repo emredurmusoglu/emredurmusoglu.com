@@ -445,12 +445,12 @@ body:has(.oku-app) {
 }
 
 .src-layer[data-peek] .src-spot {
-  animation: src-peek 2.2s ease;
+  animation: src-peek 0.8s ease;
 }
 
 @keyframes src-peek {
-  30%,
-  55% {
+  35%,
+  60% {
     opacity: 0.45;
   }
 }
@@ -528,6 +528,12 @@ body:has(.oku-app) {
 
   .src-layer[data-variant="page"][data-hover] .src-spot {
     opacity: 0.2;
+  }
+
+  /* Kaydırırken sayfa kodu kısa bir an belirginleşiyor */
+  .src-layer[data-variant="page"][data-glow] .src-ambient {
+    opacity: 0.16;
+    transition-duration: 0.2s;
   }
 }
 

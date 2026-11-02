@@ -17,7 +17,10 @@ export type Snippet = {
 const RUN_DELAY = 320;
 
 /** Dokunmatik ekranda dokunulan yerde fenerin açık kaldığı süre. */
-const TAP_LIGHT = 1400;
+const TAP_LIGHT = 800;
+
+/** Telefonda kaydırma bittikten sonra sayfa kodunun parlak kaldığı süre. */
+const SCROLL_GLOW = 400;
 
 /**
  * Üst öğenin arkasına, o öğeyi çizen gerçek kodu soluk biçimde serer.
@@ -54,6 +57,7 @@ export function SourceLayer({
     const touch = matchMedia("(hover: none)").matches;
     let runTimer: number | undefined;
     let tapTimer: number | undefined;
+    let glowTimer: number | undefined;
 
     const aim = (e: MouseEvent) => {
       const r = layer.getBoundingClientRect();
@@ -88,7 +92,7 @@ export function SourceLayer({
       void layer.offsetWidth; // animasyonu baştan başlat
       layer.dataset.run = "";
       clearTimeout(runTimer);
-      runTimer = window.setTimeout(() => delete layer.dataset.run, 900);
+      runTimer = window.setTimeout(() => delete layer.dataset.run, 800);
 
       const link = (e.target as Element).closest("a");
       if (
@@ -117,6 +121,17 @@ export function SourceLayer({
     if (isPage) host.addEventListener("click", tap);
     else host.addEventListener("click", click, true);
 
+    // Telefonda fener ancak dokununca yanıyor; kaydırırken de sayfanın
+    // arkasında kod olduğu belli olsun diye kod kaydırma boyunca hafifçe
+    // belirginleşip durduktan kısa süre sonra sönüyor.
+    const scrolled = () => {
+      layer.dataset.glow = "";
+      clearTimeout(glowTimer);
+      glowTimer = window.setTimeout(() => delete layer.dataset.glow, SCROLL_GLOW);
+    };
+    const glowOnScroll = isPage && touch && !reduceMotion;
+    if (glowOnScroll) window.addEventListener("scroll", scrolled, { passive: true });
+
     // Dokunmatik ekranda kartlar ekrana ilk girdiğinde kod bir kez belirip
     // sönüyor; sayfa katmanında buna gerek yok.
     let observer: IntersectionObserver | undefined;
@@ -138,9 +153,11 @@ export function SourceLayer({
       host.removeEventListener("pointerleave", leave);
       host.removeEventListener("click", tap);
       host.removeEventListener("click", click, true);
+      window.removeEventListener("scroll", scrolled);
       observer?.disconnect();
       clearTimeout(runTimer);
       clearTimeout(tapTimer);
+      clearTimeout(glowTimer);
     };
   }, [router, isPage]);
 

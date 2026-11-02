@@ -301,7 +301,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             <StoreLinks project={project} primary />
           </div>
           <p className="mt-8 border-t border-white/10 pt-6 text-sm text-white/45">
-            <span className="src-island">
+            <span className="src-island block">
               Aklınızda buna benzer bir uygulama mı var?{" "}
               <Link
                 href="/iletisim"
