@@ -445,13 +445,22 @@ body:has(.oku-app) {
 }
 
 .src-layer[data-peek] .src-spot {
-  animation: src-peek 0.8s ease;
+  animation: src-peek 1.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Telefonda kart ekrana girince kod bir kez belirip söner. Sert bir yanıp
+   sönme olmasın diye: yavaş yükseliyor, tepede çok kısa kalıyor, uzun bir
+   kuyrukla kayboluyor; tepe değeri de hover'dakinden düşük. */
 @keyframes src-peek {
-  35%,
-  60% {
-    opacity: 0.45;
+  0% {
+    opacity: 0;
+  }
+  28%,
+  38% {
+    opacity: 0.32;
+  }
+  100% {
+    opacity: 0;
   }
 }
 
@@ -538,6 +547,15 @@ body:has(.oku-app) {
 
   .src-layer[data-variant="page"] .src-spot {
     transition: opacity 1s ease-out;
+  }
+
+  /* Karta dokununca çalışan satırın parlaması da yumuşak açılıp kapansın */
+  .src-spot {
+    transition: opacity 0.9s ease-out;
+  }
+
+  .src-layer[data-run] .src-spot {
+    transition-duration: 0.25s;
   }
 
   .src-layer[data-variant="page"][data-glow] .src-ambient {

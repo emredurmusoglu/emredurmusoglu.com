@@ -8,7 +8,8 @@ import type { Work } from "@/lib/work";
 
 /**
  * Ana sayfadaki "Diğer işler" kartı. Ürün kartlarından daha geniş: işin
- * kendisini ekran görüntüsüyle gösterip vaka çalışmasına götürüyor.
+ * kendisini ekran görüntüsüyle gösterip vaka çalışmasına götürüyor. Kartın
+ * tamamı detay sayfasına gider; canlı site bağlantısı üstünde ayrı durur.
  */
 export function WorkCard({ work }: { work: Work }) {
   return (
@@ -47,7 +48,7 @@ export function WorkCard({ work }: { work: Work }) {
           </ul>
 
           <div className="mt-auto pt-7">
-            <div className="src-island flex w-fit flex-wrap items-center gap-3">
+            <div className="src-island relative z-10 flex w-fit flex-wrap items-center gap-3">
               <Link
                 href={`/isler/${work.slug}`}
                 className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-medium text-neutral-950 transition hover:bg-white/85"
@@ -69,11 +70,7 @@ export function WorkCard({ work }: { work: Work }) {
         </div>
 
         {/* Site önde, panel arkada: iki yüzü olan bir iş olduğunu tek bakışta anlatsın */}
-        <Link
-          href={`/isler/${work.slug}`}
-          aria-label={`${work.title} proje detayı`}
-          className="relative block min-h-[220px] sm:min-h-[300px] md:min-h-0"
-        >
+        <div className="relative min-h-[220px] sm:min-h-[300px] md:min-h-0">
           <div className="absolute right-0 top-0 w-[82%] overflow-hidden rounded-xl border border-white/10 opacity-70 shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition duration-500 group-hover:-translate-y-1 group-hover:opacity-90">
             <Image
               src={work.coverSecondary.src}
@@ -94,8 +91,14 @@ export function WorkCard({ work }: { work: Work }) {
               className="block h-auto w-full"
             />
           </div>
-        </Link>
+        </div>
       </div>
+
+      <Link
+        href={`/isler/${work.slug}`}
+        aria-label={`${work.title} proje detayı`}
+        className="absolute inset-0 rounded-3xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/40"
+      />
     </article>
   );
 }
