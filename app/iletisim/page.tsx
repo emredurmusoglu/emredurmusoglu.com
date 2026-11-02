@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { ContactForm } from "@/components/ContactForm";
+import { SourceLayer } from "@/components/source/SourceLayer";
+import pageSource from "@/lib/source/contactPage.json";
 
 export const metadata: Metadata = {
   title: "İletişim — Emre Durmuşoğlu",
@@ -17,6 +19,8 @@ export default function IletisimPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/50 to-black/80" />
       </div>
 
+      <SourceLayer snippet={pageSource} variant="page" repeat={3} />
+
       <div className="relative mx-auto max-w-2xl px-6 py-16 md:py-24">
         <Link
           href="/"
@@ -30,7 +34,9 @@ export default function IletisimPage() {
         </h1>
         <div className="mt-5 h-px w-16 bg-gradient-to-r from-sky-400/60 via-indigo-400/40 to-fuchsia-400/60" />
 
-        <ContactForm />
+        <div className="src-quiet">
+          <ContactForm />
+        </div>
       </div>
     </main>
   );

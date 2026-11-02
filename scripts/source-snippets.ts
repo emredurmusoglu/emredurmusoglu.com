@@ -25,6 +25,13 @@ const SNIPPETS: Record<string, SnippetConfig> = {
     fn: "ContactButton",
     focus: { default: 'href="/iletisim"' },
   },
+  // Sadece sayfanın düzeni. Formun gönderim, doğrulama ve spam koruması
+  // kodu (ContactForm, lib/actions/contact) bilerek hiç gösterilmiyor.
+  contactPage: {
+    file: "app/iletisim/page.tsx",
+    fn: "IletisimPage",
+    focus: {},
+  },
   home: {
     file: "app/page.tsx",
     fn: "Home",

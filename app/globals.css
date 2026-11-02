@@ -517,6 +517,18 @@ body:has(.oku-app) {
   mask-position: calc(var(--src-x) - 280px) calc(var(--src-y) - 280px);
 }
 
+/* Form gibi yazı yazılan alanların üstündeyken sayfa feneri söner; kod
+   orada sadece en soluk haliyle kalır, odağı bölmez. */
+main:has(.src-quiet:hover) .src-layer[data-variant="page"] .src-spot,
+main:has(.src-quiet:focus-within) .src-layer[data-variant="page"] .src-spot {
+  opacity: 0;
+}
+
+/* Formda yazarken klavye sayfayı kaydırsa da kod parlamasın */
+main:has(.src-quiet:focus-within) .src-layer[data-variant="page"] .src-ambient {
+  opacity: 0.07;
+}
+
 /* Sayfa feneri kartlarınkinden sönük: geniş metinlerin altından geçiyor */
 .src-layer[data-variant="page"][data-hover] .src-ambient {
   opacity: 0.07;
