@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { SourceLayer } from "@/components/source/SourceLayer";
+import workCardSource from "@/lib/source/workCard.json";
 import type { Work } from "@/lib/work";
 
 /**
@@ -9,12 +11,13 @@ import type { Work } from "@/lib/work";
  */
 export function WorkCard({ work }: { work: Work }) {
   return (
-    <article className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur transition hover:border-white/20 hover:bg-white/[0.07] hover:shadow-[0_18px_60px_rgba(0,0,0,0.45)]">
+    <article className="src-host group relative isolate overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur transition hover:border-white/20 hover:bg-white/[0.07] hover:shadow-[0_18px_60px_rgba(0,0,0,0.45)]">
+      <SourceLayer snippet={workCardSource} />
       <div className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-gradient-to-tr from-amber-400/15 via-blue-500/15 to-indigo-500/10 blur-3xl" />
 
       <div className="relative grid gap-8 p-6 md:grid-cols-[1fr_1.25fr] md:gap-10 md:p-8">
         <div className="flex flex-col">
-          <div className="flex items-center gap-3">
+          <div className="src-island flex w-fit items-center gap-3">
             <span
               className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ring-1 ring-white/10"
               style={{ backgroundColor: work.brand }}
@@ -29,9 +32,9 @@ export function WorkCard({ work }: { work: Work }) {
             </div>
           </div>
 
-          <p className="mt-5 text-base leading-relaxed text-white/75">{work.tagline}</p>
+          <p className="src-island mt-5 text-base leading-relaxed text-white/75">{work.tagline}</p>
 
-          <ul className="mt-5 grid grid-cols-2 gap-x-4 gap-y-3">
+          <ul className="src-island mt-5 grid grid-cols-2 gap-x-4 gap-y-3">
             {work.stats.map((s) => (
               <li key={s.label}>
                 <span className="block text-2xl font-semibold tabular-nums text-white">
@@ -42,23 +45,25 @@ export function WorkCard({ work }: { work: Work }) {
             ))}
           </ul>
 
-          <div className="mt-auto flex flex-wrap items-center gap-3 pt-7">
-            <Link
-              href={`/isler/${work.slug}`}
-              className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-medium text-neutral-950 transition hover:bg-white/85"
-            >
-              Projeyi incele
-              <span aria-hidden="true">→</span>
-            </Link>
-            <a
-              href={work.liveUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-full border border-white/15 px-4 py-2 text-sm font-medium text-white/75 transition hover:border-white/30 hover:text-white"
-            >
-              {work.liveLabel}
-              <span aria-hidden="true">↗</span>
-            </a>
+          <div className="mt-auto pt-7">
+            <div className="src-island flex w-fit flex-wrap items-center gap-3">
+              <Link
+                href={`/isler/${work.slug}`}
+                className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-medium text-neutral-950 transition hover:bg-white/85"
+              >
+                Projeyi incele
+                <span aria-hidden="true">→</span>
+              </Link>
+              <a
+                href={work.liveUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-full border border-white/15 px-4 py-2 text-sm font-medium text-white/75 transition hover:border-white/30 hover:text-white"
+              >
+                {work.liveLabel}
+                <span aria-hidden="true">↗</span>
+              </a>
+            </div>
           </div>
         </div>
 

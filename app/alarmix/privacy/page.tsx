@@ -54,7 +54,7 @@ export default function AlarMixPrivacyPage() {
 
         <h2 style={{ fontSize: 18, margin: '26px 0 10px' }}>3. Tracking</h2>
         <p style={{ color: '#d1d5db' }}>
-          AlarMix uses Apple's App Tracking Transparency framework to request user permission before
+          AlarMix uses Apple&apos;s App Tracking Transparency framework to request user permission before
           any tracking occurs. If the user grants permission, advertising data may be used by
           third-party providers for tracking purposes.
         </p>

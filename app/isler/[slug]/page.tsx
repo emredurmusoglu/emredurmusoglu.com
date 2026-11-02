@@ -3,7 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { SourceLayer } from "@/components/source/SourceLayer";
 import { BrowserFrame, PhoneFrame } from "@/components/work/Frames";
+import ctaSource from "@/lib/source/workCta.json";
+import pageSource from "@/lib/source/workPage.json";
 import { getWork, works } from "@/lib/work";
 
 export const dynamicParams = false;
@@ -61,6 +64,9 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
         <div className="absolute top-[60rem] -left-40 h-[520px] w-[520px] rounded-full bg-gradient-to-tr from-amber-400/10 via-blue-500/10 to-indigo-500/15 blur-3xl" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/40 to-black/70" />
       </div>
+
+      {/* Sayfanın kendi kodu, bütün sayfanın arkasında */}
+      <SourceLayer snippet={pageSource} variant="page" repeat={2} />
 
       <div className="relative mx-auto max-w-5xl px-6 py-12 md:py-20">
         <Link
@@ -176,12 +182,13 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
         </section>
 
         {/* Kapanış */}
-        <section className="mt-20 overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur md:mt-28 md:p-12">
-          <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">
+        <section className="src-host relative isolate mt-20 overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur md:mt-28 md:p-12">
+          <SourceLayer snippet={ctaSource} />
+          <h2 className="src-island w-fit text-2xl font-semibold tracking-tight md:text-3xl">
             İşiniz için benzer bir sistem mi düşünüyorsunuz?
           </h2>
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/60">{work.pitch}</p>
-          <div className="mt-8 flex flex-wrap gap-3">
+          <p className="src-island mt-4 max-w-2xl text-base leading-relaxed text-white/60">{work.pitch}</p>
+          <div className="src-island mt-8 flex w-fit flex-wrap gap-3">
             <Link
               href="/iletisim"
               className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-medium text-neutral-950 transition hover:bg-white/85"

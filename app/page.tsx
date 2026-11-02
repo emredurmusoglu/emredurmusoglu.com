@@ -1,11 +1,13 @@
 import Image from "next/image";
-import Link from "next/link";
 
+import { ContactButton } from "@/components/ContactButton";
+import { NotesSection } from "@/components/NotesSection";
 import { ProjectCard } from "@/components/ProjectCard";
 import { WorkCard } from "@/components/work/WorkCard";
+import { SourceLayer } from "@/components/source/SourceLayer";
 import { getPublicNotes, getPublicProjects } from "@/lib/content";
-import { formatDate } from "@/lib/date";
 import { getProduct } from "@/lib/products";
+import homeSource from "@/lib/source/home.json";
 import { works } from "@/lib/work";
 
 export const revalidate = 3600;
@@ -35,6 +37,9 @@ export default async function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black/70" />
       </div>
 
+      {/* Sayfanın kendi kodu, bütün sayfanın arkasında */}
+      <SourceLayer snippet={homeSource} variant="page" repeat={2} />
+
       <div className="relative mx-auto max-w-5xl px-6 py-12 md:py-20">
         {/* Header — avatar solda, iletişim sağda */}
         <header className="mb-12 flex items-center justify-between md:mb-16">
@@ -52,25 +57,7 @@ export default async function Home() {
             </div>
           </div>
 
-          <Link
-            href="/iletisim"
-            className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white/85 backdrop-blur transition hover:border-white/30 hover:bg-white/15"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-              className="h-4 w-4"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.6"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2Z" />
-              <path d="m22 8-10 6L2 8" />
-            </svg>
-            <span className="hidden sm:inline">İletişime geç</span>
-          </Link>
+          <ContactButton />
         </header>
 
         {/* Hero */}
@@ -161,43 +148,7 @@ export default async function Home() {
         ) : null}
 
         {/* Yazılar */}
-        {notes.length ? (
-          <section className="mt-16 md:mt-24">
-            <div className="mb-6 flex items-baseline gap-3">
-              <h2 className="text-xs uppercase tracking-[0.15em] text-white/40">
-                Yazılar
-              </h2>
-              <span className="h-px flex-1 bg-white/10" />
-              <Link
-                href="/yazilar"
-                className="text-xs text-white/40 transition hover:text-white/80"
-              >
-                Tümü →
-              </Link>
-            </div>
-
-            <ul className="space-y-3">
-              {notes.slice(0, 3).map((note) => (
-                <li key={note.slug}>
-                  <Link
-                    href={`/yazilar/${note.slug}`}
-                    className="group flex items-baseline justify-between gap-4 text-white/70 transition hover:text-white"
-                  >
-                    <span className="truncate underline decoration-white/15 underline-offset-4 transition group-hover:decoration-white/50">
-                      {note.title}
-                    </span>
-                    <time
-                      dateTime={note.publishedAt?.toISOString()}
-                      className="shrink-0 text-xs text-white/30"
-                    >
-                      {formatDate(note.publishedAt)}
-                    </time>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ) : null}
+        {notes.length ? <NotesSection notes={notes} /> : null}
 
         <footer className="mt-20 border-t border-white/10 pt-8 text-sm text-white/40 md:mt-28">
           © {new Date().getFullYear()} Emre Durmuşoğlu

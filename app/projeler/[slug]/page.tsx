@@ -3,10 +3,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { SourceLayer } from "@/components/source/SourceLayer";
 import { AppleIcon, PlayIcon } from "@/components/StoreIcons";
 import { BrowserFrame, DeviceFrame } from "@/components/work/Frames";
 import { getPublicProject } from "@/lib/content";
 import { getProduct, products } from "@/lib/products";
+import ctaSource from "@/lib/source/productCta.json";
+import pageSource from "@/lib/source/productPage.json";
 
 export const revalidate = 3600;
 export const dynamicParams = false;
@@ -113,6 +116,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/40 to-black/70" />
       </div>
+
+      {/* Sayfanın kendi kodu, bütün sayfanın arkasında */}
+      <SourceLayer snippet={pageSource} variant="page" repeat={2} />
 
       <div className="relative mx-auto max-w-5xl px-6 py-12 md:py-20">
         <Link
@@ -273,8 +279,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         </section>
 
         {/* Kapanış */}
-        <section className="mt-20 overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur md:mt-28 md:p-12">
-          <div className="flex items-center gap-4">
+        <section className="src-host relative isolate mt-20 overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur md:mt-28 md:p-12">
+          <SourceLayer snippet={ctaSource} />
+          <div className="src-island flex w-fit items-center gap-4">
             {icon ? (
               <span className="relative h-14 w-14 shrink-0 overflow-hidden rounded-2xl ring-1 ring-white/15">
                 <Image src={icon} alt="" fill sizes="56px" className="object-cover" />
@@ -285,20 +292,22 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               <p className="text-sm text-white/45">{isApp ? "Hemen indirin, deneyin." : "Hemen keşfedin."}</p>
             </div>
           </div>
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/60">
+          <p className="src-island mt-4 max-w-2xl text-base leading-relaxed text-white/60">
             {product.tagline}
           </p>
-          <div className="mt-8">
+          <div className="src-island mt-8 w-fit">
             <StoreLinks project={project} primary />
           </div>
           <p className="mt-8 border-t border-white/10 pt-6 text-sm text-white/45">
-            Aklınızda buna benzer bir uygulama mı var?{" "}
-            <Link
-              href="/iletisim"
-              className="text-white/75 underline decoration-white/25 underline-offset-4 transition hover:text-white hover:decoration-white/60"
-            >
-              Birlikte konuşalım →
-            </Link>
+            <span className="src-island">
+              Aklınızda buna benzer bir uygulama mı var?{" "}
+              <Link
+                href="/iletisim"
+                className="text-white/75 underline decoration-white/25 underline-offset-4 transition hover:text-white hover:decoration-white/60"
+              >
+                Birlikte konuşalım →
+              </Link>
+            </span>
           </p>
         </section>
 

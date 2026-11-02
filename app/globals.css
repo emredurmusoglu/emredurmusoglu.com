@@ -336,3 +336,238 @@ body:has(.oku-app) {
   border-radius: 999px;
   background: #fff;
 }
+
+/* Kaynak katmanı — düğme ve kartların arkasında kendi gerçek kodları.
+   Kod iki kopya halinde: .src-ambient her zaman duran soluk hali, .src-spot
+   imlecin çevresinde parlayan hali. Fener açılınca çevresi geri çekilir,
+   kartın yazı blokları buzlu cam adacıklara dönüşür (.src-island). */
+.src-layer {
+  --src-x: 50%;
+  --src-y: 50%;
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  text-shadow: none;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent);
+}
+
+/* İletişim düğmesinin çevresine taşan hale */
+.src-layer[data-variant="halo"] {
+  inset: auto;
+  top: 50%;
+  right: -28px;
+  width: min(480px, 82vw);
+  height: 200px;
+  transform: translateY(-50%);
+  -webkit-mask-image: radial-gradient(ellipse 75% 50% at 88% 50%, #000 25%, transparent 72%);
+  mask-image: radial-gradient(ellipse 75% 50% at 88% 50%, #000 25%, transparent 72%);
+}
+
+/* Kartsız bölümler (yazılar listesi): kod her kenarda yumuşakça kaybolur */
+.src-layer[data-variant="bare"] {
+  inset: -24px -32px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 65% at 50% 55%, #000 35%, transparent 100%);
+  mask-image: radial-gradient(ellipse 70% 65% at 50% 55%, #000 35%, transparent 100%);
+}
+
+/* Bütün sayfanın arkası: sayfanın kendi kodu, çok soluk. Aurora katmanının
+   üstünde, içeriğin altında durması için z-index almıyor (DOM sırası yeter).
+   Kartların buzlu camı bu kodu bulanıklaştırıyor; kartın kendi kodu net. */
+.src-layer[data-variant="page"] {
+  z-index: auto;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 240px, #000 calc(100% - 260px), transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 240px, #000 calc(100% - 260px), transparent);
+}
+
+/* Kendi kodu olan kartların altında sayfa kodu görünmesin: iki kat kod üst
+   üste binince gürültü oluyor. Kartın zeminiyle aynı tonda bir alt kat. */
+.src-host:has(> .src-layer[data-variant="card"])::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  border-radius: inherit;
+  background: rgb(22 22 23 / 0.94);
+  transition: background-color 0.3s ease;
+}
+
+.src-host:has(> .src-layer[data-variant="card"]):hover::before {
+  background: rgb(27 27 28 / 0.94);
+}
+
+.src-ambient,
+.src-spot {
+  position: absolute;
+  inset: 0;
+}
+
+.src-ambient {
+  opacity: 0.16;
+  transition: opacity 0.45s ease;
+}
+
+/* Fener açıkken dikkat imlecin altında toplansın: geri kalan kod çekilir */
+.src-layer[data-hover] .src-ambient {
+  opacity: 0.06;
+}
+
+.src-spot {
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  -webkit-mask-image: radial-gradient(closest-side, #000 35%, transparent);
+  mask-image: radial-gradient(closest-side, #000 35%, transparent);
+  -webkit-mask-size: 360px 360px;
+  mask-size: 360px 360px;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: calc(var(--src-x) - 180px) calc(var(--src-y) - 180px);
+  mask-position: calc(var(--src-x) - 180px) calc(var(--src-y) - 180px);
+}
+
+.src-layer[data-hover] .src-spot {
+  opacity: 0.55;
+}
+
+/* Tıklama: bütün kod bir anlığına netleşir, çalışan satır parlar */
+.src-layer[data-run] .src-spot,
+.src-layer[data-peek] .src-spot {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+.src-layer[data-run] .src-spot {
+  opacity: 0.55;
+  transition-duration: 0.08s;
+}
+
+.src-layer[data-peek] .src-spot {
+  animation: src-peek 2.2s ease;
+}
+
+@keyframes src-peek {
+  30%,
+  55% {
+    opacity: 0.45;
+  }
+}
+
+/* Kartın yazı blokları: normalde görünmez. Fener açılınca kod netleşip
+   renklendiği için her blok kodun üstünde buzlu bir cam adacığa dönüşür;
+   kod adacıkların arasından akar, yazıyla asla aynı yerde okunmaz.
+   Adacığı büyüten box-shadow yayılımı, yerleşimi bir piksel bile kaydırmaz. */
+.src-island {
+  border-radius: 6px;
+  background-color: rgb(27 27 28 / 0);
+  box-shadow: 0 0 0 8px rgb(27 27 28 / 0);
+  transition:
+    background-color 0.35s ease,
+    box-shadow 0.35s ease,
+    backdrop-filter 0.35s ease,
+    -webkit-backdrop-filter 0.35s ease,
+    color 0.3s ease;
+}
+
+.src-host:hover .src-island,
+.src-host:has([data-run]) .src-island {
+  background-color: rgb(27 27 28 / 0.88);
+  box-shadow: 0 0 0 8px rgb(27 27 28 / 0.88);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.src-code {
+  position: absolute;
+  top: 52%;
+  left: 0;
+  margin: 0;
+  padding-right: 1.5rem;
+  font: 11px/17px ui-monospace, "SF Mono", SFMono-Regular, Menlo, monospace;
+  white-space: pre;
+  color: rgb(255 255 255 / 0.75);
+  transform: translateY(calc(var(--src-focus) * -17px - 8px));
+}
+
+.src-layer[data-variant="page"] .src-code {
+  top: 64px;
+  left: max(8px, calc(50% - 36rem));
+  transform: none;
+}
+
+.src-layer[data-variant="page"] .src-ambient {
+  opacity: 0.07;
+}
+
+.src-layer[data-variant="page"] .src-spot {
+  -webkit-mask-size: 560px 560px;
+  mask-size: 560px 560px;
+  -webkit-mask-position: calc(var(--src-x) - 280px) calc(var(--src-y) - 280px);
+  mask-position: calc(var(--src-x) - 280px) calc(var(--src-y) - 280px);
+}
+
+/* Sayfa feneri kartlarınkinden sönük: geniş metinlerin altından geçiyor */
+.src-layer[data-variant="page"][data-hover] .src-ambient {
+  opacity: 0.07;
+}
+
+.src-layer[data-variant="page"][data-hover] .src-spot {
+  opacity: 0.3;
+}
+
+/* Telefonda ekran dar: dokunulan yerde daha küçük ve sönük bir fener */
+@media (hover: none) {
+  .src-layer[data-variant="page"] .src-spot {
+    -webkit-mask-size: 300px 300px;
+    mask-size: 300px 300px;
+    -webkit-mask-position: calc(var(--src-x) - 150px) calc(var(--src-y) - 150px);
+    mask-position: calc(var(--src-x) - 150px) calc(var(--src-y) - 150px);
+  }
+
+  .src-layer[data-variant="page"][data-hover] .src-spot {
+    opacity: 0.2;
+  }
+}
+
+.src-layer[data-variant="halo"] .src-code {
+  top: 50%;
+  left: 12%;
+}
+
+.src-line {
+  display: block;
+  height: 17px;
+  padding-right: 1rem;
+}
+
+.src-ln {
+  display: inline-block;
+  width: 3.25em;
+  padding-right: 1.25em;
+  text-align: right;
+  color: rgb(255 255 255 / 0.3);
+}
+
+/* Çalışan satır — debugger'da durulan satır gibi */
+.src-layer[data-run] .src-line[data-focus] {
+  background: linear-gradient(to right, rgb(56 189 248 / 0.35), rgb(56 189 248 / 0.08) 70%, transparent);
+  box-shadow: inset 2px 0 0 rgb(125 211 252);
+}
+
+.src-k { color: #f0abfc; }
+.src-s { color: #6ee7b7; }
+.src-t { color: #7dd3fc; }
+.src-a { color: #a5b4fc; }
+.src-f { color: #bae6fd; }
+.src-n { color: #fcd34d; }
+.src-p { color: rgb(255 255 255 / 0.45); }
+.src-c { color: rgb(255 255 255 / 0.4); font-style: italic; }
+
+@media (prefers-reduced-motion: reduce) {
+  .src-ambient,
+  .src-spot {
+    transition: none;
+  }
+}

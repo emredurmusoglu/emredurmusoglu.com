@@ -4,7 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
+import { SourceLayer } from "@/components/source/SourceLayer";
 import { AppleIcon, PlayIcon } from "@/components/StoreIcons";
+import cardSource from "@/lib/source/projectCard.json";
 
 const DEFAULT_ACCENT = "from-sky-400/70 via-indigo-400/50 to-fuchsia-400/70";
 
@@ -112,7 +114,7 @@ export function ProjectCard({
   const inner = (
     <>
       <div className="flex items-start justify-between gap-4">
-        <div className="flex items-center gap-3">
+        <div className="src-island flex items-center gap-3">
           {icon ? (
             <span className="relative h-10 w-10 shrink-0 overflow-hidden rounded-xl ring-1 ring-white/10">
               <Image src={icon} alt="" fill sizes="40px" className="object-cover" />
@@ -129,14 +131,14 @@ export function ProjectCard({
       </div>
 
       {project.description ? (
-        <p className="mt-4 text-sm leading-relaxed text-white/60">
+        <p className="src-island mt-4 text-sm leading-relaxed text-white/60 transition-colors duration-300 group-hover:text-white/85">
           {project.description}
         </p>
       ) : null}
 
       <div className="mt-auto pt-5">
         {platforms.length ? (
-          <div className="mb-4 flex flex-wrap gap-1.5">
+          <div className="src-island mb-4 flex w-fit flex-wrap gap-1.5">
             {platforms.map((p) => (
               <PlatformChip key={p} label={p} />
             ))}
@@ -181,16 +183,16 @@ export function ProjectCard({
               } ${project.comingSoon ? "w-16" : "w-0 group-hover:w-20"}`}
             />
             {project.comingSoon ? (
-              <span className="text-sm text-white/30">Hazırlanıyor</span>
+              <span className="src-island text-sm text-white/30">Hazırlanıyor</span>
             ) : detailHref ? (
-              <div className="flex items-center gap-4">
+              <div className="src-island flex items-center gap-4">
                 {storeAction}
                 <span className="text-sm font-medium text-white/70 transition group-hover:text-white">
                   İncele →
                 </span>
               </div>
             ) : (
-              <span className="text-sm text-white/50 transition group-hover:text-white/85">
+              <span className="src-island text-sm text-white/50 transition group-hover:text-white/85">
                 Uygulamaya Git →
               </span>
             )}
@@ -201,17 +203,23 @@ export function ProjectCard({
   );
 
   const shell =
-    "group flex min-h-[200px] w-full flex-col rounded-3xl border border-white/10 bg-white/5 p-6 text-left backdrop-blur transition";
+    "src-host group relative isolate flex min-h-[200px] w-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 text-left backdrop-blur transition";
   const interactive =
     "hover:border-white/20 hover:bg-white/[0.08] hover:shadow-[0_18px_60px_rgba(0,0,0,0.45)]";
 
   if (project.comingSoon || !singleHref) {
-    return <div className={shell}>{inner}</div>;
+    return (
+      <div className={shell}>
+        <SourceLayer snippet={cardSource} focus="static" />
+        {inner}
+      </div>
+    );
   }
 
   if (detailHref) {
     return (
-      <div className={`${shell} ${interactive} relative`}>
+      <div className={`${shell} ${interactive}`}>
+        <SourceLayer snippet={cardSource} focus="detail" />
         {inner}
         <Link
           href={detailHref}
@@ -227,7 +235,8 @@ export function ProjectCard({
     // <button> yerine üstteki saydam katmanla veriyoruz — aksi halde mağaza
     // bağlantıları <button> içinde kalırdı ki bu geçersiz HTML.
     return (
-      <div className={`${shell} ${interactive} relative`}>
+      <div className={`${shell} ${interactive}`}>
+        <SourceLayer snippet={cardSource} focus="picker" />
         {inner}
         {!picking ? (
           <button
@@ -248,6 +257,7 @@ export function ProjectCard({
       rel="noreferrer"
       className={`${shell} ${interactive}`}
     >
+      <SourceLayer snippet={cardSource} focus="store" />
       {inner}
     </a>
   );
