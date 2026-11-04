@@ -24,7 +24,7 @@ import {
   useProgress,
   useSettings,
 } from "@/lib/oku/store";
-import { SAMPLE_TEXT, SAMPLE_TITLE } from "@/lib/oku/sample";
+import { SAMPLE_ID, SAMPLE_TEXT, SAMPLE_TITLE } from "@/lib/oku/sample";
 import {
   countWords,
   deriveTitle,
@@ -33,6 +33,15 @@ import {
 } from "@/lib/oku/text";
 
 const numberFormat = new Intl.NumberFormat("tr-TR");
+
+const SAMPLE_DOC: Doc = {
+  id: SAMPLE_ID,
+  title: SAMPLE_TITLE,
+  text: SAMPLE_TEXT,
+  words: countWords(SAMPLE_TEXT),
+  createdAt: 0,
+  openedAt: 0,
+};
 
 /** Molalar ortalamaya dağıtıldığı için süre doğrudan kelime / hız. */
 function estimate(words: number, wpm: number) {
@@ -91,7 +100,10 @@ export function OkuApp() {
   }, [create]);
 
   if (route.name === "read") {
-    const doc = docs.find((item) => item.id === route.id);
+    const doc =
+      route.id === SAMPLE_ID
+        ? SAMPLE_DOC
+        : docs.find((item) => item.id === route.id);
     if (doc) {
       return (
         <Reader
@@ -123,7 +135,7 @@ export function OkuApp() {
       onDismissNotice={() => setNotice(null)}
       onPaste={pasteAndRead}
       onOpen={open}
-      onSample={() => create(SAMPLE_TEXT, SAMPLE_TITLE)}
+      onSample={() => navigate({ read: SAMPLE_ID })}
     />
   );
 }

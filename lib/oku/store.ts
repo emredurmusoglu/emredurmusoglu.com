@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from "react";
 
+import { SAMPLE_ID, SAMPLE_TEXT } from "@/lib/oku/sample";
 import type { FocusMode } from "@/lib/oku/text";
 
 /**
@@ -88,7 +89,12 @@ function createStore<T>(key: string, fallback: T, normalize?: (value: T) => T) {
   return { get, set, useValue };
 }
 
-const library = createStore<Doc[]>("oku:v1:library", []);
+const library = createStore<Doc[]>(
+  "oku:v1:library",
+  [],
+  // Örnek eskiden kütüphaneye ekleniyordu; o kopyalar listeden düşsün.
+  (docs) => docs.filter((doc) => doc.text !== SAMPLE_TEXT),
+);
 const progress = createStore<Record<string, Progress>>("oku:v1:progress", {});
 const settings = createStore<Settings>(
   "oku:v1:settings",
@@ -130,6 +136,7 @@ export function removeDoc(id: string) {
 }
 
 export function saveProgress(id: string, i: number, n: number) {
+  if (id === SAMPLE_ID) return;
   const saved = progress.get()[id];
   if (saved?.i === i && saved.n === n) return;
   progress.set((current) => ({ ...current, [id]: { i, n } }));

@@ -1,4 +1,10 @@
-/** Kütüphane boşken "Önce örnek bir metinle dene" bu metni ekliyor. */
+/**
+ * Kütüphane boşken "Önce örnek bir metinle dene" bu metni açıyor. Örnek
+ * kütüphaneye eklenmiyor, ilerlemesi de saklanmıyor: okuyucu kapanınca
+ * karşılama ekranı olduğu gibi duruyor. Adresi `/oku#ornek`.
+ */
+
+export const SAMPLE_ID = "ornek";
 
 export const SAMPLE_TITLE = "Oku nasıl çalışır?";
 
