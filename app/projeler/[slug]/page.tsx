@@ -61,7 +61,9 @@ function StoreLinks({ project, primary = false }: { project: Project; primary?: 
     "inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-medium text-neutral-950 transition hover:bg-white/85";
   const ghost =
     "inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-2.5 text-sm font-medium text-white/75 transition hover:border-white/30 hover:text-white";
-  const host = project.url ? new URL(project.url).host.replace(/^www\./, "") : null;
+  // Oku gibi sitenin içindeki uygulamalarda yol da görünsün: emredurmusoglu.com/oku
+  const link = project.url ? new URL(project.url) : null;
+  const host = link ? `${link.host.replace(/^www\./, "")}${link.pathname.replace(/\/$/, "")}` : null;
 
   return (
     <div className="flex flex-wrap items-center gap-3">
@@ -284,7 +286,13 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             ) : null}
             <div>
               <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">{project.title}</h2>
-              <p className="text-sm text-white/45">{isApp ? "Hemen indirin, deneyin." : "Hemen keşfedin."}</p>
+              <p className="text-sm text-white/45">
+                {project.iosUrl || project.androidUrl
+                  ? "Hemen indirin, deneyin."
+                  : isApp
+                    ? "Tarayıcıda açın, hemen deneyin."
+                    : "Hemen keşfedin."}
+              </p>
             </div>
           </div>
           <p className="src-island mt-4 max-w-2xl text-base leading-relaxed text-white/60">

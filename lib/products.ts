@@ -63,6 +63,7 @@ const vaktinde = (file: string, alt: string) => phone("vaktinde", file, alt);
 const alarmix = (file: string, alt: string) => phone("alarmix", file, alt);
 const online = (file: string, alt: string) => phone("on-line", file, alt, 1440);
 const davetiva = (file: string, alt: string) => phone("davetiva", file, alt);
+const oku = (file: string, alt: string) => phone("oku", file, alt);
 
 export const products: ProductShowcase[] = [
   {
@@ -327,6 +328,76 @@ export const products: ProductShowcase[] = [
       {
         title: "İnternet olmasa da",
         body: "Diyanet'e ulaşılamazsa vakitler cihazda hesaplanıyor; hiçbir vakit kaçmıyor.",
+      },
+    ],
+  },
+  {
+    slug: "oku",
+    kind: "app",
+    tagline: "Metni yapıştırın, kelimeler kırmızı odak harfiyle tek tek gelsin.",
+    summary:
+      "Okurken göz satır boyunca sürekli sıçrar, dikkat dağılınca da geri döner. Oku bu sıçramaları ortadan kaldırıyor: kelimeler ekranın tam ortasında tek tek akıyor, gözünüz yerinde kalıyor. Bir makaleyi, e-postayı ya da notu kopyalayıp tek dokunuşla okumaya başlıyorsunuz.",
+    category: "Hızlı okuma uygulaması",
+    platform: "Web · ana ekrana eklenebilir",
+    year: "2026",
+    color: "#ff453a", // kırmızı odak harfi
+    heroPhones: [
+      oku("library", "Okunan metinler"),
+      oku("reader", "Okuyucu, kelime ekranda"),
+      oku("paused", "Duraklatınca beliren metin"),
+    ],
+    stats: [
+      { value: "1000", label: "kelime/dk'ya kadar hız" },
+      { value: "1", label: "dokunuşla panodan okumaya" },
+      { value: "Yok", label: "hesap, giriş ya da reklam" },
+      { value: "Cihazda", label: "metinler sunucuya gitmiyor" },
+    ],
+    features: [
+      {
+        title: "Gözünüz yerinde dursun",
+        body: "Her kelimenin bir harfi kırmızı: göz, kelimeyi en hızlı o noktadan tanıyor. Kırmızı harf hep aynı yerde durduğu için göz satırda gezinmiyor, kelimeler ona geliyor.",
+        image: oku("welcome", "Oku'nun açılış ekranı"),
+      },
+      {
+        title: "Kopyalayın, okuyun",
+        body: "Okumak istediğiniz metni kopyalayın, Oku'yu açıp tek dokunuşla başlayın. Kaç kelime olduğu, ne kadar süreceği ve nerede kaldığınız listede.",
+        image: oku("library", "Okunan metinler"),
+      },
+      {
+        title: "Durunca metin karşınızda",
+        body: "Ekrana dokununca okuma duruyor ve metnin kendisi beliriyor. Kaçırdığınız bir yer varsa o kelimeye dokunup oradan devam ediyorsunuz.",
+        image: oku("paused", "Duraklatınca beliren metin"),
+      },
+      {
+        title: "Hızı siz belirleyin",
+        body: "Dakikada 100 ile 1000 kelime arası. Yazı boyutu, kırmızı harfin yeri ve noktalamada duraksama da aynı ekranda.",
+        image: oku("settings", "Ayarlar"),
+      },
+    ],
+    highlights: [
+      {
+        title: "Noktalamada nefes",
+        body: "Virgülde kısa, cümle sonunda biraz daha uzun bir duraksama. Metin bir solukta geçmiyor, okunur gibi akıyor.",
+      },
+      {
+        title: "Sayılar acele etmez",
+        body: "Rakamlar, tarihler, parantez ve tırnak içleri ekranda biraz daha uzun kalıyor; hız artsa da gözden kaçmıyor.",
+      },
+      {
+        title: "Kaldığınız yerden",
+        body: "Okumayı yarıda bırakın; metni yeniden açtığınızda kaldığınız kelimeden devam ediyor.",
+      },
+      {
+        title: "Cümle cümle gezinme",
+        body: "Bir önceki kelimeye ya da cümleye tek dokunuşla dönün. Bilgisayarda ok tuşları ve boşluk tuşu da çalışıyor.",
+      },
+      {
+        title: "Ana ekranda, internetsiz de",
+        body: "Telefonunuzun ana ekranına uygulama gibi ekleniyor. Bir kez açtıktan sonra internet olmadan da çalışıyor.",
+      },
+      {
+        title: "Metinler sizde kalıyor",
+        body: "Hesap da giriş de yok. Yapıştırdığınız her şey yalnızca kendi cihazınızda saklanıyor.",
       },
     ],
   },

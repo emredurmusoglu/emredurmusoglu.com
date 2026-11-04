@@ -72,12 +72,15 @@ export function ProjectCard({
   project,
   color,
   detailHref,
+  isApp = false,
 }: {
   project: PublicProject;
   /** Ürünün kendi rengi (lib/products); yoksa sitenin mavisi */
   color?: string;
   /** Ürünün detay sayfası varsa kart oraya gider, mağaza bağlantısı yanında kalır. */
   detailHref?: string;
+  /** Mağazası olmayan ama uygulama olan ürünler (ör. Oku): "Siteye Git" değil */
+  isApp?: boolean;
 }) {
   const [picking, setPicking] = useState(false);
   const [androidNotice, setAndroidNotice] = useState(false);
@@ -112,7 +115,7 @@ export function ProjectCard({
     </button>
   ) : singleHref ? (
     <a href={singleHref} target="_blank" rel="noreferrer" className={storeLink}>
-      {project.iosUrl || project.androidUrl ? "Uygulamaya Git" : "Siteye Git"}
+      {project.iosUrl || project.androidUrl || isApp ? "Uygulamaya Git" : "Siteye Git"}
       <ExternalArrow />
     </a>
   ) : null;

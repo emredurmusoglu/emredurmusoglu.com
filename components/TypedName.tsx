@@ -13,7 +13,7 @@ const OPEN_CLASSES = ["src-p", "src-t", "src-t", "src-p"];
 const START_DELAY = 675;
 /** Satır yazılınca Enter'a basmadan önceki duraksama */
 const BEFORE_ENTER = 780;
-/** Enter: satır bir an "çalışan satır" gibi parlar, sonra başlık gelir */
+/** Enter: satır bir an debugger'ın durduğu satır gibi yanar, sonra başlık gelir */
 const RUN = 170;
 
 /** İnsan eli gibi: etiket hızlı, isim biraz daha yavaş ve düzensiz. */
@@ -70,7 +70,7 @@ export function TypedName() {
         <span
           aria-hidden="true"
           data-run={phase === "run" ? "" : undefined}
-          className="typed-code absolute inset-y-0 -left-3 flex items-center whitespace-pre pl-3 pr-4 font-mono text-xl font-normal tracking-normal md:text-4xl"
+          className="typed-code absolute inset-y-0 -left-3 -right-3 flex items-center whitespace-pre pl-3 pr-4 font-mono text-xl font-normal tracking-normal md:text-4xl"
         >
           {[...open].map((ch, i) => (
             <span key={i} className={OPEN_CLASSES[i]}>

@@ -102,6 +102,7 @@ export default async function Home() {
                   project={project}
                   color={getProduct(project.slug)?.color}
                   detailHref={getProduct(project.slug) ? `/projeler/${project.slug}` : undefined}
+                  isApp={getProduct(project.slug)?.kind === "app"}
                 />
               ))}
             </div>
