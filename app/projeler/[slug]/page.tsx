@@ -61,9 +61,9 @@ function StoreLinks({ project, primary = false }: { project: Project; primary?: 
     "inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-medium text-neutral-950 transition hover:bg-white/85";
   const ghost =
     "inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-2.5 text-sm font-medium text-white/75 transition hover:border-white/30 hover:text-white";
-  // Oku gibi sitenin içindeki uygulamalarda yol da görünsün: emredurmusoglu.com/oku
+  // Oku gibi bir sitenin içindeki uygulamalarda adres değil uygulamanın adı yazsın
   const link = project.url ? new URL(project.url) : null;
-  const host = link ? `${link.host.replace(/^www\./, "")}${link.pathname.replace(/\/$/, "")}` : null;
+  const label = link ? (link.pathname.replace(/\/$/, "") ? project.title : link.host.replace(/^www\./, "")) : null;
 
   return (
     <div className="flex flex-wrap items-center gap-3">
@@ -86,7 +86,7 @@ function StoreLinks({ project, primary = false }: { project: Project; primary?: 
       ) : null}
       {!project.iosUrl && !project.androidUrl && project.url ? (
         <a href={project.url} target="_blank" rel="noreferrer" className={primary ? solid : ghost}>
-          {host}
+          {label}
           <ExternalArrow className="ml-0" />
         </a>
       ) : null}
