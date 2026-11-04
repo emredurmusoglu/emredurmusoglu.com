@@ -650,10 +650,30 @@ main:has(.src-quiet:focus-within) .src-layer[data-variant="page"] .src-ambient {
   opacity: 0;
 }
 
-/* Enter: satır bir an renksiz bir bantla örtülüyor; arkadaki kod katmanı
-   bandın içinden görünmesin diye bant sayfa zemininin rengi. */
+/* Enter: satır bir an renksiz yanıyor, editördeki seçili satır gibi: beyaz,
+   yarı saydam bir bant ve solda ince beyaz çizgi. Bant parlak başlayıp
+   söner. Arkadaki kod katmanı içinden görünmesin diye bant sayfa zemininin
+   üstünde. */
 .typed-code[data-run] {
-  background: var(--color-neutral-950);
+  --run-glow: rgb(255 255 255 / 0.2);
+  background: linear-gradient(var(--run-glow), var(--run-glow)), var(--color-neutral-950);
+  box-shadow: inset 2px 0 0 rgb(255 255 255 / 0.85);
+  animation: typed-run 170ms ease-out forwards;
+}
+
+@property --run-glow {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@keyframes typed-run {
+  from {
+    --run-glow: rgb(255 255 255 / 0.2);
+  }
+  to {
+    --run-glow: rgb(255 255 255 / 0.08);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
