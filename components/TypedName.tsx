@@ -13,7 +13,7 @@ const OPEN_CLASSES = ["src-p", "src-t", "src-t", "src-p"];
 const START_DELAY = 675;
 /** Satır yazılınca Enter'a basmadan önceki duraksama */
 const BEFORE_ENTER = 780;
-/** Enter: satır bir an debugger'ın durduğu satır gibi yanar, sonra başlık gelir */
+/** Enter: satır bir an renksiz bir bantla örtülür, sonra başlık gelir */
 const RUN = 170;
 
 /** İnsan eli gibi: etiket hızlı, isim biraz daha yavaş ve düzensiz. */
