@@ -8,8 +8,14 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-plex-sans);
+  --font-mono: var(--font-plex-mono);
+}
+
+/* Sitenin tek vurgu rengi: logodaki mavi. Az yerde kullanılıyor — imleç,
+   kodda çalışan satır, ince vurgu çizgileri. */
+@theme {
+  --color-ed: #43a2e8;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,7 +28,8 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-plex-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* iOS'ta ana ekrandan açıldığında (standalone) durum çubuğu saydam olur ve
@@ -374,8 +381,8 @@ body:has(.oku-app) {
   mask-image: radial-gradient(ellipse 70% 65% at 50% 55%, #000 35%, transparent 100%);
 }
 
-/* Bütün sayfanın arkası: sayfanın kendi kodu, çok soluk. Aurora katmanının
-   üstünde, içeriğin altında durması için z-index almıyor (DOM sırası yeter).
+/* Bütün sayfanın arkası: sayfanın kendi kodu, çok soluk. İçeriğin altında
+   durması için z-index almıyor (DOM sırası yeter).
    Kartların buzlu camı bu kodu bulanıklaştırıyor; kartın kendi kodu net. */
 .src-layer[data-variant="page"] {
   z-index: auto;
@@ -494,7 +501,7 @@ body:has(.oku-app) {
   left: 0;
   margin: 0;
   padding-right: 1.5rem;
-  font: 11px/17px ui-monospace, "SF Mono", SFMono-Regular, Menlo, monospace;
+  font: 11px/17px var(--font-plex-mono), ui-monospace, "SF Mono", Menlo, monospace;
   white-space: pre;
   color: rgb(255 255 255 / 0.75);
   transform: translateY(calc(var(--src-focus) * -17px - 8px));
@@ -601,8 +608,8 @@ main:has(.src-quiet:focus-within) .src-layer[data-variant="page"] .src-ambient {
 
 /* Çalışan satır — debugger'da durulan satır gibi */
 .src-layer[data-run] .src-line[data-focus] {
-  background: linear-gradient(to right, rgb(56 189 248 / 0.35), rgb(56 189 248 / 0.08) 70%, transparent);
-  box-shadow: inset 2px 0 0 rgb(125 211 252);
+  background: linear-gradient(to right, rgb(67 162 232 / 0.35), rgb(67 162 232 / 0.08) 70%, transparent);
+  box-shadow: inset 2px 0 0 var(--color-ed);
 }
 
 .src-k { color: #f0abfc; }
@@ -618,5 +625,43 @@ main:has(.src-quiet:focus-within) .src-layer[data-variant="page"] .src-ambient {
   .src-ambient,
   .src-spot {
     transition: none;
+  }
+}
+
+/* Ana sayfadaki isim (TypedName): önce başlığın HTML'i yazılıyor. İmleç
+   yazarken sabit (her tuşta animasyon baştan başlıyor), durunca yanıp sönüyor. */
+.typed-caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.05em;
+  margin-left: 1px;
+  vertical-align: -0.15em;
+  background: var(--color-ed);
+  animation: typed-blink 1.05s step-end infinite;
+}
+
+@keyframes typed-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.typed-pending {
+  opacity: 0;
+}
+
+/* Enter: satır, kod katmanındaki çalışan satır gibi bir an parlıyor */
+.typed-code[data-run] {
+  background: linear-gradient(to right, rgb(67 162 232 / 0.35), rgb(67 162 232 / 0.08) 70%, transparent);
+  box-shadow: inset 2px 0 0 var(--color-ed);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .typed-pending {
+    opacity: 1;
+  }
+
+  .typed-code {
+    display: none;
   }
 }

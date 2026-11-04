@@ -23,7 +23,6 @@ export async function getPublicProjects() {
       title: projects.title,
       description: projects.description,
       status: projects.status,
-      accent: projects.accent,
       iconUrl: projects.iconUrl,
       url: projects.url,
       iosUrl: projects.iosUrl,

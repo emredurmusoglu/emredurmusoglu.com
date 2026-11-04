@@ -9,13 +9,10 @@ import { SourceLayer } from "@/components/source/SourceLayer";
 import { AppleIcon, PlayIcon } from "@/components/StoreIcons";
 import cardSource from "@/lib/source/projectCard.json";
 
-const DEFAULT_ACCENT = "from-sky-400/70 via-indigo-400/50 to-fuchsia-400/70";
-
 export type PublicProject = {
   slug: string;
   title: string;
   description: string | null;
-  accent: string | null;
   iconUrl: string | null;
   url: string | null;
   iosUrl: string | null;
@@ -26,7 +23,7 @@ export type PublicProject = {
 
 function PlatformChip({ label }: { label: string }) {
   return (
-    <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[11px] font-medium text-white/50">
+    <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 font-mono text-[11px] text-white/50">
       {label}
     </span>
   );
@@ -73,9 +70,12 @@ function SoonButton({
 
 export function ProjectCard({
   project,
+  color,
   detailHref,
 }: {
   project: PublicProject;
+  /** Ürünün kendi rengi (lib/products); yoksa sitenin mavisi */
+  color?: string;
   /** Ürünün detay sayfası varsa kart oraya gider, mağaza bağlantısı yanında kalır. */
   detailHref?: string;
 }) {
@@ -184,9 +184,10 @@ export function ProjectCard({
         ) : (
           <div className="flex items-center justify-between gap-3">
             <div
-              className={`h-px bg-gradient-to-r transition-all duration-300 ${
-                project.accent ?? DEFAULT_ACCENT
-              } ${project.comingSoon ? "w-16" : "w-0 group-hover:w-20"}`}
+              className={`h-px transition-all duration-300 ${
+                project.comingSoon ? "w-16" : "w-0 group-hover:w-20"
+              }`}
+              style={{ backgroundColor: color ?? "var(--color-ed)" }}
             />
             {project.comingSoon ? (
               <span className="src-island text-sm text-white/30">Hazırlanıyor</span>

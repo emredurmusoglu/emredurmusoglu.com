@@ -15,7 +15,6 @@ export function WorkCard({ work }: { work: Work }) {
   return (
     <article className="src-host group relative isolate overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur transition hover:border-white/20 hover:bg-white/[0.07] hover:shadow-[0_18px_60px_rgba(0,0,0,0.45)]">
       <SourceLayer snippet={workCardSource} />
-      <div className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-gradient-to-tr from-amber-400/15 via-blue-500/15 to-indigo-500/10 blur-3xl" />
 
       <div className="relative grid gap-8 p-6 md:grid-cols-[1fr_1.25fr] md:gap-10 md:p-8">
         <div className="flex flex-col">
@@ -28,7 +27,7 @@ export function WorkCard({ work }: { work: Work }) {
             </span>
             <div>
               <h3 className="text-lg font-semibold text-white">{work.title}</h3>
-              <p className="text-xs text-white/40">
+              <p className="font-mono text-xs text-white/40">
                 {work.company} · {work.year}
               </p>
             </div>

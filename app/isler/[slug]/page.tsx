@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { ExternalArrow } from "@/components/ExternalArrow";
+import { SectionLabel } from "@/components/SectionLabel";
 import { SourceLayer } from "@/components/source/SourceLayer";
 import { BrowserFrame, PhoneFrame } from "@/components/work/Frames";
 import ctaSource from "@/lib/source/workCta.json";
@@ -41,7 +42,7 @@ export async function generateMetadata({
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
     <div className="mb-8 flex items-baseline gap-3 md:mb-10">
-      <h2 className="text-xs uppercase tracking-[0.15em] text-white/40">{children}</h2>
+      <SectionLabel>{children}</SectionLabel>
       <span className="h-px flex-1 bg-white/10" />
     </div>
   );
@@ -60,12 +61,6 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-neutral-950 text-white">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-40 left-1/2 h-[620px] w-[620px] -translate-x-1/2 rounded-full bg-gradient-to-tr from-blue-600/30 via-indigo-500/20 to-amber-400/15 blur-3xl" />
-        <div className="absolute top-[60rem] -left-40 h-[520px] w-[520px] rounded-full bg-gradient-to-tr from-amber-400/10 via-blue-500/10 to-indigo-500/15 blur-3xl" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/40 to-black/70" />
-      </div>
-
       {/* Sayfanın kendi kodu, bütün sayfanın arkasında */}
       <SourceLayer snippet={pageSource} variant="page" repeat={2} />
 
@@ -86,16 +81,14 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
             >
               <Image src={work.logo} alt="" width={24} height={26} className="h-6 w-auto" />
             </span>
-            <span className="text-xs uppercase tracking-[0.15em] text-white/40">
-              Proje detayı
-            </span>
+            <SectionLabel as="span">Proje detayı</SectionLabel>
           </div>
 
-          <h1 className="mt-6 text-4xl font-bold tracking-tight md:text-6xl">{work.title}</h1>
+          <h1 className="mt-6 text-4xl font-semibold tracking-[-0.02em] md:text-6xl">{work.title}</h1>
           <p className="mt-4 max-w-3xl text-xl leading-relaxed text-white/80 md:text-2xl">
             {work.tagline}
           </p>
-          <div className={`mt-7 h-px w-16 bg-gradient-to-r ${work.accent}`} />
+          <div className="mt-7 h-px w-16" style={{ backgroundColor: work.color }} />
           <p className="mt-7 max-w-3xl text-base leading-relaxed text-white/60 md:text-lg">
             {work.summary}
           </p>
@@ -103,12 +96,12 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
           <dl className="mt-10 grid grid-cols-1 gap-x-8 gap-y-5 border-y border-white/10 py-6 text-sm sm:grid-cols-2 md:grid-cols-4">
             {meta.map((m) => (
               <div key={m.label}>
-                <dt className="text-xs text-white/35">{m.label}</dt>
+                <dt className="font-mono text-xs text-white/35">{m.label}</dt>
                 <dd className="mt-1 text-white/80">{m.value}</dd>
               </div>
             ))}
             <div>
-              <dt className="text-xs text-white/35">Yayında</dt>
+              <dt className="font-mono text-xs text-white/35">Yayında</dt>
               <dd className="mt-1">
                 <a
                   href={work.liveUrl}
@@ -175,7 +168,7 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
                 key={b.title}
                 className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur"
               >
-                <span className={`block h-px w-8 bg-gradient-to-r ${work.accent}`} />
+                <span className="block h-px w-8" style={{ backgroundColor: work.color }} />
                 <h3 className="mt-4 font-semibold">{b.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-white/55">{b.body}</p>
               </div>

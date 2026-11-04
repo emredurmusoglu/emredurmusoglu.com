@@ -36,8 +36,8 @@ export type Work = {
   logo: string;
   /** Logonun durduğu rozetin rengi (markanın kendi rengi) */
   brand: string;
-  /** Vurgu çizgisinin rengi (tailwind gradient) */
-  accent: string;
+  /** Vurgu çizgisinin rengi: sitelerindeki vurgu rengi */
+  color: string;
   cover: WorkImage;
   coverSecondary: WorkImage;
   stats: { value: string; label: string }[];
@@ -78,7 +78,7 @@ export const works: Work[] = [
     liveLabel: "sibea.com.tr",
     logo: "/work/sibea/sibea-mark-white.svg",
     brand: "#1E3D8F",
-    accent: "from-amber-300/80 via-amber-400/50 to-blue-500/70",
+    color: "#d9a84e",
     cover: desktop("sibea", "site-home", "Sibea ana sayfası", "sibea.com.tr"),
     coverSecondary: desktop("sibea", "panel-ozet-v2", "Sibea yönetim paneli", "sibea.com.tr/panel"),
     stats: [
@@ -158,7 +158,7 @@ export const works: Work[] = [
     liveLabel: "menga.com.tr",
     logo: "/work/menga/menga-mark-white.svg",
     brand: "#003C78",
-    accent: "from-orange-400/80 via-orange-500/50 to-sky-600/70",
+    color: "#e5631f",
     cover: desktop("menga", "site-home", "MengA ana sayfası", "menga.com.tr"),
     coverSecondary: desktop("menga", "panel-ozet", "MengA yönetim paneli", "menga.com.tr/panel"),
     stats: [

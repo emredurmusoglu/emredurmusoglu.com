@@ -3,6 +3,8 @@ import Image from "next/image";
 import { ContactButton } from "@/components/ContactButton";
 import { NotesSection } from "@/components/NotesSection";
 import { ProjectCard } from "@/components/ProjectCard";
+import { SectionCount, SectionLabel } from "@/components/SectionLabel";
+import { TypedName } from "@/components/TypedName";
 import { WorkCard } from "@/components/work/WorkCard";
 import { SourceLayer } from "@/components/source/SourceLayer";
 import { getPublicNotes, getPublicProjects } from "@/lib/content";
@@ -29,32 +31,21 @@ export default async function Home() {
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-neutral-950 text-white">
-      {/* Background — aurora blobs */}
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-24 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-gradient-to-tr from-sky-500/35 via-indigo-500/25 to-fuchsia-500/25 blur-3xl" />
-        <div className="absolute top-48 -left-24 h-[420px] w-[420px] rounded-full bg-gradient-to-tr from-emerald-400/20 via-cyan-400/15 to-sky-500/20 blur-3xl" />
-        <div className="absolute -bottom-32 right-0 h-[520px] w-[520px] rounded-full bg-gradient-to-tr from-fuchsia-500/20 via-purple-500/20 to-indigo-500/20 blur-3xl" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black/70" />
-      </div>
-
       {/* Sayfanın kendi kodu, bütün sayfanın arkasında */}
       <SourceLayer snippet={homeSource} variant="page" repeat={2} />
 
       <div className="relative mx-auto max-w-5xl px-6 py-12 md:py-20">
         {/* Header — avatar solda, iletişim sağda */}
         <header className="mb-12 flex items-center justify-between md:mb-16">
-          <div className="relative">
-            <div className="absolute -inset-3 rounded-full bg-gradient-to-r from-sky-500/40 via-indigo-500/30 to-fuchsia-500/40 blur-xl" />
-            <div className="relative h-[72px] w-[72px] overflow-hidden rounded-full bg-white/10 shadow-[0_12px_40px_rgba(0,0,0,0.55)] ring-1 ring-white/15 md:h-[88px] md:w-[88px]">
-              <Image
-                src="/ed-512.png"
-                alt="ED logo"
-                fill
-                priority
-                sizes="(max-width: 768px) 72px, 88px"
-                className="object-cover"
-              />
-            </div>
+          <div className="relative h-[72px] w-[72px] overflow-hidden rounded-full bg-white/10 shadow-[0_12px_40px_rgba(0,0,0,0.55)] ring-1 ring-white/15 md:h-[88px] md:w-[88px]">
+            <Image
+              src="/ed-512.png"
+              alt="ED logo"
+              fill
+              priority
+              sizes="(max-width: 768px) 72px, 88px"
+              className="object-cover"
+            />
           </div>
 
           <ContactButton />
@@ -62,13 +53,7 @@ export default async function Home() {
 
         {/* Hero */}
         <section className="max-w-3xl">
-          <h1 className="mb-6 text-4xl font-bold tracking-tight md:text-6xl">
-            <span className="bg-gradient-to-r from-white via-white to-white/70 bg-clip-text text-transparent">
-              Emre Durmuşoğlu
-            </span>
-          </h1>
-
-          <div className="mb-7 h-px w-16 bg-gradient-to-r from-sky-400/60 via-indigo-400/40 to-fuchsia-400/60" />
+          <TypedName />
 
           <p className="mb-6 text-xl leading-relaxed text-white/85 md:text-2xl">
             Merhaba, ben Emre. Bağımsız bir yazılım geliştiricisiyim.
@@ -93,7 +78,7 @@ export default async function Home() {
             {CAPABILITIES.map((c) => (
               <li
                 key={c}
-                className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-white/55 backdrop-blur"
+                className="rounded-full border border-white/10 bg-white/5 px-3 py-1 font-mono text-xs text-white/55 backdrop-blur"
               >
                 {c}
               </li>
@@ -105,13 +90,9 @@ export default async function Home() {
         {projects.length ? (
           <section id="projeler" className="mt-16 scroll-mt-8 md:mt-24">
             <div className="mb-6 flex items-baseline gap-3">
-              <h2 className="text-xs uppercase tracking-[0.15em] text-white/40">
-                Kendi projelerim
-              </h2>
+              <SectionLabel>Kendi projelerim</SectionLabel>
               <span className="h-px flex-1 bg-white/10" />
-              <span className="text-xs tabular-nums text-white/25">
-                {projects.length}
-              </span>
+              <SectionCount count={projects.length} />
             </div>
 
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
@@ -119,6 +100,7 @@ export default async function Home() {
                 <ProjectCard
                   key={project.slug}
                   project={project}
+                  color={getProduct(project.slug)?.color}
                   detailHref={getProduct(project.slug) ? `/projeler/${project.slug}` : undefined}
                 />
               ))}
@@ -130,13 +112,9 @@ export default async function Home() {
         {works.length ? (
           <section id="isler" className="mt-16 scroll-mt-8 md:mt-24">
             <div className="mb-6 flex items-baseline gap-3">
-              <h2 className="text-xs uppercase tracking-[0.15em] text-white/40">
-                Diğer işler
-              </h2>
+              <SectionLabel>Diğer işler</SectionLabel>
               <span className="h-px flex-1 bg-white/10" />
-              <span className="text-xs tabular-nums text-white/25">
-                {works.length}
-              </span>
+              <SectionCount count={works.length} />
             </div>
 
             <div className="space-y-5">

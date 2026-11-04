@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { SectionLabel } from "@/components/SectionLabel";
 import { SourceLayer } from "@/components/source/SourceLayer";
 import type { getPublicNotes } from "@/lib/content";
 import { formatDate } from "@/lib/date";
@@ -13,9 +14,7 @@ export function NotesSection({ notes }: { notes: Note[] }) {
     <section className="src-host relative isolate mt-16 md:mt-24">
       <SourceLayer snippet={notesSource} variant="bare" />
       <div className="mb-6 flex items-baseline gap-3">
-        <h2 className="src-island text-xs uppercase tracking-[0.15em] text-white/40">
-          Yazılar
-        </h2>
+        <SectionLabel className="src-island">Yazılar</SectionLabel>
         <span className="h-px flex-1 bg-white/10" />
         <Link
           href="/yazilar"
@@ -37,7 +36,7 @@ export function NotesSection({ notes }: { notes: Note[] }) {
               </span>
               <time
                 dateTime={note.publishedAt?.toISOString()}
-                className="shrink-0 text-xs text-white/30"
+                className="shrink-0 font-mono text-xs text-white/30"
               >
                 {formatDate(note.publishedAt)}
               </time>

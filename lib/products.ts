@@ -30,10 +30,8 @@ export type ProductShowcase = {
   category: string;
   platform: string;
   year: string;
-  /** Vurgu çizgisi (tailwind gradient) */
-  accent: string;
-  /** Sayfa arka planındaki ışıltı (tailwind gradient) */
-  glow: string;
+  /** Ürünün kendi rengi, ikonundan alındı: vurgu çizgileri ve telefon arkası ışık */
+  color: string;
   /** Uygulamalarda başlıktaki üç telefon (ortadaki öne çıkar) */
   heroPhones?: [WorkImage, WorkImage, WorkImage];
   /** Web ürünlerinde başlıktaki tarayıcı + telefon */
@@ -76,8 +74,7 @@ export const products: ProductShowcase[] = [
     category: "Dijital davetiye platformu",
     platform: "Web · telefon öncelikli",
     year: "2025",
-    accent: "from-amber-300/80 via-rose-300/50 to-indigo-400/70",
-    glow: "from-amber-400/20 via-rose-400/15 to-indigo-500/25",
+    color: "#d4ae62", // mühür altını
     heroDesktop: desktop("davetiva", "home", "Davetiva ana sayfası", "davetiva.com"),
     heroMobile: davetiva("m-invite", "Örnek davetiye, telefonda"),
     stats: [
@@ -145,8 +142,7 @@ export const products: ProductShowcase[] = [
     category: "Alarm uygulaması",
     platform: "iPhone",
     year: "2026",
-    accent: "from-violet-400/80 via-fuchsia-400/50 to-sky-400/70",
-    glow: "from-violet-600/30 via-fuchsia-500/15 to-indigo-500/20",
+    color: "#b390e3", // ikondaki lila
     heroPhones: [
       alarmix("tasks", "Uyanma görevleri ayarı"),
       alarmix("alarms", "Alarm listesi"),
@@ -216,8 +212,7 @@ export const products: ProductShowcase[] = [
     category: "Arcade oyun",
     platform: "iPhone ve Android",
     year: "2026",
-    accent: "from-fuchsia-400/80 via-violet-400/50 to-cyan-400/70",
-    glow: "from-fuchsia-600/25 via-violet-600/25 to-cyan-500/15",
+    color: "#e05cf2", // neon pembe
     heroPhones: [
       online("wind", "Rüzgara karşı denge"),
       online("play", "Oyun ekranı"),
@@ -274,8 +269,7 @@ export const products: ProductShowcase[] = [
     category: "Namaz vakti ve ibadet",
     platform: "iPhone, Apple Watch, CarPlay",
     year: "2026",
-    accent: "from-violet-400/80 via-indigo-400/50 to-sky-300/70",
-    glow: "from-indigo-600/30 via-violet-600/20 to-sky-500/15",
+    color: "#9184cf", // ikondaki mor
     heroPhones: [
       vaktinde("quran", "Kur'an-ı Kerim"),
       vaktinde("home", "Ana ekran, gece"),
