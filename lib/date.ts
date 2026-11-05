@@ -54,6 +54,40 @@ export function formatDateTime(date: Date | null): string {
   }).format(date);
 }
 
+/** Hedef zaman diliminde "YYYY-MM-DD" + "HH:mm" olarak yazılmış anın kendisi */
+export function zonedInstant(day: string, time: string, tz: string = TZ): Date {
+  const guess = new Date(`${day}T${time}:00Z`);
+  return new Date(`${day}T${time}:00${offsetFor(guess, tz)}`);
+}
+
+/** "Çar 5 Kas · 19:00" */
+export function formatLessonTime(date: Date): string {
+  const parts = new Intl.DateTimeFormat("tr-TR", {
+    timeZone: TZ,
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).formatToParts(date);
+  const get = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((p) => p.type === type)?.value ?? "";
+  return `${get("weekday")} ${get("day")} ${get("month")} · ${get("hour")}:${get("minute")}`;
+}
+
+/** Günün ait olduğu haftanın pazartesisi, "YYYY-MM-DD" */
+export function weekStart(day: string): string {
+  const date = new Date(`${day}T00:00:00Z`);
+  const fromMonday = (date.getUTCDay() + 6) % 7;
+  return addDays(day, -fromMonday);
+}
+
+export function addDays(day: string, days: number): string {
+  const date = new Date(`${day}T00:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().slice(0, 10);
+}
+
 /** `<input type="date">` için değer */
 export function toDateInput(date: Date | null): string {
   return date ? dayKey(date) : "";

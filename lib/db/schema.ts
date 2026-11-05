@@ -218,6 +218,32 @@ export const contactMessages = pgTable(
   (t) => [index("contact_messages_created_idx").on(t.createdAt)],
 );
 
+/** Hocayla ders mi, tek başına antrenman mı. Sadece dersler ders hakkından düşüyor. */
+export const kickboxSessionKind = pgEnum("kickbox_session_kind", [
+  "lesson",
+  "training",
+]);
+
+/**
+ * Kickboks dersleri ve antrenmanlar (/kickboks). Sayfa şifresiz; bu yüzden tabloda kişisel
+ * bir şey yok, sadece dersin saati ve kısa bir not.
+ */
+export const kickboxLessons = pgTable(
+  "kickbox_lessons",
+  {
+    id: serial("id").primaryKey(),
+    kind: kickboxSessionKind("kind").notNull().default("lesson"),
+    startsAt: timestamp("starts_at", { withTimezone: true }).notNull(),
+    note: varchar("note", { length: 200 }),
+    /** Ders yapıldı diye işaretlendiği an. Bir kez dolunca geri alınmıyor. */
+    doneAt: timestamp("done_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => [index("kickbox_lessons_starts_idx").on(t.startsAt)],
+);
+
 export type Project = typeof projects.$inferSelect;
 export type NewProject = typeof projects.$inferInsert;
 export type Task = typeof tasks.$inferSelect;
@@ -228,3 +254,4 @@ export type EtsyCategory = typeof etsyCategories.$inferSelect;
 export type EtsyEntry = typeof etsyEntries.$inferSelect;
 export type EtsyAccessLog = typeof etsyAccessLog.$inferSelect;
 export type ContactMessage = typeof contactMessages.$inferSelect;
+export type KickboxLesson = typeof kickboxLessons.$inferSelect;
