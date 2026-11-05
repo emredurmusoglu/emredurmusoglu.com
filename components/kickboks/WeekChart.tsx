@@ -12,32 +12,22 @@ import type { WeekBar } from "@/lib/kickboks/dal";
  */
 export function WeekChart({ weeks }: { weeks: WeekBar[] }) {
   const max = Math.max(1, ...weeks.map((week) => week.lessons + week.trainings));
-  const current = weeks.at(-1)?.start;
+  const current = weeks.at(-1);
 
   return (
-    <section>
-      <div className="mb-2 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 px-3">
-        <h2 className="text-sm font-medium text-neutral-700">Haftalık</h2>
-        <div className="flex items-center gap-3 text-xs text-neutral-500">
-          <span className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-sm bg-red-600" />
-            Ders
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-sm bg-sky-600" />
-            Antrenman
-          </span>
-          <span className="text-neutral-400">son {weeks.length} hafta</span>
-        </div>
+    <section className="rounded-2xl bg-white p-4 shadow-[0_1px_2px_rgba(0,0,0,0.04)] ring-1 ring-neutral-200">
+      <div className="flex items-baseline justify-between gap-3">
+        <h2 className="text-sm font-medium text-neutral-900">Haftalık</h2>
+        <span className="text-xs text-neutral-500">son {weeks.length} hafta</span>
       </div>
 
-      <div className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
+      <div className="mt-4">
         <ol className="flex h-44 items-stretch gap-1">
           {weeks.map((week, index) => {
             const [, month, day] = week.start.split("-").map(Number);
             const prevMonth =
               index > 0 ? Number(weeks[index - 1].start.slice(5, 7)) : null;
-            const isCurrent = week.start === current;
+            const isCurrent = week.start === current?.start;
             const total = week.lessons + week.trainings;
             const detail = [
               `${day} ${MONTHS_TR_SHORT[month - 1]} haftası`,
@@ -82,7 +72,7 @@ export function WeekChart({ weeks }: { weeks: WeekBar[] }) {
                 </div>
 
                 <div className="mt-1.5 w-full border-t border-neutral-200 pt-1 text-center text-[10px] leading-tight tabular-nums text-neutral-400">
-                  <span className={isCurrent ? "font-medium text-neutral-700" : ""}>
+                  <span className={isCurrent ? "font-medium text-neutral-900" : ""}>
                     {day}
                   </span>
                   <span className="block h-3">
@@ -99,6 +89,17 @@ export function WeekChart({ weeks }: { weeks: WeekBar[] }) {
             );
           })}
         </ol>
+
+        <div className="mt-3 flex gap-4 text-xs text-neutral-500">
+          <span className="flex items-center gap-1.5">
+            <span className="h-2 w-2 rounded-[2px] bg-red-600" />
+            Ders
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="h-2 w-2 rounded-[2px] bg-sky-600" />
+            Antrenman
+          </span>
+        </div>
       </div>
     </section>
   );

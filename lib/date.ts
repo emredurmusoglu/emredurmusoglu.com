@@ -75,6 +75,33 @@ export function formatLessonTime(date: Date): string {
   return `${get("weekday")} ${get("day")} ${get("month")} · ${get("hour")}:${get("minute")}`;
 }
 
+/** getUTCDay() sırasıyla: pazar 0 */
+export const WEEKDAYS_TR = [
+  "Pazar",
+  "Pazartesi",
+  "Salı",
+  "Çarşamba",
+  "Perşembe",
+  "Cuma",
+  "Cumartesi",
+];
+export const WEEKDAYS_TR_SHORT = ["Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt"];
+
+/** "YYYY-MM-DD" gününün haftanın kaçıncı günü olduğu (pazar 0) */
+export function weekdayOf(day: string): number {
+  return new Date(`${day}T00:00:00Z`).getUTCDay();
+}
+
+/** Hedef zaman dilimindeki saat, "HH:mm" */
+export function timeKey(date: Date, tz: string = TZ): string {
+  return new Intl.DateTimeFormat("en-GB", {
+    timeZone: tz,
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).format(date);
+}
+
 /** Günün ait olduğu haftanın pazartesisi, "YYYY-MM-DD" */
 export function weekStart(day: string): string {
   const date = new Date(`${day}T00:00:00Z`);

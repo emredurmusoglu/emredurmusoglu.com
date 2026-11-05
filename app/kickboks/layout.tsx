@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 
 import { ToastHost } from "@/components/panel/Toast";
 
@@ -11,14 +11,19 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
+export const viewport: Viewport = {
+  themeColor: "#fafafa",
+  colorScheme: "light",
+};
+
 export default function KickboksLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <div className="panel-light safe-top safe-bottom min-h-screen bg-neutral-50 text-neutral-900 [font-family:system-ui,-apple-system,'Segoe_UI',sans-serif]">
-      <main className="mx-auto min-w-0 max-w-2xl px-4 py-6 pb-20 md:py-10">
+    <div className="panel-light safe-top safe-bottom min-h-screen bg-neutral-50 text-neutral-900 [-webkit-tap-highlight-color:transparent]">
+      <main className="mx-auto min-w-0 max-w-xl px-4 pt-8 pb-24 md:pt-12">
         {children}
       </main>
 

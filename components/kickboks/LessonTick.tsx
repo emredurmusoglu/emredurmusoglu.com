@@ -7,7 +7,7 @@ import { markLessonDone } from "@/lib/actions/kickboks";
 
 /**
  * Yapıldı işareti geri alınmadığı için tek dokunuşla atılmıyor: kutuya
- * basınca satırda "✓ Yapıldı / Vazgeç" çıkıyor, ancak onaylanınca kilitleniyor.
+ * yuvarlağa basınca satırda "Yapıldı / Vazgeç" çıkıyor, ancak onaylanınca kilitleniyor.
  * `data-asking` açıkken satırdaki sil düğmesi gizleniyor (LessonList).
  */
 export function LessonTick({ id }: { id: number }) {
@@ -19,7 +19,7 @@ export function LessonTick({ id }: { id: number }) {
         type="button"
         onClick={() => setAsking(true)}
         aria-label="Yapıldı diye işaretle"
-        className="grid h-7 w-7 shrink-0 place-items-center rounded-lg border-2 border-neutral-300 bg-white transition hover:border-red-500"
+        className="h-7 w-7 shrink-0 rounded-full border-2 border-neutral-300 transition hover:border-neutral-900"
       />
     );
   }
@@ -35,7 +35,7 @@ export function LessonTick({ id }: { id: number }) {
       <button
         type="button"
         onClick={() => setAsking(false)}
-        className="rounded-lg px-2 py-1.5 text-xs text-neutral-500 transition hover:text-neutral-900"
+        className="rounded-full px-2.5 py-1.5 text-xs text-neutral-500 transition hover:text-neutral-900"
       >
         Vazgeç
       </button>
@@ -49,9 +49,9 @@ function ConfirmButton() {
     <button
       type="submit"
       disabled={pending}
-      className="rounded-lg bg-red-600 px-2.5 py-1.5 text-xs font-medium text-white transition hover:bg-red-700 disabled:opacity-60"
+      className="rounded-full bg-neutral-900 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-neutral-700 disabled:opacity-60"
     >
-      {pending ? "…" : "✓ Yapıldı"}
+      {pending ? "…" : "Yapıldı"}
     </button>
   );
 }

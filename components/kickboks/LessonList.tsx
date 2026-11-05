@@ -1,13 +1,20 @@
 import { ConfirmSubmit } from "@/components/panel/ConfirmSubmit";
 import { LessonTick } from "@/components/kickboks/LessonTick";
 import { deleteLesson } from "@/lib/actions/kickboks";
-import { dayKey, formatLessonTime } from "@/lib/date";
+import {
+  addDays,
+  dayKey,
+  MONTHS_TR,
+  timeKey,
+  WEEKDAYS_TR_SHORT,
+  weekdayOf,
+  weekStart,
+} from "@/lib/date";
 import type { KickboxLesson } from "@/lib/db/schema";
 
-function untilLabel(startsAt: Date, now: Date): string {
+function untilLabel(day: string, today: string): string {
   const days = Math.round(
-    (Date.parse(`${dayKey(startsAt)}T00:00:00Z`) -
-      Date.parse(`${dayKey(now)}T00:00:00Z`)) /
+    (Date.parse(`${day}T00:00:00Z`) - Date.parse(`${today}T00:00:00Z`)) /
       86_400_000,
   );
   if (days === 0) return "Bugün";
@@ -15,45 +22,112 @@ function untilLabel(startsAt: Date, now: Date): string {
   return `${days} gün sonra`;
 }
 
-export function LessonList({
-  title,
-  lessons,
-  now,
-  ordinals,
-  empty,
-}: {
-  title: string;
+/** "3 – 9 Kasım", ay değişiyorsa "27 Ekim – 2 Kasım" */
+function weekTitle(start: string): string {
+  const end = addDays(start, 6);
+  const [, m1, d1] = start.split("-").map(Number);
+  const [, m2, d2] = end.split("-").map(Number);
+  return m1 === m2
+    ? `${d1} – ${d2} ${MONTHS_TR[m2 - 1]}`
+    : `${d1} ${MONTHS_TR[m1 - 1]} – ${d2} ${MONTHS_TR[m2 - 1]}`;
+}
+
+const cardClass =
+  "overflow-hidden rounded-2xl bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04)] ring-1 ring-neutral-200";
+const cardHeadClass =
+  "flex items-center justify-between gap-3 border-b border-neutral-100 bg-neutral-50/70 px-4 py-2.5";
+
+/** Haftanın yapılan ders ve antrenman sayısı, kendi renkleriyle */
+function WeekCounts({ lessons }: { lessons: KickboxLesson[] }) {
+  const done = lessons.filter((lesson) => lesson.doneAt);
+  const lessonCount = done.filter((lesson) => lesson.kind === "lesson").length;
+  const trainingCount = done.length - lessonCount;
+
+  return (
+    <div className="flex shrink-0 gap-1.5 text-xs">
+      {lessonCount ? (
+        <span className="rounded-full bg-red-50 px-2 py-0.5 text-red-700">
+          {lessonCount} ders
+        </span>
+      ) : null}
+      {trainingCount ? (
+        <span className="rounded-full bg-sky-50 px-2 py-0.5 text-sky-700">
+          {trainingCount} antrenman
+        </span>
+      ) : null}
+      {!done.length ? <span className="text-neutral-400">yapılan yok</span> : null}
+    </div>
+  );
+}
+
+type ListProps = {
   lessons: KickboxLesson[];
   now: Date;
   /** Yapılan derslerin sıra numarası (ilk ders 1); antrenmanlar numara almıyor */
   ordinals: Map<number, number>;
-  empty: string;
-}) {
-  return (
-    <section>
-      <h2 className="mb-2 px-3 text-sm font-medium text-neutral-700">
-        {title}
-        {lessons.length ? (
-          <span className="ml-2 text-neutral-400">{lessons.length}</span>
-        ) : null}
-      </h2>
+};
 
-      {lessons.length ? (
-        <ul className="divide-y divide-neutral-100 overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
-          {lessons.map((lesson) => (
-            <LessonRow
-              key={lesson.id}
-              lesson={lesson}
-              now={now}
-              ordinal={ordinals.get(lesson.id)}
-            />
-          ))}
-        </ul>
-      ) : (
-        <p className="rounded-2xl border border-dashed border-neutral-300 px-4 py-6 text-center text-sm text-neutral-400">
-          {empty}
-        </p>
-      )}
+export function UpcomingLessons({ lessons, now, ordinals }: ListProps) {
+  if (!lessons.length) return null;
+
+  return (
+    <section className={cardClass}>
+      <div className={cardHeadClass}>
+        <h2 className="text-sm font-medium text-neutral-900">Yaklaşan</h2>
+        <span className="text-xs text-neutral-500">{lessons.length} kayıt</span>
+      </div>
+      <ul className="divide-y divide-neutral-100 px-4">
+        {lessons.map((lesson) => (
+          <LessonRow
+            key={lesson.id}
+            lesson={lesson}
+            now={now}
+            ordinal={ordinals.get(lesson.id)}
+          />
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+/** Geçmiş kayıtlar haftalara bölünüyor, en yeni hafta üstte. */
+export function PastLessons({ lessons, now, ordinals }: ListProps) {
+  const weeks = new Map<string, KickboxLesson[]>();
+  for (const lesson of lessons) {
+    const key = weekStart(dayKey(lesson.startsAt));
+    weeks.set(key, [...(weeks.get(key) ?? []), lesson]);
+  }
+
+  if (!weeks.size) return null;
+  const currentWeek = weekStart(dayKey(now));
+
+  return (
+    <section className="space-y-3">
+      {[...weeks.entries()].map(([start, items]) => (
+        <div key={start} className={cardClass}>
+          <div className={cardHeadClass}>
+            <h2 className="flex min-w-0 items-center gap-2 text-sm font-medium text-neutral-900">
+              <span className="truncate">{weekTitle(start)}</span>
+              {start === currentWeek ? (
+                <span className="shrink-0 rounded-full bg-neutral-900 px-2 py-0.5 text-[11px] font-normal text-white">
+                  Bu hafta
+                </span>
+              ) : null}
+            </h2>
+            <WeekCounts lessons={items} />
+          </div>
+          <ul className="divide-y divide-neutral-100 px-4">
+            {items.map((lesson) => (
+              <LessonRow
+                key={lesson.id}
+                lesson={lesson}
+                now={now}
+                ordinal={ordinals.get(lesson.id)}
+              />
+            ))}
+          </ul>
+        </div>
+      ))}
     </section>
   );
 }
@@ -67,21 +141,33 @@ function LessonRow({
   now: Date;
   ordinal?: number;
 }) {
+  const day = dayKey(lesson.startsAt);
   const isPast = lesson.startsAt <= now;
   const isDone = lesson.doneAt !== null;
+  const isTraining = lesson.kind === "training";
 
   return (
-    <li className="group flex min-h-14 items-center gap-3 px-4 py-2.5">
+    <li className="group flex min-h-16 items-center gap-3 py-2.5">
+      <span
+        className={`h-9 w-0.5 shrink-0 rounded-full ${isTraining ? "bg-sky-600" : "bg-red-600"}`}
+      />
+
+      <div className="w-8 shrink-0 text-center">
+        <p className="font-mono text-lg leading-none font-medium tabular-nums text-neutral-900">
+          {Number(day.slice(8, 10))}
+        </p>
+        <p className="mt-1 text-[11px] leading-none text-neutral-400">
+          {WEEKDAYS_TR_SHORT[weekdayOf(day)]}
+        </p>
+      </div>
+
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-medium tabular-nums text-neutral-900">
-          {formatLessonTime(lesson.startsAt)}
-          {lesson.kind === "training" ? (
-            <span className="ml-2 font-normal text-sky-700">Antrenman</span>
-          ) : ordinal ? (
-            <span className="ml-2 font-normal text-neutral-400">
-              {ordinal}. ders
-            </span>
-          ) : null}
+        <p className="truncate text-sm text-neutral-900">
+          <span className="font-mono tabular-nums">{timeKey(lesson.startsAt)}</span>
+          <span className="text-neutral-400">
+            {" · "}
+            {isTraining ? "Antrenman" : ordinal ? `${ordinal}. ders` : "Ders"}
+          </span>
         </p>
         {lesson.note ? (
           <p className="truncate text-xs text-neutral-500">{lesson.note}</p>
@@ -89,28 +175,31 @@ function LessonRow({
       </div>
 
       {isDone ? (
-        <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700">
+        <span
+          className={`grid h-7 w-7 shrink-0 place-items-center rounded-full text-white ${isTraining ? "bg-sky-600" : "bg-red-600"}`}
+          aria-label="Yapıldı"
+          title="Yapıldı"
+        >
           <svg
             viewBox="0 0 24 24"
             className="h-3.5 w-3.5"
             fill="none"
             stroke="currentColor"
-            strokeWidth="3"
+            strokeWidth="3.5"
             strokeLinecap="round"
             strokeLinejoin="round"
             aria-hidden="true"
           >
             <path d="m5 13 4 4L19 7" />
           </svg>
-          Yapıldı
         </span>
       ) : (
         <>
           {isPast ? (
             <LessonTick id={lesson.id} />
           ) : (
-            <span className="shrink-0 text-xs text-neutral-400">
-              {untilLabel(lesson.startsAt, now)}
+            <span className="shrink-0 text-xs text-neutral-500">
+              {untilLabel(day, dayKey(now))}
             </span>
           )}
 
@@ -121,11 +210,9 @@ function LessonRow({
             <input type="hidden" name="id" value={lesson.id} />
             <ConfirmSubmit
               message={
-                lesson.kind === "training"
-                  ? "Bu antrenman silinsin mi?"
-                  : "Bu ders silinsin mi?"
+                isTraining ? "Bu antrenman silinsin mi?" : "Bu ders silinsin mi?"
               }
-              className="grid h-7 w-7 place-items-center rounded-lg text-neutral-300 transition hover:bg-neutral-100 hover:text-neutral-600"
+              className="-mr-1.5 grid h-7 w-7 place-items-center rounded-full text-neutral-300 transition hover:bg-neutral-100 hover:text-neutral-600"
             >
               <svg
                 viewBox="0 0 24 24"
