@@ -6,8 +6,8 @@ import { addDays, dayKey, weekStart } from "@/lib/date";
 import { db } from "@/lib/db";
 import { kickboxLessons, type KickboxLesson } from "@/lib/db/schema";
 
-/** Alınan paketteki toplam ders hakkı. Yeni paket alınınca burası güncelleniyor. */
-export const LESSON_QUOTA = 36;
+/** Alınan paketlerdeki toplam ders hakkı (36 + 12 ek ders). Yeni paket alınınca burası güncelleniyor. */
+export const LESSON_QUOTA = 48;
 
 /** Grafikte görünen hafta sayısı (içinde bulunduğumuz hafta dahil) */
 export const CHART_WEEKS = 12;
