@@ -47,6 +47,7 @@ export function SourceLayer({
   const router = useRouter();
   const focusLine = snippet.focus[focus] ?? 0;
   const isPage = variant === "page";
+  const isCard = variant === "card";
 
   useEffect(() => {
     const layer = ref.current;
@@ -134,13 +135,15 @@ export function SourceLayer({
       clearTimeout(glowTimer);
       glowTimer = window.setTimeout(() => delete layer.dataset.glow, SCROLL_GLOW);
     };
-    const glowOnScroll = isPage && touch && !reduceMotion;
+    // Kartlar da sayfayla birlikte aynı ölçüde aydınlanıyor: kartın kodu
+    // sayfanın arka planıyla tek bir katman gibi görünsün.
+    const glowOnScroll = (isPage || isCard) && touch && !reduceMotion;
     if (glowOnScroll) window.addEventListener("scroll", scrolled, { passive: true });
 
-    // Dokunmatik ekranda kartlar ekrana ilk girdiğinde kod bir kez belirip
-    // sönüyor; sayfa katmanında buna gerek yok.
+    // Dokunmatik ekranda hale ve kartsız bölümlerin kodu ekrana ilk girdiğinde
+    // bir kez belirip sönüyor; kaydırınca aydınlanan katmanlarda buna gerek yok.
     let observer: IntersectionObserver | undefined;
-    if (!isPage && !reduceMotion && touch) {
+    if (!glowOnScroll && !isPage && !reduceMotion && touch) {
       observer = new IntersectionObserver(
         ([entry]) => {
           if (!entry.isIntersecting) return;
@@ -164,7 +167,7 @@ export function SourceLayer({
       clearTimeout(tapTimer);
       clearTimeout(glowTimer);
     };
-  }, [router, isPage]);
+  }, [router, isPage, isCard]);
 
   const code = (
     <pre className="src-code">
