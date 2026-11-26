@@ -30,7 +30,13 @@ export default async function LedgerLayout({
 
   return (
     <div className="panel-light safe-top safe-bottom min-h-screen bg-neutral-50 text-neutral-900 [font-family:system-ui,-apple-system,'Segoe_UI',sans-serif]">
-      <header className="sticky top-0 z-20 border-b border-neutral-200 bg-neutral-50/85 backdrop-blur">
+      {/*
+        Zemin bilerek düz (yarı saydam + backdrop-blur değil): iOS Safari'de
+        kaydırınca arkadan geçen koyu başlık yazısı saydam zeminden bulanık
+        bir leke olarak görünüyor, başlığın ilk satırı silik duruyordu.
+        Simülatörde iki hâl yan yana denenip doğrulandı.
+      */}
+      <header className="sticky top-0 z-20 border-b border-neutral-200 bg-neutral-50">
         {/*
           Telefonda sekmeler alt satıra iniyor (order-last + w-full), md'den
           itibaren aynı satıra dönüyor. Panel dönüşü sadece sahibinde.
