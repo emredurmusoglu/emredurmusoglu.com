@@ -32,7 +32,7 @@ Sitede şu projeler yer alır:
 - **TypeScript**
 - **Tailwind CSS**
 - **Neon Postgres** + **Drizzle ORM**
-- **Vercel** (Deployment & Hosting)
+- **Cloudflare Workers** + **OpenNext** (Hosting; sayfa önbelleği R2'de)
 
 Ziyaretçiye açılan sayfalar statik üretilir (ISR); veri tabanı yalnızca panel
 ve içerik yayınlama akışında devreye girer.
@@ -110,7 +110,17 @@ npm run dev
 npm run db:generate
 ```
 
-**3 — Vercel.** Aynı üç değişkeni (`DATABASE_URL`, `SESSION_SECRET`,
-`PANEL_PASSWORD_HASH`) Vercel proje ayarlarına ekle. Build sırasında ana sayfa
-ve `/yazilar` veri tabanından okuduğu için `DATABASE_URL` build ortamında da
-tanımlı olmalı.
+**3 — Yayın (Cloudflare).** Site Cloudflare Workers'ta, OpenNext ile.
+`main`'e her push'ta Workers Builds derleyip yüklüyor:
+
+- Build command: `npm run cf:ci` (derlemede ana sayfa ve `/yazilar` veri
+  tabanından okunduğu için `DATABASE_URL`, Build variables and secrets'ta)
+- Deploy command: `npx opennextjs-cloudflare deploy`
+
+Çalışma anındaki gizli değerler (`DATABASE_URL`, `SESSION_SECRET`, parola
+hash'leri, `RESEND_API_KEY`) Worker'ın kendi secret'larında. Yerelde
+`.cf-gizli.env` ile tutuluyor; değiştirince `npm run -s cf:gizli yukle`.
+
+Yedek yol, Mac'ten elle yükleme: `npm run -s cf:yukle` (önce denemek için
+`-- --dene`). Canlıya dokunmadan Worker'ı yerelde denemek için `.dev.vars` +
+`npm run cf:onizle`.
