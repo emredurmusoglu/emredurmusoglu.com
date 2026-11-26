@@ -24,6 +24,7 @@ import handler from "../.open-next/worker.js";
 export { DOQueueHandler } from "../.open-next/worker.js";
 
 const HSTS = "max-age=63072000";
+const DENEME_ADRESI = "deneme.emredurmusoglu.com";
 const VERCEL_GIBI = "public, max-age=0, must-revalidate";
 // next/image: kaynak public/ altındaki dosya. Her gösterimde yeniden
 // küçültülmesin; dosya değişirse en geç bir haftada yenisi gelir.
@@ -40,7 +41,10 @@ const worker = {
     const headers = new Headers(response.headers);
     headers.set("Strict-Transport-Security", HSTS);
 
-    const { pathname } = new URL(request.url);
+    const { hostname, pathname } = new URL(request.url);
+    // Deneme adresi (taşıma 7) arama motorlarına girmesin. 10. adımda
+    // adresle birlikte bu da kalkacak.
+    if (hostname === DENEME_ADRESI) headers.set("X-Robots-Tag", "noindex, nofollow");
     const cacheControl = headers.get("Cache-Control");
     if (pathname === "/_next/image" && response.ok) {
       headers.set("Cache-Control", GORSEL);
