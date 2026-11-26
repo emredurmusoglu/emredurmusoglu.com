@@ -47,13 +47,18 @@
   "images": { "binding": "IMAGES" },
   // Canlı (taşıma 8): www.emredurmusoglu.com asıl adres; emredurmusoglu.com
   // Cloudflare Redirect Rule ile www'ye gider (Worker'dan önce çalışır).
-  // İlk yüklemede wrangler "DNS kayıtları çakışıyor" diye sorar: evet denince
-  // Vercel'i gösteren kayıtları kendisi Worker'a çevirir; geçişin kendisi bu.
+  //
+  // www ve kök "custom domain" değil, Workers Route: wrangler var olan DNS
+  // kaydını (Vercel'i gösteren) silmeden custom domain eklemiyordu, silmek de
+  // kesinti demekti. Route'ta kayıt yerinde kalıyor; DNS'te turuncu bulut
+  // (proxy) açılınca istekler Cloudflare'e gelir ve Worker karşılar, Vercel'e
+  // hiç gitmez. Geri dönüş: bulutu kapatmak.
+  //
   // Deneme adresi arama motorlarına kapalı (cloudflare/worker.ts), 10. adımda
   // kalkacak.
   "routes": [
-    { "pattern": "www.emredurmusoglu.com", "custom_domain": true },
-    { "pattern": "emredurmusoglu.com", "custom_domain": true },
+    { "pattern": "www.emredurmusoglu.com/*", "zone_name": "emredurmusoglu.com" },
+    { "pattern": "emredurmusoglu.com/*", "zone_name": "emredurmusoglu.com" },
     { "pattern": "deneme.emredurmusoglu.com", "custom_domain": true }
   ],
   "workers_dev": false,
