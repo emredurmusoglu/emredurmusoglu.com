@@ -1,5 +1,8 @@
 #!/usr/bin/env node
-// Cloudflare'e yükleme (taşıma 6). Mac'ten tek komut, Davetiva'daki gibi:
+// Cloudflare'e Mac'ten elle yükleme (taşıma 6). Normalde main'e push yeterli:
+// Workers Builds derleyip yüklüyor (scripts/cf-ci.mjs). Bu betik yedek yol;
+// commitlenmemiş kodu da yükler, yani canlı GitHub'ın gerisine/ilerisine düşebilir.
+//
 //
 //   npm run -s cf:yukle            Derler ve yükler (gizli değerler dahil).
 //   npm run -s cf:yukle -- --dene  Aynısı ama hiçbir şey göndermez (wrangler --dry-run).
@@ -10,16 +13,16 @@
 // R2'ye, revalidations tablosu D1'e, Worker ve gizli değerleri Cloudflare'e).
 // Değerler ekrana yazılmaz. Yüklenen adresler wrangler.jsonc "routes"ta.
 
-import { existsSync, readFileSync, readdirSync, statSync, writeFileSync, mkdtempSync, rmSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { execFileSync, spawnSync } from "node:child_process";
 import { resolveCname } from "node:dns/promises";
 import { createInterface } from "node:readline/promises";
 import { DOSYA, oku, denetle, workerDegerleri } from "./cf-gizli.mjs";
+import { CIKTI, ciktiEksigi, envDosyasiniBosalt, sizintiTara } from "./cf-cikti.mjs";
 
 const DENE = process.argv.includes("--dene");
-const CIKTI = ".open-next";
 const ASIL_ADRES = "www.emredurmusoglu.com";
 
 function dur(mesaj) {
@@ -59,41 +62,18 @@ if (!calistir("npx", ["--no-install", "opennextjs-cloudflare", "build"], derleme
   dur("Derleme başarısız, hiçbir şey yüklenmedi.");
 }
 
-// 3. Derleme çıktısı
-if (!existsSync(join(CIKTI, "worker.js")) || !existsSync(join(CIKTI, "assets", "_headers"))) {
-  dur(`Derleme çıktısı beklenen yerde değil (${CIKTI}/worker.js, ${CIKTI}/assets/_headers).`);
-}
+// 3. Derleme çıktısı: .env değerleri koddan silinir, sızıntı taraması.
+const eksik = ciktiEksigi();
+if (eksik) dur(eksik);
+envDosyasiniBosalt();
 
-// OpenNext .env dosyalarındaki değerleri Worker koduna gömüyor (next-env.mjs).
-// Canlıda hepsi gizli değer olarak geliyor; koda hiçbiri girmesin.
-const envDosyasi = join(CIKTI, "cloudflare", "next-env.mjs");
-if (!existsSync(envDosyasi)) dur(`${envDosyasi} bulunamadı; OpenNext'in çıktısı değişmiş olabilir.`);
-writeFileSync(
-  envDosyasi,
-  "// cf:yukle boşalttı: canlıda değerler Worker'ın gizli değerlerinden gelir.\n" +
-    "export const production = {};\nexport const development = {};\nexport const test = {};\n",
-);
-
-// Sızıntı taraması: bilinen gizli değerlerin hiçbiri çıktıda geçmesin.
 const gizliler = new Set();
 for (const kaynak of [DOSYA, ".env.local", ".env", ".env.production", ".env.production.local", ".dev.vars"]) {
-  for (const v of Object.values(oku(kaynak))) if (v.trim().length >= 16) gizliler.add(v.trim());
+  for (const v of Object.values(oku(kaynak))) gizliler.add(v.trim());
 }
-const sizan = [];
-(function tara(klasor) {
-  for (const ad of readdirSync(klasor)) {
-    const yol = join(klasor, ad);
-    const bilgi = statSync(yol);
-    if (bilgi.isDirectory()) tara(yol);
-    else if (bilgi.size < 50 * 1024 * 1024) {
-      const icerik = readFileSync(yol);
-      if ([...gizliler].some((g) => icerik.includes(g))) sizan.push(yol);
-    }
-    if (/^\.env|^\.dev\.vars$|^\.cf-gizli/.test(ad)) sizan.push(yol);
-  }
-})(CIKTI);
+const { sizan, taranan } = sizintiTara(gizliler);
 if (sizan.length) dur(`Derleme çıktısında gizli değer var, yükleme durduruldu:\n  ${sizan.join("\n  ")}`);
-console.log(`\n✓ Derleme tamam, çıktıda gizli değer yok (${gizliler.size} değer tarandı).`);
+console.log(`\n✓ Derleme tamam, çıktıda gizli değer yok (${taranan} değer tarandı).`);
 
 // 4. Adresler ve geçiş koruması
 const ayar = JSON.parse(readFileSync("wrangler.jsonc", "utf8").replace(/^\s*\/\/.*$/gm, ""));
