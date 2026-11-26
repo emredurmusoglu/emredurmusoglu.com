@@ -1,0 +1,32 @@
+// emredurmusoglu.com Cloudflare Worker ayarı (taşıma 2).
+// Worker'ı OpenNext üretiyor: `opennextjs-cloudflare build` next build
+// çıktısını .open-next/worker.js'e çeviriyor, elle Worker yazılmıyor.
+// Gizli değerler burada DEĞİL: canlıda `wrangler secret`, yerelde .env.local.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "emredurmusoglu",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-11-01",
+  // nodejs_compat: node:crypto (panel parolası scrypt), Buffer, process.env.
+  // global_fetch_strictly_public: OpenNext'in önerdiği; Worker'dan yapılan
+  // fetch'ler kendi alan adına dönüp döngüye girmesin.
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  // OpenNext'in kendine istek atması için (önbellek yenileme). Ad Worker
+  // adıyla aynı olmalı.
+  "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "emredurmusoglu" }],
+  // Sayfa önbelleği (Vercel'deki ISR'ın karşılığı). Kova 3. adımda açılıyor;
+  // yerel önizlemede wrangler kendi taklidini kullanıyor.
+  "r2_buckets": [
+    { "binding": "NEXT_INC_CACHE_R2_BUCKET", "bucket_name": "emredurmusoglu-opennext-cache" }
+  ],
+  // next/image küçültmesi Cloudflare Images ile.
+  "images": { "binding": "IMAGES" },
+  // Alan adları 7. (deneme) ve 8. (geçiş) adımlarda eklenecek.
+  "workers_dev": false,
+  "preview_urls": false,
+  "observability": { "enabled": true }
+}
