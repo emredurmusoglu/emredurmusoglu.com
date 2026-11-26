@@ -46,6 +46,13 @@ export default async function DashboardLayout({
               >
                 O<span className="text-red-500">k</span>u
               </Link>
+              {/* Düz sayfa (route handler), Link'in istemci geçişi işe yaramaz */}
+              <a
+                href="/qr-generator"
+                className="rounded-full bg-white px-2.5 py-1 text-xs font-medium text-violet-600 ring-1 ring-neutral-200 transition hover:ring-violet-300"
+              >
+                QR
+              </a>
             </div>
             <form action={logout} className="md:hidden">
               <button
