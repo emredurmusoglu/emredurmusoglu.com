@@ -45,10 +45,17 @@
   "migrations": [{ "tag": "v1", "new_sqlite_classes": ["DOQueueHandler"] }],
   // next/image küçültmesi Cloudflare Images ile.
   "images": { "binding": "IMAGES" },
-  // Deneme adresi (taşıma 7): canlı veritabanıyla, www ve kök Vercel'deyken.
-  // Arama motorlarına kapalı (cloudflare/worker.ts, X-Robots-Tag). www ve
-  // kök 8. adımda (geçiş) eklenecek; deneme 10. adımda kalkacak.
-  "routes": [{ "pattern": "deneme.emredurmusoglu.com", "custom_domain": true }],
+  // Canlı (taşıma 8): www.emredurmusoglu.com asıl adres; emredurmusoglu.com
+  // Cloudflare Redirect Rule ile www'ye gider (Worker'dan önce çalışır).
+  // İlk yüklemede wrangler "DNS kayıtları çakışıyor" diye sorar: evet denince
+  // Vercel'i gösteren kayıtları kendisi Worker'a çevirir; geçişin kendisi bu.
+  // Deneme adresi arama motorlarına kapalı (cloudflare/worker.ts), 10. adımda
+  // kalkacak.
+  "routes": [
+    { "pattern": "www.emredurmusoglu.com", "custom_domain": true },
+    { "pattern": "emredurmusoglu.com", "custom_domain": true },
+    { "pattern": "deneme.emredurmusoglu.com", "custom_domain": true }
+  ],
   "workers_dev": false,
   "preview_urls": false,
   "observability": { "enabled": true }
