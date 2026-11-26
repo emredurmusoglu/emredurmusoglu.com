@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * Panel başlığındaki "Uygulamalar" açılır menüsü. Etsy, Oku, QR, tk-bc gibi
- * siteye taşınmış ayrı uygulamalar burada toplanır; yenisi gelince APPS'e
- * bir satır eklemek yeter.
+ * Panel başlığındaki "Uygulamalar" açılır menüsü. Oku, QR, tk-bc gibi siteye
+ * taşınmış ayrı uygulamalar burada toplanır; yenisi gelince APPS'e bir satır
+ * eklemek yeter. Etsy sık açıldığı için başlıkta ayrı rozet olarak duruyor.
  *
  * Bağlantılar düz <a>: QR route handler, tk-bc public/ altında statik sayfa;
  * Next'in istemci geçişi bunlarda işe yaramıyor, hepsi aynı davransın.
@@ -16,7 +16,6 @@ const APPS: {
   hint: string;
   dot: string;
 }[] = [
-  { href: "/etsy", label: "Etsy", hint: "Mağaza", dot: "bg-orange-500" },
   {
     href: "/oku",
     label: (

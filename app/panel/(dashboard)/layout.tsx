@@ -35,6 +35,12 @@ export default async function DashboardLayout({
                 Panel
                 <span className="h-1 w-8 rounded-full bg-gradient-to-r from-sky-400 via-indigo-400 to-fuchsia-400" />
               </Link>
+              <Link
+                href="/etsy"
+                className="rounded-full bg-white px-2.5 py-1 text-xs font-medium text-orange-600 ring-1 ring-neutral-200 transition hover:ring-orange-300"
+              >
+                Etsy
+              </Link>
               <AppsMenu />
             </div>
             <form action={logout} className="md:hidden">

@@ -29,8 +29,15 @@ export default async function LedgerLayout({
   }
 
   return (
-    <div className="panel-light safe-top safe-bottom min-h-screen bg-neutral-50 text-neutral-900 [font-family:system-ui,-apple-system,'Segoe_UI',sans-serif]">
-      <header className="sticky top-0 z-20 border-b border-neutral-200 bg-neutral-50/85 backdrop-blur">
+    <div className="panel-light safe-bottom min-h-screen bg-neutral-50 text-neutral-900 [font-family:system-ui,-apple-system,'Segoe_UI',sans-serif]">
+      {/*
+        Güvenli alan boşluğu (safe-top) dış kutuda değil başlığın kendisinde:
+        dışta olunca kaydırınca yapışkan başlık top-0'a, yani iPhone'da saat
+        ve pilin altına kayıyor, iOS o şeridi bulanıklaştırdığı için ilk satır
+        silik görünüyordu. Böyle başlığın zemini durum çubuğunu da örtüyor,
+        içerik hep güvenli alanın altında kalıyor.
+      */}
+      <header className="safe-top sticky top-0 z-20 border-b border-neutral-200 bg-neutral-50/85 backdrop-blur">
         {/*
           Telefonda sekmeler alt satıra iniyor (order-last + w-full), md'den
           itibaren aynı satıra dönüyor. Panel dönüşü sadece sahibinde.
