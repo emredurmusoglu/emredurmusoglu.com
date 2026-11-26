@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * Panel başlığındaki "Uygulamalar" açılır menüsü. Oku, QR, tk-bc gibi siteye
+ * Panel başlığındaki "Uygulamalar" açılır menüsü. Kickboks, Oku, QR, tk-bc gibi siteye
  * taşınmış ayrı uygulamalar burada toplanır; yenisi gelince APPS'e bir satır
  * eklemek yeter. Etsy sık açıldığı için başlıkta ayrı rozet olarak duruyor.
  *
@@ -16,6 +16,7 @@ const APPS: {
   hint: string;
   dot: string;
 }[] = [
+  { href: "/kickboks", label: "Kickboks", hint: "Ders takibi", dot: "bg-sky-500" },
   {
     href: "/oku",
     label: (

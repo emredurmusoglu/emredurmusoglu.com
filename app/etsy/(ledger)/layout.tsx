@@ -29,14 +29,19 @@ export default async function LedgerLayout({
   }
 
   return (
-    <div className="panel-light safe-top safe-bottom min-h-screen bg-neutral-50 text-neutral-900 [font-family:system-ui,-apple-system,'Segoe_UI',sans-serif]">
+    <div className="panel-light safe-bottom min-h-screen bg-neutral-50 text-neutral-900 [font-family:system-ui,-apple-system,'Segoe_UI',sans-serif]">
       {/*
-        Zemin bilerek düz (yarı saydam + backdrop-blur değil): iOS Safari'de
-        kaydırınca arkadan geçen koyu başlık yazısı saydam zeminden bulanık
-        bir leke olarak görünüyor, başlığın ilk satırı silik duruyordu.
-        Simülatörde iki hâl yan yana denenip doğrulandı.
+        iOS'ta başlığın ilk satırı silik görünüyordu, iki nedeni var:
+        1. Ana ekran uygulamasında (viewport-fit=cover) sayfa saat ve pilin
+           arkasından başlıyor. safe-top dış kutudayken yapışkan başlık
+           kaydırınca top-0'a, saat ve pilin altına kayıyordu; iOS o şeridi
+           soluklaştırıyor. safe-top başlığın kendisinde olunca zemini o
+           şeridi örtüyor, satırlar hep altında kalıyor. Safari'de boşluk
+           sıfır, orada bir şey değişmiyor.
+        2. Zemin yarı saydam + backdrop-blur'du; arkadan geçen koyu yazı
+           bulanık leke gibi görünüyordu (simülatörde görüldü). Zemin düz.
       */}
-      <header className="sticky top-0 z-20 border-b border-neutral-200 bg-neutral-50">
+      <header className="safe-top sticky top-0 z-20 border-b border-neutral-200 bg-neutral-50">
         {/*
           Telefonda sekmeler alt satıra iniyor (order-last + w-full), md'den
           itibaren aynı satıra dönüyor. Panel dönüşü sadece sahibinde.
