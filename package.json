@@ -15,7 +15,9 @@
     "db:seed": "tsx scripts/seed.ts",
     "panel:hash": "tsx scripts/hash-password.ts",
     "cf:derle": "opennextjs-cloudflare build",
-    "cf:onizle": "opennextjs-cloudflare build && opennextjs-cloudflare preview"
+    "cf:onizle": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "cf:gizli": "node scripts/cf-gizli.mjs",
+    "cf:yukle": "node scripts/cf-yukle.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

@@ -45,3 +45,5 @@ next-env.d.ts
 /.open-next/
 /.wrangler/
 .dev.vars*
+# Cloudflare canlı gizli değerleri (npm run cf:gizli)
+.cf-gizli.env
