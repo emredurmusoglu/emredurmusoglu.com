@@ -34,8 +34,9 @@ function weekTitle(start: string): string {
 
 const cardClass =
   "overflow-hidden rounded-2xl bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04)] ring-1 ring-neutral-200";
-const cardHeadClass =
-  "flex items-center justify-between gap-3 border-b border-neutral-100 bg-neutral-50/70 px-4 py-2.5";
+const cardHeadBase =
+  "flex items-center justify-between gap-3 border-neutral-100 bg-neutral-50/70 px-4 py-2.5";
+const cardHeadClass = `${cardHeadBase} border-b`;
 
 /** Haftanın yapılan ders ve antrenman sayısı, kendi renkleriyle */
 function WeekCounts({ lessons }: { lessons: KickboxLesson[] }) {
@@ -90,44 +91,122 @@ export function UpcomingLessons({ lessons, now, ordinals }: ListProps) {
   );
 }
 
-/** Geçmiş kayıtlar haftalara bölünüyor, en yeni hafta üstte. */
-export function PastLessons({ lessons, now, ordinals }: ListProps) {
-  const weeks = new Map<string, KickboxLesson[]>();
+/** Anahtarı ilk görülme sırasıyla koruyarak gruplar (liste zaten en yeni başta). */
+function groupBy(
+  lessons: KickboxLesson[],
+  key: (lesson: KickboxLesson) => string,
+): Map<string, KickboxLesson[]> {
+  const groups = new Map<string, KickboxLesson[]>();
   for (const lesson of lessons) {
-    const key = weekStart(dayKey(lesson.startsAt));
-    weeks.set(key, [...(weeks.get(key) ?? []), lesson]);
+    const k = key(lesson);
+    groups.set(k, [...(groups.get(k) ?? []), lesson]);
   }
+  return groups;
+}
 
-  if (!weeks.size) return null;
-  const currentWeek = weekStart(dayKey(now));
+/** "Kasım", başka yıldaysa "Aralık 2025" */
+function monthTitle(month: string, currentMonth: string): string {
+  const [year, m] = month.split("-").map(Number);
+  const name = MONTHS_TR[m - 1];
+  return month.slice(0, 4) === currentMonth.slice(0, 4) ? name : `${name} ${year}`;
+}
+
+/**
+ * Geçmiş kayıtlar ay ay, en yeni ay üstte. İçinde bulunduğumuz ay hep açık;
+ * önceki aylar kapalı başlıyor, başlığa basınca haftalarıyla açılıyor.
+ * Ay ay bölünce ay sınırındaki hafta iki aya ayrılıyor; her ay kendi
+ * günlerini gösteriyor.
+ */
+export function PastLessons({ lessons, now, ordinals }: ListProps) {
+  const months = groupBy(lessons, (lesson) => dayKey(lesson.startsAt).slice(0, 7));
+  if (!months.size) return null;
+
+  const today = dayKey(now);
+  const currentMonth = today.slice(0, 7);
+  const currentWeek = weekStart(today);
 
   return (
     <section className="space-y-3">
-      {[...weeks.entries()].map(([start, items]) => (
-        <div key={start} className={cardClass}>
-          <div className={cardHeadClass}>
+      {[...months.entries()].map(([month, items]) => {
+        const weeks = groupBy(items, (lesson) => weekStart(dayKey(lesson.startsAt)));
+        const isCurrent = month === currentMonth;
+        const head = (
+          <>
             <h2 className="flex min-w-0 items-center gap-2 text-sm font-medium text-neutral-900">
-              <span className="truncate">{weekTitle(start)}</span>
-              {start === currentWeek ? (
+              <span className="truncate">{monthTitle(month, currentMonth)}</span>
+              {isCurrent ? (
                 <span className="shrink-0 rounded-full bg-neutral-900 px-2 py-0.5 text-[11px] font-normal text-white">
-                  Bu hafta
+                  Bu ay
                 </span>
               ) : null}
             </h2>
-            <WeekCounts lessons={items} />
-          </div>
-          <ul className="divide-y divide-neutral-100 px-4">
-            {items.map((lesson) => (
-              <LessonRow
-                key={lesson.id}
-                lesson={lesson}
-                now={now}
-                ordinal={ordinals.get(lesson.id)}
-              />
+            <span className="flex shrink-0 items-center gap-2">
+              <WeekCounts lessons={items} />
+              {isCurrent ? null : (
+                <svg
+                  viewBox="0 0 24 24"
+                  className="h-4 w-4 text-neutral-400 transition group-open:rotate-180"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              )}
+            </span>
+          </>
+        );
+        const body = (
+          <div className="divide-y divide-neutral-100">
+            {[...weeks.entries()].map(([start, weekItems]) => (
+              <div key={start}>
+                <div className="flex items-center justify-between gap-3 px-4 pt-3 pb-1">
+                  <h3 className="flex min-w-0 items-center gap-2 text-xs font-medium text-neutral-500">
+                    <span className="truncate">{weekTitle(start)}</span>
+                    {start === currentWeek ? (
+                      <span className="shrink-0 rounded-full bg-neutral-100 px-2 py-0.5 text-[11px] font-normal text-neutral-700">
+                        Bu hafta
+                      </span>
+                    ) : null}
+                  </h3>
+                  <WeekCounts lessons={weekItems} />
+                </div>
+                <ul className="divide-y divide-neutral-100 px-4">
+                  {weekItems.map((lesson) => (
+                    <LessonRow
+                      key={lesson.id}
+                      lesson={lesson}
+                      now={now}
+                      ordinal={ordinals.get(lesson.id)}
+                    />
+                  ))}
+                </ul>
+              </div>
             ))}
-          </ul>
-        </div>
-      ))}
+          </div>
+        );
+
+        // Bu ay açılıp kapanmıyor; önceki aylar <details>: JS'siz, klavyeyle
+        // de açılıyor.
+        return isCurrent ? (
+          <div key={month} className={cardClass}>
+            <div className={cardHeadClass}>{head}</div>
+            {body}
+          </div>
+        ) : (
+          <details key={month} className={`group ${cardClass}`}>
+            <summary
+              className={`${cardHeadBase} cursor-pointer list-none group-open:border-b [&::-webkit-details-marker]:hidden`}
+            >
+              {head}
+            </summary>
+            {body}
+          </details>
+        );
+      })}
     </section>
   );
 }
