@@ -1,11 +1,12 @@
 // emredurmusoglu.com Cloudflare Worker ayarı (taşıma 2).
 // Worker'ı OpenNext üretiyor: `opennextjs-cloudflare build` next build
-// çıktısını .open-next/worker.js'e çeviriyor, elle Worker yazılmıyor.
+// çıktısını .open-next/worker.js'e çeviriyor. cloudflare/worker.ts onun
+// önünde ince bir katman: HSTS ve tarayıcıya giden Cache-Control.
 // Gizli değerler burada DEĞİL: canlıda `wrangler secret`, yerelde .env.local.
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "emredurmusoglu",
-  "main": ".open-next/worker.js",
+  "main": "./cloudflare/worker.ts",
   "compatibility_date": "2026-11-01",
   // nodejs_compat: node:crypto (panel parolası scrypt), Buffer, process.env.
   // global_fetch_strictly_public: OpenNext'in önerdiği; Worker'dan yapılan

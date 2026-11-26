@@ -1,0 +1,16 @@
+# Cloudflare'in dosya başlıkları (taşıma 5). Worker'a gelmeden sunulan
+# dosyalar için: /_next/static ve public/ altındakiler. Sayfaların başlıkları
+# cloudflare/worker.ts'te. Vercel bu dosyayı kullanmıyor.
+
+# Vercel her cevaba ekliyordu, Cloudflare eklemiyor.
+/*
+  Strict-Transport-Security: max-age=63072000
+
+# Adında içerik özeti var, hiç değişmez.
+/_next/static/*
+  Cache-Control: public,max-age=31536000,immutable
+
+# Oku'nun service worker'ı her açılışta yeniden sorulsun, güncelleme
+# telefona gecikmeden düşsün (Vercel'deki değer).
+/oku-sw.js
+  Cache-Control: public, max-age=0, must-revalidate
