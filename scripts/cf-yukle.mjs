@@ -107,8 +107,9 @@ if (!DENE && adresler.includes(ASIL_ADRES) && (await vercelde(ASIL_ADRES))) {
   Devam etmeden önce Cloudflare → emredurmusoglu.com:
    1. Rules → Redirect Rules: emredurmusoglu.com → https://www.emredurmusoglu.com (301, yol ve sorgu korunur)
    2. SSL/TLS → Edge Certificates → Always Use HTTPS: açık
-  Yükleme sırasında wrangler "DNS kayıtları çakışıyor, güncelleyeyim mi?" diye
-  soracak: y. Geri dönüş: plan sayfasındaki "Geri dönüş" tablosu.`);
+  Yükleme www ve kökü Workers Route olarak bağlar; trafik, DNS'te bu iki kaydın
+  bulutu turuncuya (Proxied) çevrilince Cloudflare'e geçer. Geri dönüş: bulutu
+  griye (DNS only) çevirmek.`);
   const rl = createInterface({ input: process.stdin, output: process.stdout });
   const cevap = (await rl.question('\nHepsi tamamsa "gecis" yaz: ')).trim();
   rl.close();
