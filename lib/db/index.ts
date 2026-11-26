@@ -18,13 +18,18 @@ if (!connectionString) {
  * konuşamıyor. Bu yüzden host'a bakıp sürücüyü seçiyoruz — böylece
  * `postgresql://localhost/...` ile internetsiz de geliştirebiliyorsun.
  * Kullandığımız sorgu API'si iki sürücüde de birebir aynı.
+ *
+ * Yerel sürücüde `maxUses: 1`: her sorgu kendi bağlantısını açıp kapatıyor.
+ * Cloudflare Worker'ı yerelde çalıştırırken (npm run cf:onizle) bir isteğin
+ * açtığı bağlantı sonraki istekte kullanılamıyor, istek takılıp kalıyordu.
+ * Neon'un HTTP sürücüsünde bağlantı yok, orada bu sorun hiç çıkmıyor.
  */
 const isNeon = /\.neon\.(tech|build)$/.test(new URL(connectionString).hostname);
 
 export const db = (
   isNeon
     ? drizzleNeon(neon(connectionString), { schema })
-    : drizzlePg(connectionString, { schema })
+    : drizzlePg({ connection: { connectionString, maxUses: 1 }, schema })
 ) as NeonHttpDatabase<typeof schema>;
 
 export { schema };

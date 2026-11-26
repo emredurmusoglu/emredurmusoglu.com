@@ -18,11 +18,30 @@
   // OpenNext'in kendine istek atması için (önbellek yenileme). Ad Worker
   // adıyla aynı olmalı.
   "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "emredurmusoglu" }],
-  // Sayfa önbelleği (Vercel'deki ISR'ın karşılığı). Kova 3. adımda açılıyor;
-  // yerel önizlemede wrangler kendi taklidini kullanıyor.
+  // Sayfa önbelleği (Vercel'deki ISR'ın karşılığı), bkz. open-next.config.ts.
+  // Kova ve veritabanı Doğu Avrupa'da (eeur), ziyaretçilerin çoğuna yakın.
+  // Yerel önizlemede wrangler ikisinin de taklidini .wrangler/ altında tutar.
+  //
+  // R2: üretilmiş sayfalar.
   "r2_buckets": [
     { "binding": "NEXT_INC_CACHE_R2_BUCKET", "bucket_name": "emredurmusoglu-opennext-cache" }
   ],
+  // D1: "bu sayfa eskidi" kayıtları. Panelden yayınlayınca revalidatePath
+  // buraya yazar, sayfa bir sonraki istekte yeniden üretilir. revalidations
+  // tablosunu OpenNext yüklemede kendisi kurar.
+  "d1_databases": [
+    {
+      "binding": "NEXT_TAG_CACHE_D1",
+      "database_name": "emredurmusoglu-tag-cache",
+      "database_id": "9e48d6b3-4f1a-45e8-b7ab-d22dec4e58b5"
+    }
+  ],
+  // Durable Object kuyruğu: süresi dolan sayfayı (1 saat) arka planda yeniden
+  // üretir; aynı sayfa için aynı anda tek üretim.
+  "durable_objects": {
+    "bindings": [{ "name": "NEXT_CACHE_DO_QUEUE", "class_name": "DOQueueHandler" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["DOQueueHandler"] }],
   // next/image küçültmesi Cloudflare Images ile.
   "images": { "binding": "IMAGES" },
   // Alan adları 7. (deneme) ve 8. (geçiş) adımlarda eklenecek.
