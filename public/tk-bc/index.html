@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Kaserol Servis</title>
+    <link rel="icon" href="/tk-bc/servis.webp" />
+    <link rel="stylesheet" href="/tk-bc/style.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="header">
+        <div class="header-top">
+          <div>
+            <h1>Kaserol Servis</h1>
+            <p>
+              Lütfen koltuk numaranızı girerek tercih ettiğiniz ürünü kaserolden
+              tabağınıza sürükleyiniz.
+            </p>
+          </div>
+          <a href="/tk-bc/chef" class="ghost-button">Şef Ekranı</a>
+        </div>
+        <div class="seat-row">
+          <label class="seat">
+            <span>Koltuk Numarası</span>
+            <input id="seatInput" type="text" placeholder="Örnek: 12A" />
+          </label>
+        </div>
+      </header>
+
+      <section class="tray" aria-label="Kaserollar">
+        <div class="card" draggable="true" data-item="1">
+          <img src="/tk-bc/sushi.webp" alt="Sushi" />
+          <span>Sushi</span>
+          <button class="info-button" type="button" data-info="sushi" aria-label="Sushi bilgisi">
+            Bilgi
+          </button>
+        </div>
+        <div class="card" draggable="true" data-item="2">
+          <img src="/tk-bc/shrimp.webp" alt="Shrimp" />
+          <span>Shrimp</span>
+          <button class="info-button" type="button" data-info="shrimp" aria-label="Shrimp bilgisi">
+            Bilgi
+          </button>
+        </div>
+        <div class="card" draggable="true" data-item="3">
+          <img src="/tk-bc/pizza.webp" alt="Pizza" />
+          <span>Pizza</span>
+          <button class="info-button" type="button" data-info="pizza" aria-label="Pizza bilgisi">
+            Bilgi
+          </button>
+        </div>
+      </section>
+
+      <section class="plate-area">
+        <div class="plate-drop" id="plateDrop" aria-label="Servis tabağı">
+          <img src="/tk-bc/servis.webp" alt="Servis tabağı" class="plate-img" />
+          <div id="plateItems" class="plate-items" aria-live="polite"></div>
+        </div>
+        <div class="plate-actions">
+          <button id="submitOrder" class="primary-button" type="button">Gönder</button>
+          <button id="resetPlate" class="ghost-button" type="button">Tabağı Temizle</button>
+        </div>
+        <div id="plateChips" class="plate-chip-row" aria-live="polite"></div>
+        <p class="hint">
+          Tabağınıza eklemek için sürükleyiniz. Çıkarmak için Tabağı Temizle
+          butonunu kullanınız.
+        </p>
+      </section>
+
+      <section class="main-course is-hidden" id="mainCourse">
+        <div class="section-head">
+          <h2>Ana Yemek</h2>
+          <p>Lütfen bir ana yemek seçerek gönderiniz.</p>
+        </div>
+        <div class="tray" aria-label="Ana yemekler">
+          <div class="card main-card" data-main="mantarmakarna">
+            <img src="/tk-bc/pasta.webp" alt="Mantarlı Makarna" />
+            <span>Mantarlı Makarna</span>
+            <button class="info-button" type="button" data-info="mantarmakarna" aria-label="Mantarlı Makarna bilgisi">
+              Bilgi
+            </button>
+          </div>
+          <div class="card main-card" data-main="kuzuincik">
+            <img src="/tk-bc/kuzu.webp" alt="Kuzu İncik" />
+            <span>Kuzu İncik</span>
+            <button class="info-button" type="button" data-info="kuzuincik" aria-label="Kuzu İncik bilgisi">
+              Bilgi
+            </button>
+          </div>
+          <div class="card main-card" data-main="kilicbaligi">
+            <img src="/tk-bc/balik.webp" alt="Kılıç Balığı" />
+            <span>Kılıç Balığı</span>
+            <button class="info-button" type="button" data-info="kilicbaligi" aria-label="Kılıç Balığı bilgisi">
+              Bilgi
+            </button>
+          </div>
+        </div>
+        <div class="main-actions">
+          <button id="submitMain" class="primary-button" type="button">Gönder</button>
+        </div>
+      </section>
+
+      <section class="dessert-course is-hidden" id="dessertCourse">
+        <div class="section-head">
+          <h2>Tatlı</h2>
+          <p>Lütfen tatlılarınızı seçerek gönderiniz.</p>
+        </div>
+        <div class="tray" aria-label="Tatlılar">
+          <div class="card dessert-card" draggable="true" data-dessert="1">
+            <img src="/tk-bc/baklava.webp" alt="Baklava" />
+            <span>Baklava</span>
+            <button class="info-button" type="button" data-info="baklava" aria-label="Baklava bilgisi">
+              Bilgi
+            </button>
+          </div>
+          <div class="card dessert-card" draggable="true" data-dessert="2">
+            <img src="/tk-bc/browni.webp" alt="Browni" />
+            <span>Browni</span>
+            <button class="info-button" type="button" data-info="browni" aria-label="Browni bilgisi">
+              Bilgi
+            </button>
+          </div>
+          <div class="card dessert-card" draggable="true" data-dessert="3">
+            <img src="/tk-bc/cheesecake.webp" alt="Cheesecake" />
+            <span>Cheesecake</span>
+            <button class="info-button" type="button" data-info="cheesecake" aria-label="Cheesecake bilgisi">
+              Bilgi
+            </button>
+          </div>
+        </div>
+        <div class="plate-area">
+          <div class="plate-drop" id="dessertDrop" aria-label="Tatlı tabağı">
+            <img src="/tk-bc/servis.webp" alt="Tatlı tabağı" class="plate-img" />
+            <div id="dessertItems" class="plate-items" aria-live="polite"></div>
+          </div>
+          <div class="plate-actions">
+            <button id="submitDessert" class="primary-button" type="button">Gönder</button>
+            <button id="resetDessert" class="ghost-button" type="button">Tabağı Temizle</button>
+          </div>
+          <div id="dessertChips" class="plate-chip-row" aria-live="polite"></div>
+          <p class="hint">
+            Tatlı tabağınıza eklemek için sürükleyiniz. Çıkarmak için tatlıyı geri
+            bırakınız.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <div id="toast" class="toast" role="alertdialog" aria-modal="true" hidden>
+      <div class="toast-card">
+        <p id="toastMessage">Lütfen önce koltuk numaranızı giriniz.</p>
+        <button id="toastOk" class="primary-button" type="button">Tamam</button>
+        <a id="toastChef" class="ghost-button" href="/tk-bc/chef" hidden>Şef Ekranı</a>
+      </div>
+    </div>
+
+    <div id="infoModal" class="info-modal" role="dialog" aria-modal="true" hidden>
+      <div class="info-card" role="document">
+        <h3 id="infoTitle" class="info-title"></h3>
+        <p id="infoBody" class="info-body"></p>
+        <p id="infoAllergen" class="info-allergen"></p>
+      </div>
+    </div>
+
+    <script src="/tk-bc/app.js"></script>
+  </body>
+</html>

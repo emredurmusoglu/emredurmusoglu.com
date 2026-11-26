@@ -14,6 +14,8 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Cloudflare: OpenNext derleme çıktısı ve wrangler yerel durumu.
     ".open-next/**",
+    // Ayrı repodan olduğu gibi taşınan statik sayfa.
+    "public/tk-bc/**",
     ".wrangler/**",
   ]),
 ]);
