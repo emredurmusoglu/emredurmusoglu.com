@@ -30,13 +30,7 @@ export default async function LedgerLayout({
 
   return (
     <div className="panel-light safe-top safe-bottom min-h-screen bg-neutral-50 text-neutral-900 [font-family:system-ui,-apple-system,'Segoe_UI',sans-serif]">
-      {/*
-        Başlık bilerek yapışkan (sticky) değil, panel gibi sayfayla kayıp
-        gidiyor. Yapışkanken hep ekranın tepesinde kalıyordu; iOS 26 o şeridi
-        (saat, pil ve hemen altı) bulanıklaştırıp soluklaştırdığı için ilk
-        satır silik görünüyordu. Güvenli alanı başlığa taşımak da yetmedi.
-      */}
-      <header className="border-b border-neutral-200 bg-neutral-50">
+      <header className="sticky top-0 z-20 border-b border-neutral-200 bg-neutral-50/85 backdrop-blur">
         {/*
           Telefonda sekmeler alt satıra iniyor (order-last + w-full), md'den
           itibaren aynı satıra dönüyor. Panel dönüşü sadece sahibinde.
