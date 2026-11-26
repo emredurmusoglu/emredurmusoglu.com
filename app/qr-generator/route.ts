@@ -11,3 +11,6 @@ export function GET() {
     },
   });
 }
+
+// Cloudflare'de route handler HEAD'i kendiliğinden karşılamıyor (404 dönüyordu).
+export const HEAD = GET;
