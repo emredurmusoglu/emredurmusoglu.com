@@ -62,7 +62,12 @@ export async function logEtsyAccess(
   try {
     const head = await headers();
     const device = describeDevice(head.get("user-agent"));
-    const ip = head.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null;
+    // Cloudflare gerçek IP'yi cf-connecting-ip'de verir; X-Forwarded-For'u
+    // istemci uydurabilir. Vercel'de o başlık yok, x-forwarded-for'a düşer.
+    const ip =
+      head.get("cf-connecting-ip")?.trim() ||
+      head.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      null;
 
     if (event === "login") {
       await db.insert(etsyAccessLog).values({
